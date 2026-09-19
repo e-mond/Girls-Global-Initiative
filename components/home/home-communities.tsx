@@ -64,7 +64,7 @@ export function HomeCommunities({
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-5 rounded-[1.5rem] bg-[#edf2f7] px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8">
+          <div className="mt-10 flex flex-col gap-5 rounded-[1.5rem] bg-[#edf2f7] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8 sm:py-6">
           <div className="flex items-start gap-4">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-navy text-white">
               <MapPin className="h-5 w-5" aria-hidden />
@@ -78,16 +78,16 @@ export function HomeCommunities({
               </p>
             </div>
           </div>
-          <div className="flex shrink-0 flex-wrap gap-3">
+          <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
             <Link
               href="/partner"
-              className="inline-flex h-11 items-center justify-center rounded-full bg-brand-navy px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90"
+              className="inline-flex h-11 min-h-11 w-full items-center justify-center rounded-full bg-brand-navy px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90 sm:w-auto"
             >
               Invite GGI
             </Link>
             <Link
               href="/partner"
-              className="inline-flex h-11 items-center justify-center rounded-full border border-brand-navy/20 bg-bg-surface px-5 text-sm font-semibold text-brand-navy hover:border-brand-navy/40"
+              className="inline-flex h-11 min-h-11 w-full items-center justify-center rounded-full border border-brand-navy/20 bg-bg-surface px-5 text-sm font-semibold text-brand-navy hover:border-brand-navy/40 sm:w-auto"
             >
               Partner with us
             </Link>

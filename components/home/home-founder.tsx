@@ -26,7 +26,7 @@ export function HomeFounder() {
         <div className="relative mx-auto w-full max-w-sm pb-8">
           <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] rounded-b-3xl ring-1 ring-brand-sky/35">
             <Image
-              src="/home/founder.jpg"
+              src={founderSpotlight.imageSrc}
               alt={`${founderSpotlight.name}, ${founderSpotlight.role}`}
               fill
               className="object-cover object-[50%_12%]"

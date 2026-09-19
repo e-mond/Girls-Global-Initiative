@@ -11,9 +11,10 @@
 * **Status:** Not started (branch pending)
 * **Previous phase:** Unit 3 — Admin Back-Office Core
 * **Unit 3 status:** Complete and merged into `main` (PR #5)
-* **Current branch:** `main`
+* **Current branch:** `feature/submission-workflows`
 * **Repository:** `e-mond/Girls-Global-Initiative`
 * **Current objective:** Volunteer, partnership, and contact submission flows with admin review.
+* **Owner notes:** Neon `DATABASE_URL` configured locally; Cloudinary credentials pending; team photos received (Eugenia placeholder until photo arrives).
 
 ---
 
@@ -93,7 +94,15 @@ A local `.env.local` is present and remains gitignored.
 
 ---
 
-# Recently completed
+## Recently completed
+
+### Responsive / accessibility / favicons polish (pre–Unit 4)
+
+* Favicon set + web manifest from GGI logo (`app/icon.png`, `public/icons/*`)
+* Skip-to-content link, viewport/theme-color metadata
+* Accessible mobile nav drawer (Escape to close, 44px touch targets)
+* Responsive CTA stacking on hero, communities, header, footer
+* Team page + founder photos from owner assets (Eugenia placeholder)
 
 ## Unit 3 — Admin Back-Office Core
 
@@ -408,6 +417,21 @@ Until those assets arrive:
 ---
 
 # Architecture Decisions
+
+## Media storage — Cloudinary
+
+Owner decision (2026-09-19): image and video uploads for the media library
+will use **Cloudinary**, not S3-compatible object storage.
+
+* Credentials will be supplied later (`CLOUDINARY_*` in `.env.example`).
+* Until then, admin uploads continue to use the local `storage/media/` fallback.
+* Database stores metadata/URLs only — never binaries.
+* Static founder/team photos currently ship from `assets/` → `public/team/`
+  and `public/home/founder.jpg` until CMS/Cloudinary publishing is live.
+
+**Source:** Explicit owner instruction; updates `architecture.md` File storage.
+
+---
 
 ## Unit 3 — Offline auth and media fallback
 

@@ -16,7 +16,7 @@
 | Auth             | Auth.js (NextAuth) over Drizzle, RBAC in session/JWT claims | Staff back-office authentication only (Administrator / Editor) — the public site is unauthenticated |
 | Email            | SMTP (Nodemailer or equivalent, SekoFund integration pattern) | Transactional email: submission acknowledgements, donation receipts, newsletter double opt-in/unsubscribe |
 | Payments         | Paystack                                       | Donation checkout; server-verified signed webhook confirms outcome  |
-| File storage     | S3-compatible object storage, outside web root | Media library (gallery photos, team/founder photos, advocacy assets); database stores references/metadata only |
+| File storage     | Cloudinary (images/videos) | Media library uploads; database stores references/metadata only. Credentials pending. Local `storage/media` remains the offline fallback until Cloudinary is wired. |
 | CSV export       | RFC4180 helpers in `features/exports/csv.ts`   | Submissions and subscriber export from the admin back-office        |
 | Containerization | Docker + docker-compose                        | Local/dev parity, deployable images                                  |
 | Unit testing     | Playwright (component/unit-level)              | Unit tests for components, hooks, utils, validation logic           |
@@ -72,9 +72,11 @@ without an explicit Architecture Decision.
   `media_assets`, `volunteer_applications`, `partnership_requests`,
   `contact_messages`, `newsletter_subscribers`, `donations` (reference/status
   synced from Paystack, never raw card data), `audit_logs`.
-- **Object/file storage**: gallery/team/media-library image binaries. The
+- **Object/file storage**: gallery/team/media-library image and video
+  binaries via **Cloudinary** (owner-approved; credentials to follow). The
   database stores only the reference/URL and metadata, never the file
-  itself.
+  itself. Until Cloudinary env vars are supplied, local media writes use
+  gitignored `storage/media/` for admin uploads only.
 - GGI does not have an applicant/document-upload workflow — there is no
   user-submitted document storage in Release 1.0 (volunteer, partnership,
   and contact forms are text-field submissions only).

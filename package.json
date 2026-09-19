@@ -11,7 +11,8 @@
     "test": "playwright test",
     "test:e2e": "cypress run",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed-admin": "tsx --env-file=.env.local scripts/seed-admin.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -42,6 +43,7 @@
     "eslint-config-next": "^15.5.9",
     "msw": "^2.15.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   },
   "msw": {
