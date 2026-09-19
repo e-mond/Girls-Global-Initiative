@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* GGI brand + semantic tokens — see ui-context.md */
+:root {
+  --brand-navy: #041b4b;
+  --brand-sky: #00b0f2;
+  --brand-magenta: #e00286;
+
+  --bg-base: #fdf6ec;
+  --bg-surface: #ffffff;
+  --text-primary: #101828;
+  --text-muted: #5b6472;
+  --text-on-inverse: #ffffff;
+  --border-default: #e4e7ec;
+  --state-error: #d92d20;
+  --state-success: #12b76a;
+  --state-warning: #f0a500;
+  --state-info: #00b0f2;
+}
+
+@theme inline {
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-sky: var(--brand-sky);
+  --color-brand-magenta: var(--brand-magenta);
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-inverse: var(--text-on-inverse);
+  --color-border-default: var(--border-default);
+  --color-state-error: var(--state-error);
+  --color-state-success: var(--state-success);
+  --color-state-warning: var(--state-warning);
+  --color-state-info: var(--state-info);
+  --font-sans: var(--font-redhat-text), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-redhat-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+/* Visible focus for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--brand-sky);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

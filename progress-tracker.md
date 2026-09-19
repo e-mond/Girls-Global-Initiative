@@ -4,41 +4,40 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- **Phase 0 — Discovery complete.** Repository inspected; documentation
-  reviewed; design reference and logo inspected. Application not yet
-  scaffolded. Git not initialised.
+- **Unit 1 — Foundations complete** on branch `feature/foundations`.
+  Application scaffolded; public + admin layout shells; Drizzle/MSW/Docker/
+  Playwright/Cypress foundations in place.
 
 ## Current Goal
 
-- Obtain project-owner confirmation on **Unit 1 (Foundations)** scope
-  (and resolution of blocking doc contradictions) before any application
-  code is written, per `AGENTS.md` §16 / session protocol.
+- Begin **Unit 2 — Public Website (static/CMS-read)** after Foundations is
+  committed/pushed per project workflow (push only when owner requests).
 
 ## Completed
 
 - **Phase 0 — Project Discovery**
-  - Inspected repository: documentation + `RefenceImage.png` +
-    `GGI LOGO.png` only; no app source, no `package.json`, no `.git`.
-  - Read BRD, PRD, architecture, code-standards, ui-context,
-    ai-workflow-rules, progress tracker; inspected design reference
-    pixels and logo.
-  - Produced `docs/PROJECT-UNDERSTANDING.md`.
-  - Produced `docs/ARCHITECTURE-DECISIONS.md` (ADR-001–007 from existing
-    approved decisions).
+  - Docs review, `docs/PROJECT-UNDERSTANDING.md`,
+    `docs/ARCHITECTURE-DECISIONS.md`.
+- **Unit 1 — Foundations**
+  - Git initialised (`main` + `feature/foundations`).
+  - Renamed `RefenceImage.png` → `GGIHomepage.png`.
+  - Aligned `AGENTS.md` stack to PRD/architecture.
+  - Next.js App Router + TypeScript + Tailwind + shadcn-style Button.
+  - Brand tokens + Red Hat Display/Text + JetBrains Mono.
+  - Public header/footer shells + IA stub routes.
+  - Admin shell (sidebar/topbar) + login placeholder (no Auth.js yet).
+  - Drizzle schema skeleton + Neon client (null-safe without `DATABASE_URL`).
+  - MSW handlers/browser/server stubs + health API.
+  - Docker + docker-compose, `.env.example`.
+  - Playwright unit/smoke + Cypress smoke.
 
 ## In Progress
 
-- Awaiting project-owner confirmation to begin Unit 1 (Foundations).
+_None._
 
 ## Next Up — Development Roadmap
 
-1. **Foundations** — Next.js App Router + TypeScript scaffold, Tailwind +
-   shadcn/ui setup, Docker/docker-compose, Drizzle skeleton + Neon
-   connection, MSW wiring, base layout shells (public + `/admin`), GGI
-   brand tokens and Red Hat fonts wired into `ui-context.md`'s design
-   system, validation scripts (`lint`, `type-check`, `test`, `build`).
-   Also requires Git initialisation (repo currently has no `.git`) and
-   recommended alignment of stale `AGENTS.md` stack with PRD before code.
+1. ~~**Foundations**~~ — **Done** (this unit).
 2. **Public Website (static/CMS-read)** — Home, Our story, What we do
    (4 pillar detail pages), Founder, Team, Communities/Where we work,
    Contact page shell; content read from the CMS entities (mock-backed
@@ -68,84 +67,34 @@ Recurring-donation billing (monthly Paystack subscriptions) is Phase 2 per
 
 ## Open Questions
 
-- **SMTP relay/host details:** GGI has said email will follow the SekoFund
-  SMTP pattern, but the actual host/credentials have not been supplied yet.
-  Environment variables should be named generically (`SMTP_HOST`,
-  `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`) so they can be filled in without
-  a code change.
-- **Video hosting:** Not yet decided whether the "Our story in 2 min" /
-  founder-message videos are self-hosted or embedded from YouTube/Vimeo
-  (`GGI-PRD.md` §14, item 3).
-- **Domain / DNS:** GGI has confirmed a `.org` registration (Project Brief
-  §10.1); exact registrar/DNS handoff details are not yet available.
-- **Paystack account credentials:** Not yet supplied by GGI; donation
-  checkout is built against the mock/MSW contract until they arrive.
-- **Object storage provider:** S3-compatible storage is required; concrete
-  provider/bucket not specified in the repository.
-- **Design reference filename:** Docs refer to `GGIHomepage.png`; the file
-  on disk is `RefenceImage.png`. Rename vs doc update —
-  **REQUIRES PRODUCT DECISION**.
-- **`project-overview.md` content:** File currently contains agent
-  instructions (AGENTS-style), not a product overview. Rewrite vs leave —
-  **REQUIRES PRODUCT DECISION**.
-- **Stale `AGENTS.md` stack:** Root `AGENTS.md` still lists Framer Motion,
-  Google SMTP, and SMSNotifyGH, which conflict with `GGI-PRD.md` /
-  `architecture.md` (Paystack, SMTP SekoFund pattern, no SMS). Align before
-  Unit 1 code — **REQUIRES PRODUCT DECISION** (recommended: align to PRD).
-- **Git initialisation:** Workspace is not a Git repository. Feature-branch
-  workflow cannot run until `git init` (+ remote) —
-  **REQUIRES PRODUCT DECISION** on when/how to initialise.
-- **Brand logo and additional design references:** Logo (`GGI LOGO.png`)
-  and homepage reference (`RefenceImage.png`) are present; additional UI
-  image packs may still arrive from GGI.
+- **SMTP relay/host details:** Use generic `SMTP_*` env names until
+  credentials arrive.
+- **Video hosting:** YouTube/Vimeo vs self-host still open (`GGI-PRD.md` §14).
+- **Domain / DNS:** `.org` intent confirmed; registrar/DNS handoff open.
+- **Paystack account credentials:** Not yet supplied; MSW until available.
+- **Object storage provider:** S3-compatible required; provider/bucket open.
+- ~~Design reference filename~~ — Resolved: `GGIHomepage.png`.
+- ~~`project-overview.md` content~~ — Resolved by owner before Unit 1.
+- ~~Stale `AGENTS.md` stack~~ — Resolved in Unit 1.
+- ~~Git initialisation~~ — Resolved in Unit 1.
 
 ## Architecture Decisions
 
-- See durable records in `docs/ARCHITECTURE-DECISIONS.md` (ADR-001–007).
-- **Payment processor — Paystack:** Chosen for Ghana-based NGO donation
-  support. GGI's organisation account details are also displayed on the
-  donate page as a direct-transfer alternative. No raw card data is ever
-  stored; donation records are written only from a signed, server-verified
-  webhook. Source: `GGI-PRD.md` §8.2, Project Brief §6.
-- **Recurring donations — phased:** One-time donations live via Paystack
-  from the start; the donate form includes a One-time/Monthly toggle from
-  the first release, but monthly billing (subscription creation, retries,
-  cancellation) is a later increment, not part of the initial roadmap.
-  Source: `GGI-PRD.md` §12.
-- **Email — SMTP (SekoFund pattern):** Transactional email uses SMTP
-  (Nodemailer or equivalent) rather than a dedicated transactional-email
-  vendor, matching the pattern already used on the SekoFund project.
-  Source: `GGI-PRD.md` §8.1.
-- **Deployment — single full-stack Next.js app:** Frontend and API live in
-  one Next.js App Router application, containerised with Docker; no
-  separate backend service. Source: `GGI-PRD.md` §7, Project Brief §6.
-- **No applicant/donor accounts in Release 1.0:** Volunteer, partnership,
-  and contact submissions are anonymous form submissions reviewed by staff
-  in the back-office — there is no public sign-in, and no per-visitor
-  dashboard. This is a deliberate scope boundary, not an oversight; do not
-  add a public auth flow without an explicit Architecture Decision.
-- **Brand palette:** Deep Navy `#041b4b`, Vivid Sky Blue `#00b0f2`, Magenta
-  Pink `#e00286`; Red Hat Display/Text typography. Source: `GGI-PRD.md`
-  §10, Project Brief §6.
-- **Brand assets:** Logo and homepage design reference are present
-  (`GGI LOGO.png`, `RefenceImage.png`). Docs that cite `GGIHomepage.png`
-  should be updated once naming is decided.
-- **Domain:** `.org` registration, billed separately from the development
-  cost (Project Brief §10.1).
-- **No PDF/XLSX/DOCX generation in Release 1.0:** Unlike a scholarship/
-  award-letter platform, GGI's back-office needs are met by CSV export
-  alone (submissions, subscribers). Do not add a document-generation
-  library without an explicit Architecture Decision.
-- **MSW mocking strategy:** Real Drizzle-backed handlers first; MSW at HTTP
-  boundary for offline/demo/tests; excluded from production builds.
+- See `docs/ARCHITECTURE-DECISIONS.md` (ADR-001–007).
+- **Payment processor — Paystack**, deferred recurring billing, SMTP
+  SekoFund pattern, single Next.js deployable, staff-only auth, MSW at HTTP
+  boundary, brand palette + Red Hat fonts, CSV-only exports — unchanged.
 
 ## Session Notes
 
-- **2026-09-19 — Phase 0 Discovery:** Confirmed docs-only workspace.
-  Inspected `RefenceImage.png` (homepage mockup) and `GGI LOGO.png`.
-  Recorded contradictions (stale `AGENTS.md` stack; misnamed
-  `project-overview.md`; `GGIHomepage.png` vs `RefenceImage.png`).
-  Created `docs/PROJECT-UNDERSTANDING.md` and
-  `docs/ARCHITECTURE-DECISIONS.md`. No application code written.
-  Next action: owner confirmation on Unit 1 Foundations scope +
-  doc/Git decisions above.
+- **2026-09-19 — Unit 1 Foundations**
+  - Branch: `feature/foundations`
+  - Validation:
+    - `npm run lint` — PASS
+    - `npm run type-check` — PASS
+    - `npm run test` (Playwright) — PASS (2 tests)
+    - `npm run test:e2e` (Cypress) — PASS (1 spec)
+    - `npm run build` — PASS (Next.js 15.5.9)
+  - Assumptions: Admin routes are scaffolded without Auth.js enforcement
+    until Unit 3; homepage is a branded shell only (full design Unit 2).
+  - Next: Unit 2 Public Website after commit/push per owner instruction.
