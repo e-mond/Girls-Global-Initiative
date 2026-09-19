@@ -9,16 +9,28 @@ test.describe("foundations utilities", () => {
 });
 
 test.describe("public homepage shell", () => {
-  test("renders brand headline and primary navigation", async ({ page }) => {
+  test("renders reference hero and navigation", async ({ page }) => {
     await page.goto("/");
     await expect(
       page.getByRole("heading", { name: /Every girl/i }),
     ).toBeVisible();
+    await expect(page.getByText("Youth-led")).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Primary" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Support a girl" }),
+      page.getByRole("banner").getByRole("link", { name: "Support a girl" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("banner").getByRole("link", { name: "Contact us" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Primary" }).getByRole("link", {
+        name: "Communities",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Advancing rights & dignity"),
     ).toBeVisible();
   });
 });
