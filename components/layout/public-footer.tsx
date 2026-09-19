@@ -79,12 +79,20 @@ export function PublicFooter() {
           <p className="text-white/80">
             Contact details will be managed via site settings.
           </p>
-          <Link
-            href="/contact"
-            className="inline-flex h-11 min-h-11 items-center justify-center rounded-lg bg-brand-magenta px-4 font-medium text-text-on-inverse hover:bg-brand-magenta/90"
-          >
-            Contact us
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/contact"
+              className="inline-flex h-11 min-h-11 items-center justify-center rounded-lg bg-brand-magenta px-4 font-medium text-text-on-inverse hover:bg-brand-magenta/90"
+            >
+              Contact us
+            </Link>
+            <Link
+              href="/#newsletter"
+              className="inline-flex h-11 min-h-11 items-center justify-center rounded-lg border border-white/30 px-4 font-medium text-text-on-inverse hover:border-brand-sky hover:text-brand-sky"
+            >
+              Newsletter
+            </Link>
+          </div>
         </div>
       </div>
       <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60 sm:px-6">

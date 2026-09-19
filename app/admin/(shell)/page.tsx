@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
         />
         <DashboardCard
           title="New subscribers"
-          empty="Newsletter subscriber activity will appear here after the Newsletter unit."
+          empty="Review pending and confirmed Letters for her future subscribers."
           href="/admin/subscribers"
         />
         <DashboardCard
