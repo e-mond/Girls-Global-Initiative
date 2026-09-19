@@ -219,3 +219,26 @@ export const contactMessages = pgTable("contact_messages", {
     .defaultNow()
     .notNull(),
 });
+
+export const subscriberStatusEnum = pgEnum("subscriber_status", [
+  "pending",
+  "subscribed",
+  "unsubscribed",
+]);
+
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: text("email").notNull().unique(),
+  status: subscriberStatusEnum("status").notNull().default("pending"),
+  confirmToken: text("confirm_token"),
+  unsubscribeToken: text("unsubscribe_token").notNull(),
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
+  source: text("source").notNull().default("public"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

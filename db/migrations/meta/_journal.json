@@ -15,6 +15,13 @@
       "when": 1789858151920,
       "tag": "0001_unit4_submissions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789858996662,
+      "tag": "0002_unit5_newsletter",
+      "breakpoints": true
     }
   ]
 }

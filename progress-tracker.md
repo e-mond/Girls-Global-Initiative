@@ -7,25 +7,26 @@
 
 ## Current Phase
 
-* **Unit 4 — Submission Workflows**
+* **Unit 5 — Newsletter**
 * **Status:** Complete — validate, push, and merge this branch
-* **Previous phase:** Unit 3 — Admin Back-Office Core
-* **Unit 3 status:** Complete and merged into `main` (PR #5)
-* **Current branch:** `feature/submission-workflows-unit4`
+* **Previous phase:** Unit 4 — Submission Workflows
+* **Unit 4 status:** Complete and merged into `main` (PR #7)
+* **Current branch:** `feature/newsletter`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 4 merge, then start Unit 5 — Newsletter.
+* **Current objective:** Finish Unit 5 merge, then start Unit 6 — Paystack donations.
 * **Owner notes:** Neon `DATABASE_URL` configured locally; Cloudinary credentials pending; team photos received (Eugenia placeholder until photo arrives).
 
 ---
 
 ## Current Goal
 
-Complete Unit 4 merge, then begin Unit 5 — Newsletter:
+Complete Unit 5 merge, then begin Unit 6 — Donations (Paystack):
 
-1. Public newsletter signup with double opt-in.
-2. Unsubscribe flow.
-3. Admin subscriber list, search, and CSV export.
-4. Do not expand into Paystack until Unit 5 is merged.
+1. Donation page with amount selection and one-time / monthly UI.
+2. Paystack checkout for one-time donations; monthly as intent only.
+3. Signed, idempotent webhook → donation records.
+4. Organisation direct-transfer details on the donate page.
+5. Admin read-only donations view.
 
 ---
 
@@ -88,17 +89,27 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 5 — Newsletter
+## Unit 6 — Donations (Paystack)
 
-**Status:** Next up after Unit 4 merge — create `feature/newsletter`
+**Status:** Next up after Unit 5 merge — create `feature/donations-paystack`
 
 ---
 
 ## Recently completed
 
+### Unit 5 — Newsletter
+
+**Status:** Complete on `feature/newsletter` (pending push/merge)
+
+* Homepage single-field signup with double opt-in confirmation email
+* Confirm (`/newsletter/confirm`) and unsubscribe (`/newsletter/unsubscribe`) flows
+* Admin subscriber list, search, status updates, manual add, CSV export
+* Drizzle migration `0002_unit5_newsletter`
+* Unsubscribed rows retained and flagged (never silently deleted)
+
 ### Unit 4 — Submission Workflows
 
-**Status:** Complete on `feature/submission-workflows-unit4` (pending push/merge)
+**Status:** Complete (merged via PR #7)
 
 * Public volunteer (3-step), partnership, and contact forms
 * Zod validation, in-memory rate limiting, Neon persistence (with memory fallback)
@@ -231,7 +242,7 @@ Scope:
 
 ## 4. Submission Workflows
 
-**Status:** Complete on `feature/submission-workflows-unit4` (pending remote merge)
+**Status:** Complete (merged via PR #7)
 
 Public forms:
 
@@ -262,7 +273,7 @@ Status flow:
 
 ## 5. Newsletter
 
-**Status:** Planned
+**Status:** Complete on `feature/newsletter` (pending remote merge)
 
 Public:
 
@@ -957,10 +968,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1–3 are complete and merged into `main` (through PR #5; polish via PR #6).
+Unit 1–4 are complete and merged into `main` (Unit 4 via PR #7).
 
-Unit 4 — Submission Workflows is complete on `feature/submission-workflows-unit4`
-(lint, type-check, Playwright 7, build PASS). Pending push/merge, then Unit 5.
+Unit 5 — Newsletter is complete on `feature/newsletter`
+(lint, type-check, Playwright 9, build PASS). Pending push/merge, then Unit 6.
 
 ---
 
