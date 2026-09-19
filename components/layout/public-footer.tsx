@@ -17,16 +17,16 @@ const SUPPORT_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-/** Public site footer shell aligned with the homepage reference. */
+/** Public site footer — responsive columns and accessible link lists. */
 export function PublicFooter() {
   return (
     <footer className="mt-auto bg-brand-navy text-text-on-inverse">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
-        <div className="space-y-4">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-4 md:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
             <Image
               src="/brand/ggi-logo.png"
-              alt=""
+              alt="Girls Global Initiative"
               width={40}
               height={40}
               className="h-10 w-10 rounded-full bg-bg-surface"
@@ -35,43 +35,43 @@ export function PublicFooter() {
               Girls Global Initiative
             </span>
           </div>
-          <p className="text-sm text-white/80">
+          <p className="max-w-md text-sm leading-relaxed text-white/80">
             Advancing the rights, dignity, health, wellbeing and education of
             girls in rural, remote and underserved communities.
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-6 text-sm">
-          <div>
+          <nav aria-label="Explore">
             <p className="mb-3 font-semibold">Explore</p>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-brand-sky"
+                    className="inline-flex min-h-10 items-center text-white/80 hover:text-brand-sky"
                   >
                     {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
+          </nav>
+          <nav aria-label="Support">
             <p className="mb-3 font-semibold">Support</p>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {SUPPORT_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-brand-sky"
+                    className="inline-flex min-h-10 items-center text-white/80 hover:text-brand-sky"
                   >
                     {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         </div>
 
         <div className="space-y-3 text-sm">
@@ -81,13 +81,13 @@ export function PublicFooter() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-magenta px-4 font-medium text-text-on-inverse hover:bg-brand-magenta/90"
+            className="inline-flex h-11 min-h-11 items-center justify-center rounded-lg bg-brand-magenta px-4 font-medium text-text-on-inverse hover:bg-brand-magenta/90"
           >
             Contact us
           </Link>
         </div>
       </div>
-      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60">
+      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60 sm:px-6">
         © {new Date().getFullYear()} Girls Global Initiative. All rights
         reserved.
       </div>

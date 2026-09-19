@@ -77,6 +77,7 @@ export const founderSpotlight = {
   badge: "Leadership with lived understanding",
   quote: "We started GGI so no girl has to figure it all out alone.",
   body: "Philomena leads Girls Global Initiative as a youth-led movement rooted in community. Under her direction, GGI centres girls' voices — pairing rights education and health support with the mentorship, guidance and encouragement every girl deserves.",
+  imageSrc: "/home/founder.jpg",
   callouts: [
     {
       title: "Advocacy first",
@@ -95,6 +96,62 @@ export const founderSpotlight = {
     },
   ],
 };
+
+/**
+ * Public team roster from owner-supplied assets (names/roles as provided).
+ * Eugenia photo pending — placeholder used until the real image arrives.
+ * Display spellings follow BRD/PRD (Philomena) even where filenames differ.
+ */
+export const teamMembers = [
+  {
+    id: "philomena-ofori-larbi",
+    name: "Philomena Ofori Larbi",
+    role: "Founder & Executive Director",
+    imageSrc: "/team/philomena-ofori-larbi.jpg",
+    isFounder: true,
+    photoPending: false,
+  },
+  {
+    id: "godwin-ntaah",
+    name: "Godwin Ntaah",
+    role: "Vice President",
+    imageSrc: "/team/godwin-ntaah.jpg",
+    isFounder: false,
+    photoPending: false,
+  },
+  {
+    id: "myriam-akushieka-abiwu",
+    name: "Myriam Akushieka Abiwu",
+    role: "Programs Coordinator",
+    imageSrc: "/team/myriam-akushieka-abiwu.jpg",
+    isFounder: false,
+    photoPending: false,
+  },
+  {
+    id: "angela-selasi-amekuedi",
+    name: "Angela Selasi Amekuedi",
+    role: "Rural Girls Outreach Officer",
+    imageSrc: "/team/angela-selasi-amekuedi.jpg",
+    isFounder: false,
+    photoPending: false,
+  },
+  {
+    id: "benewa-osmani",
+    name: "Benewa Osmani",
+    role: "Secretary",
+    imageSrc: "/team/benewa-osmani.jpg",
+    isFounder: false,
+    photoPending: false,
+  },
+  {
+    id: "eugenia-yaa-nkebuare",
+    name: "Eugenia Yaa Nkebuare",
+    role: "Executive Secretary",
+    imageSrc: "/team/eugenia-yaa-nkebuare-placeholder.jpg",
+    isFounder: false,
+    photoPending: true,
+  },
+] as const;
 
 export const communityStories = [
   {

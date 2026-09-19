@@ -15,7 +15,7 @@ export default function FounderPage() {
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-start">
           <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky">
             <Image
-              src="/home/founder.jpg"
+              src={founderSpotlight.imageSrc}
               alt={founderSpotlight.name}
               fill
               className="object-cover object-top"

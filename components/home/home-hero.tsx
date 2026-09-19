@@ -30,7 +30,7 @@ export function HomeHero() {
             </span>
           </div>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-brand-navy sm:text-5xl lg:text-[3.25rem]">
+          <h1 className="font-display text-3xl font-bold leading-[1.12] tracking-tight text-brand-navy sm:text-5xl lg:text-[3.25rem]">
             Every girl,{" "}
             <span className="text-brand-magenta">everywhere, seen,</span> heard
             &amp; thriving.
@@ -42,17 +42,17 @@ export function HomeHero() {
             most.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/get-involved"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-navy px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90"
+              className="inline-flex h-11 min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-navy px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90 sm:w-auto"
             >
               Join our mission
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link
               href="/our-story"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border-default bg-bg-surface px-5 text-sm font-semibold text-brand-navy hover:border-brand-navy/30"
+              className="inline-flex h-11 min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border-default bg-bg-surface px-5 text-sm font-semibold text-brand-navy hover:border-brand-navy/30 sm:w-auto"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full border border-brand-navy/20">
                 <Play className="h-3 w-3 fill-brand-navy text-brand-navy" aria-hidden />
