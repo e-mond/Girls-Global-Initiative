@@ -65,7 +65,7 @@ export function HomeHero() {
             <div className="flex -space-x-2" aria-hidden>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-main.png"
+                  src="/home/hero-main.jpg"
                   alt=""
                   fill
                   className="object-cover object-[30%_20%]"
@@ -83,7 +83,7 @@ export function HomeHero() {
               </span>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-main.png"
+                  src="/home/hero-main.jpg"
                   alt=""
                   fill
                   className="object-cover object-[70%_35%]"
@@ -105,7 +105,7 @@ export function HomeHero() {
             <div className="relative min-h-[280px] sm:min-h-[340px]">
               <div className="absolute inset-0 overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky shadow-lg">
                 <Image
-                  src="/home/hero-main.png"
+                  src="/home/hero-main.jpg"
                   alt="Young people gathering outdoors in community"
                   fill
                   className="object-cover"
