@@ -155,3 +155,67 @@ export const schemaMeta = pgTable("schema_meta", {
     .defaultNow()
     .notNull(),
 });
+
+export const submissionStatusEnum = pgEnum("submission_status", [
+  "new",
+  "in_review",
+  "accepted",
+  "declined",
+]);
+
+export const volunteerApplications = pgTable("volunteer_applications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  city: text("city"),
+  interestArea: text("interest_area").notNull(),
+  skills: text("skills").notNull().default(""),
+  availability: text("availability").notNull().default(""),
+  message: text("message").notNull().default(""),
+  status: submissionStatusEnum("status").notNull().default("new"),
+  statusUpdatedAt: timestamp("status_updated_at", { withTimezone: true }),
+  statusUpdatedById: uuid("status_updated_by_id").references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const partnershipRequests = pgTable("partnership_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  requesterName: text("requester_name").notNull(),
+  email: text("email").notNull(),
+  roleTitle: text("role_title").notNull(),
+  organisation: text("organisation").notNull(),
+  location: text("location").notNull(),
+  message: text("message").notNull(),
+  status: submissionStatusEnum("status").notNull().default("new"),
+  statusUpdatedAt: timestamp("status_updated_at", { withTimezone: true }),
+  statusUpdatedById: uuid("status_updated_by_id").references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const contactMessages = pgTable("contact_messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  subject: text("subject").notNull(),
+  message: text("message").notNull(),
+  status: submissionStatusEnum("status").notNull().default("new"),
+  statusUpdatedAt: timestamp("status_updated_at", { withTimezone: true }),
+  statusUpdatedById: uuid("status_updated_by_id").references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

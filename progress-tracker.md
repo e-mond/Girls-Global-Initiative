@@ -8,24 +8,24 @@
 ## Current Phase
 
 * **Unit 4 — Submission Workflows**
-* **Status:** Not started (branch pending)
+* **Status:** Complete — validate, push, and merge this branch
 * **Previous phase:** Unit 3 — Admin Back-Office Core
 * **Unit 3 status:** Complete and merged into `main` (PR #5)
-* **Current branch:** `feature/submission-workflows`
+* **Current branch:** `feature/submission-workflows-unit4`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Volunteer, partnership, and contact submission flows with admin review.
+* **Current objective:** Finish Unit 4 merge, then start Unit 5 — Newsletter.
 * **Owner notes:** Neon `DATABASE_URL` configured locally; Cloudinary credentials pending; team photos received (Eugenia placeholder until photo arrives).
 
 ---
 
 ## Current Goal
 
-Begin Unit 4 — Submission Workflows:
+Complete Unit 4 merge, then begin Unit 5 — Newsletter:
 
-1. Public volunteer application, partnership request, and contact forms.
-2. Client + server validation, rate limiting, persistence, SMTP acknowledgements.
-3. Admin submission list/detail with New → In review → Accepted/Declined.
-4. Do not expand into newsletter or Paystack units.
+1. Public newsletter signup with double opt-in.
+2. Unsubscribe flow.
+3. Admin subscriber list, search, and CSV export.
+4. Do not expand into Paystack until Unit 5 is merged.
 
 ---
 
@@ -88,13 +88,24 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 4 — Submission Workflows
+## Unit 5 — Newsletter
 
-**Status:** Next up — create `feature/submission-workflows`
+**Status:** Next up after Unit 4 merge — create `feature/newsletter`
 
 ---
 
 ## Recently completed
+
+### Unit 4 — Submission Workflows
+
+**Status:** Complete on `feature/submission-workflows-unit4` (pending push/merge)
+
+* Public volunteer (3-step), partnership, and contact forms
+* Zod validation, in-memory rate limiting, Neon persistence (with memory fallback)
+* SMTP acknowledgement emails via Nodemailer (best-effort; save succeeds if SMTP unset)
+* Admin submissions list with status New → In review → Accepted/Declined + CSV export
+* Drizzle migration `0001_unit4_submissions`
+* Audit log entries for create/status/export
 
 ### Responsive / accessibility / favicons polish (pre–Unit 4)
 
@@ -220,7 +231,7 @@ Scope:
 
 ## 4. Submission Workflows
 
-**Status:** Planned
+**Status:** Complete on `feature/submission-workflows-unit4` (pending remote merge)
 
 Public forms:
 
@@ -946,10 +957,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1 and Unit 2 are complete and merged into `main`.
+Unit 1–3 are complete and merged into `main` (through PR #5; polish via PR #6).
 
-Unit 3 — Admin Back-Office Core is in progress on
-`feature/admin-back-office-core`.
+Unit 4 — Submission Workflows is complete on `feature/submission-workflows-unit4`
+(lint, type-check, Playwright 7, build PASS). Pending push/merge, then Unit 5.
 
 ---
 
