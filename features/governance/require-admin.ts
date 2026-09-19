@@ -36,3 +36,19 @@ export async function requireAdminSession(): Promise<
     },
   };
 }
+
+export async function requireAdministratorSession(): Promise<
+  | { ok: true; user: AdminSessionUser }
+  | { ok: false; status: 401 | 403; message: string }
+> {
+  const access = await requireAdminSession();
+  if (!access.ok) return access;
+  if (access.user.role !== "administrator") {
+    return {
+      ok: false,
+      status: 403,
+      message: "Administrator access required.",
+    };
+  }
+  return access;
+}

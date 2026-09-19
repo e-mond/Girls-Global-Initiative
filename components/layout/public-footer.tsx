@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getSiteSettings } from "@/features/settings/service";
 
 const EXPLORE_LINKS = [
   { href: "/our-story", label: "Our story" },
@@ -18,7 +19,16 @@ const SUPPORT_LINKS = [
 ] as const;
 
 /** Public site footer — responsive columns and accessible link lists. */
-export function PublicFooter() {
+export async function PublicFooter() {
+  const settings = await getSiteSettings();
+  const social = [
+    { href: settings.socialFacebook, label: "Facebook" },
+    { href: settings.socialInstagram, label: "Instagram" },
+    { href: settings.socialX, label: "X" },
+    { href: settings.socialYoutube, label: "YouTube" },
+    { href: settings.socialLinkedin, label: "LinkedIn" },
+  ].filter((item) => item.href);
+
   return (
     <footer className="mt-auto bg-brand-navy text-text-on-inverse">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
@@ -39,6 +49,22 @@ export function PublicFooter() {
             Advancing the rights, dignity, health, wellbeing and education of
             girls in rural, remote and underserved communities.
           </p>
+          {social.length > 0 ? (
+            <ul className="flex flex-wrap gap-3 text-sm">
+              {social.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="text-white/80 hover:text-brand-sky"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-6 text-sm">
@@ -63,7 +89,15 @@ export function PublicFooter() {
               {SUPPORT_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    href={
+                      link.href === "/get-involved/donate"
+                        ? settings.ctaDonateUrl || link.href
+                        : link.href === "/get-involved/volunteer"
+                          ? settings.ctaVolunteerUrl || link.href
+                          : link.href === "/partner"
+                            ? settings.ctaPartnerUrl || link.href
+                            : link.href
+                    }
                     className="inline-flex min-h-10 items-center text-white/80 hover:text-brand-sky"
                   >
                     {link.label}
@@ -76,9 +110,20 @@ export function PublicFooter() {
 
         <div className="space-y-3 text-sm">
           <p className="font-semibold">Questions? Say hello</p>
-          <p className="text-white/80">
-            Contact details will be managed via site settings.
-          </p>
+          {settings.footerContactEmail ? (
+            <p className="text-white/80">
+              <a
+                href={`mailto:${settings.footerContactEmail}`}
+                className="hover:text-brand-sky"
+              >
+                {settings.footerContactEmail}
+              </a>
+            </p>
+          ) : (
+            <p className="text-white/80">
+              Contact details can be set in admin site settings.
+            </p>
+          )}
           <div className="flex flex-wrap gap-2">
             <Link
               href="/contact"

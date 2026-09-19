@@ -8,6 +8,7 @@ import {
   HeartHandshake,
   Mail,
   Images,
+  ScrollText,
 } from "lucide-react";
 import { auth } from "@/auth";
 import { canManageSettings, canManageUsers } from "@/features/governance/rbac";
@@ -21,7 +22,7 @@ const BASE_NAV = [
   { href: "/admin/subscribers", label: "Subscribers", icon: Mail },
 ] as const;
 
-/** Admin sidebar — Users/Settings visible to Administrators only. */
+/** Admin sidebar — Users/Settings/Audit visible to Administrators only. */
 export async function AdminSidebar() {
   const session = await auth();
   const role = session?.user?.role;
@@ -31,7 +32,10 @@ export async function AdminSidebar() {
       ? ([{ href: "/admin/users", label: "Users", icon: Users }] as const)
       : []),
     ...(canManageSettings(role)
-      ? ([{ href: "/admin/settings", label: "Settings", icon: Settings }] as const)
+      ? ([
+          { href: "/admin/settings", label: "Settings", icon: Settings },
+          { href: "/admin/audit", label: "Audit", icon: ScrollText },
+        ] as const)
       : []),
   ];
 
