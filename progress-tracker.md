@@ -8,12 +8,12 @@
 ## Current Phase
 
 * **Unit 2 — Public Website**
-* **Status:** Not started
+* **Status:** In progress (homepage hero + navbar aligned to design reference)
 * **Previous phase:** Unit 1 — Foundations
 * **Unit 1 status:** Complete and merged into `main` (PR #1)
-* **Current branch:** `main`
+* **Current branch:** `feature/public-website`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Scope and confirm Unit 2 before implementation begins, in accordance with `AGENTS.md` §15/§16.
+* **Current objective:** Continue Public Website pages against `GGIHomepage.png` / approved hero reference; keep later units out of scope.
 
 ---
 
@@ -91,11 +91,25 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-**None.**
+## Unit 2 — Public Website (partial)
 
-Unit 2 has not yet entered implementation.
+**Branch:** `feature/public-website`
 
-The next action is **scope confirmation and implementation planning**, not feature coding.
+### Done in this increment
+
+* Homepage navbar rebuilt to match the approved hero screenshot:
+  cream surface, logo + wordmark + “Rights · Health · Potential”, centered
+  text nav, outline **Contact us**, magenta **Support a girl** with heart.
+* Homepage hero rebuilt to match the reference: pastel blobs, Youth-led
+  badge, magenta “everywhere, seen,” dual CTAs, avatar proof row, arch
+  collage + quote card, navy pillar strip.
+* Hero imagery temporarily sourced from the approved design reference crops
+  under `public/home/` until GGI supplies production photography.
+
+### Remaining in Unit 2
+
+* Our Story, What We Do (+ 4 pillars), Founder, Team, Communities, Contact shell
+* Full homepage sections below the hero (origin, pillars grid, founder, etc.)
 
 ---
 
