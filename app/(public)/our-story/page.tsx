@@ -36,10 +36,10 @@ export default function OurStoryPage() {
             <div className="flex flex-wrap gap-2">
               {challengeTags.map((tag) => (
                 <span
-                  key={tag}
+                  key={tag.label}
                   className="rounded-full border border-border-default bg-bg-base px-3 py-1.5 text-xs font-medium text-brand-navy"
                 >
-                  {tag}
+                  {tag.label}
                 </span>
               ))}
             </div>

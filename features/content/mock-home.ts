@@ -1,7 +1,7 @@
 /**
  * Mock-backed homepage / public content for Unit 2.
+ * Copy aligned to approved section screenshots / GGIHomepage.png.
  * Replace with CMS-published entities when Unit 3 writes ship.
- * Copy follows GGIHomepage.png / BRD pillar names — no fabricated impact stats.
  */
 
 export type PillarSlug =
@@ -20,12 +20,12 @@ export type Pillar = {
 };
 
 export const challengeTags = [
-  "Poverty",
-  "Early pregnancy",
-  "School dropout",
-  "Menstrual health",
-  "Lack of guidance",
-  "Limited opportunities",
+  { label: "Poverty", icon: "calendar" as const },
+  { label: "Early pregnancy", icon: "globe" as const },
+  { label: "School dropout", icon: "book" as const },
+  { label: "Menstrual health", icon: "droplet" as const },
+  { label: "Lack of guidance", icon: "check" as const },
+  { label: "Limited opportunities", icon: "briefcase" as const },
 ] as const;
 
 export const pillars: Pillar[] = [
@@ -74,19 +74,24 @@ export const pillars: Pillar[] = [
 export const founderSpotlight = {
   name: "Philomena Ofori Larbi",
   role: "Founder & Executive Director",
+  badge: "Leadership with lived understanding",
   quote: "We started GGI so no girl has to figure it all out alone.",
+  body: "Philomena leads Girls Global Initiative as a youth-led movement rooted in community. Under her direction, GGI centres girls' voices — pairing rights education and health support with the mentorship, guidance and encouragement every girl deserves.",
   callouts: [
     {
       title: "Advocacy first",
-      body: "We centre girls’ voices when shaping programmes and partnerships.",
+      body: "Girls' rights at the centre",
+      icon: "megaphone" as const,
     },
     {
-      title: "Stay involved",
-      body: "Support continues beyond a single workshop or conversation.",
+      title: "Stay in school",
+      body: "Support to keep learning",
+      icon: "graduation" as const,
     },
     {
       title: "Community-led",
-      body: "Rural and underserved communities are first, not last.",
+      body: "Built with local voices",
+      icon: "users" as const,
     },
   ],
 };
@@ -95,22 +100,47 @@ export const communityStories = [
   {
     id: "school",
     title: "Staying in school",
-    caption: "Supporting girls to remain in learning pathways.",
+    caption: "Encouragement to keep learning",
     imageSrc: "/home/community-1.jpg",
+    badge: null as string | null,
   },
   {
     id: "circles",
     title: "Circles of support",
-    caption: "Peer spaces where girls can speak and be heard.",
+    caption: "Guidance, mentorship & friendship",
     imageSrc: "/home/community-2.jpg",
+    badge: null as string | null,
   },
   {
     id: "health",
     title: "Health & confidence",
-    caption: "Practical wellbeing conversations without stigma.",
+    caption: "Knowledge for body and mind",
     imageSrc: "/home/community-3.jpg",
+    badge: "her future matters",
   },
 ] as const;
+
+export const originCopy = {
+  eyebrow: "Our origin",
+  title: "Born from listening. Built around girls.",
+  body: "GGI was born from a conversation between two young women who recognised the challenges affecting girls in their communities — and decided to act. The initiative was created around girls' empowerment, education and advocacy.",
+  facingLabel: "What girls told us they were facing:",
+  howItStarted:
+    "A conversation between two young women who saw girls in their communities being left behind.",
+  vision:
+    "A world where every girl — regardless of location or background — has the rights, knowledge, health, support and opportunities to reach her full potential.",
+  mission:
+    "To educate, empower and support girls in rural, remote and underserved communities — and connect them to mentorship, guidance and opportunities.",
+};
+
+export const communitiesCopy = {
+  eyebrow: "Where we work",
+  title: "Rural, remote & underserved — first, not last.",
+  body: "We go where guidance is thinnest and potential is greatest: the villages, towns and neighbourhoods where a mentor, a health lesson or a listening ear can change a girl's trajectory.",
+  ctaTitle: "Is your community next?",
+  ctaBody:
+    "We partner with schools, families and local leaders to bring GGI conversations and support to girls who need it most. Tell us about your community.",
+};
 
 export const getInvolvedCards = [
   {
