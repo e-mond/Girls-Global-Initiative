@@ -8,12 +8,12 @@
 ## Current Phase
 
 * **Unit 2 — Public Website**
-* **Status:** In progress (homepage hero + navbar aligned to design reference)
+* **Status:** In progress — Origin / Founder / Where we work aligned to attached section screenshots
 * **Previous phase:** Unit 1 — Foundations
 * **Unit 1 status:** Complete and merged into `main` (PR #1)
 * **Current branch:** `feature/public-website`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Continue Public Website pages against `GGIHomepage.png` / approved hero reference; keep later units out of scope.
+* **Current objective:** Finish Unit 2 validation/commit for section fidelity polish, then Unit 3 after owner confirmation.
 
 ---
 
@@ -107,6 +107,13 @@ A local `.env.local` is present and remains gitignored.
   Communities, Get involved hub, Contact shell
 * Mock content isolated in `features/content/mock-home.ts` (CMS-ready;
   no fabricated impact statistics)
+* Pre–Unit 3 fidelity pass against attached section screenshots:
+  * Origin — tilted youth-led badge, MessageCircleHeart “How it started” card,
+    challenge tags, vision/mission cards, recropped `origin.jpg`
+  * Founder — darker navy band, exact Philomena body copy, callout cards, CTAs,
+    recropped `founder.jpg`
+  * Where we work — centered gallery, orange “her future matters” badge,
+    Invite GGI / Partner CTA strip, recropped community photos
 
 ### Still later (not Unit 2)
 
@@ -907,9 +914,12 @@ npm run build       PASS
 
 Unit 1 is complete and merged into `main`.
 
-Unit 2 — Public Website has **not started**.
+Unit 2 — Public Website is on `feature/public-website`. Origin, Founder, and
+Where we work sections were re-aligned to the attached section screenshots
+(copy, overlays, and photo crops) before Unit 3.
 
-The next step is **scope confirmation and implementation planning**, followed by creation of the Unit 2 feature branch.
+Next: complete Unit 2 validation/commit/push for this polish, then begin Unit 3
+only after owner confirmation.
 
 ---
 
