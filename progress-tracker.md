@@ -91,25 +91,26 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 2 — Public Website (partial)
+## Unit 2 — Public Website
 
 **Branch:** `feature/public-website`
 
 ### Done in this increment
 
-* Homepage navbar rebuilt to match the approved hero screenshot:
-  cream surface, logo + wordmark + “Rights · Health · Potential”, centered
-  text nav, outline **Contact us**, magenta **Support a girl** with heart.
-* Homepage hero rebuilt to match the reference: pastel blobs, Youth-led
-  badge, magenta “everywhere, seen,” dual CTAs, avatar proof row, arch
-  collage + quote card, navy pillar strip.
-* Hero imagery temporarily sourced from the approved design reference crops
-  under `public/home/` until GGI supplies production photography.
+* Hero images wired from project assets:
+  * `assets/Hero1.jpg` → arch collage
+  * `assets/HeroLittleGirl.jpg` → secondary hero photo
+* Homepage rebuilt section-by-section against `GGIHomepage.png`:
+  hero, origin, four pillars, founder spotlight, communities, get involved,
+  newsletter band
+* Public pages: Our story, What we do (+ 4 pillar routes), Founder, Team,
+  Communities, Get involved hub, Contact shell
+* Mock content isolated in `features/content/mock-home.ts` (CMS-ready;
+  no fabricated impact statistics)
 
-### Remaining in Unit 2
+### Still later (not Unit 2)
 
-* Our Story, What We Do (+ 4 pillars), Founder, Team, Communities, Contact shell
-* Full homepage sections below the hero (origin, pillars grid, founder, etc.)
+* Admin CMS writes, Auth.js, submissions persistence, Paystack, live SMTP newsletter
 
 ---
 

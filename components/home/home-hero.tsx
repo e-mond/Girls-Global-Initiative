@@ -74,7 +74,7 @@ export function HomeHero() {
               </span>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-secondary.png"
+                  src="/home/hero-little-girl.jpg"
                   alt=""
                   fill
                   className="object-cover object-center"
@@ -129,8 +129,8 @@ export function HomeHero() {
             <div className="flex flex-col gap-3 pt-4 sm:gap-4 sm:pt-8">
               <div className="relative min-h-[120px] flex-[0.9] overflow-hidden rounded-2xl bg-blob-sky shadow-md sm:min-h-[140px]">
                 <Image
-                  src="/home/hero-secondary.png"
-                  alt="A girl reading in a classroom"
+                  src="/home/hero-little-girl.jpg"
+                  alt="A schoolgirl reading a book in class"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 40vw, 220px"
