@@ -242,3 +242,36 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
     .defaultNow()
     .notNull(),
 });
+
+export const donationFrequencyEnum = pgEnum("donation_frequency", [
+  "one_time",
+  "monthly_intent",
+]);
+
+export const donationStatusEnum = pgEnum("donation_status", [
+  "pending",
+  "success",
+  "failed",
+  "abandoned",
+]);
+
+export const donations = pgTable("donations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  reference: text("reference").notNull().unique(),
+  paystackEventId: text("paystack_event_id").unique(),
+  amountMinor: integer("amount_minor").notNull(),
+  currency: text("currency").notNull().default("GHS"),
+  frequency: donationFrequencyEnum("frequency").notNull().default("one_time"),
+  status: donationStatusEnum("status").notNull().default("pending"),
+  donorName: text("donor_name"),
+  donorEmail: text("donor_email"),
+  isAnonymous: boolean("is_anonymous").notNull().default(false),
+  channel: text("channel"),
+  paidAt: timestamp("paid_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

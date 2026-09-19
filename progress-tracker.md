@@ -7,26 +7,25 @@
 
 ## Current Phase
 
-* **Unit 5 — Newsletter**
+* **Unit 6 — Donations (Paystack)**
 * **Status:** Complete — validate, push, and merge this branch
-* **Previous phase:** Unit 4 — Submission Workflows
-* **Unit 4 status:** Complete and merged into `main` (PR #7)
-* **Current branch:** `feature/newsletter`
+* **Previous phase:** Unit 5 — Newsletter
+* **Unit 5 status:** Complete and merged into `main` (PR #8)
+* **Current branch:** `feature/donations-paystack`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 5 merge, then start Unit 6 — Paystack donations.
-* **Owner notes:** Neon `DATABASE_URL` configured locally; Cloudinary credentials pending; team photos received (Eugenia placeholder until photo arrives).
+* **Current objective:** Finish Unit 6 merge, then continue with Unit 7 (Users, Settings & Audit) per roadmap.
+* **Owner notes:** Neon configured; Paystack credentials still pending (checkout disabled until keys exist; transfer details via `ORG_*` env); Cloudinary pending; Eugenia placeholder remains.
 
 ---
 
 ## Current Goal
 
-Complete Unit 5 merge, then begin Unit 6 — Donations (Paystack):
+Complete Unit 6 merge, then begin Unit 7 — Users, Settings & Audit:
 
-1. Donation page with amount selection and one-time / monthly UI.
-2. Paystack checkout for one-time donations; monthly as intent only.
-3. Signed, idempotent webhook → donation records.
-4. Organisation direct-transfer details on the donate page.
-5. Admin read-only donations view.
+1. Administrator-only staff user management.
+2. Site settings (social, footer contact, SEO defaults, CTA destinations).
+3. Audit log UI.
+4. Do not invent Paystack credentials or organisation bank details.
 
 ---
 
@@ -89,17 +88,29 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 6 — Donations (Paystack)
+## Unit 7 — Users, Settings & Audit
 
-**Status:** Next up after Unit 5 merge — create `feature/donations-paystack`
+**Status:** Next up after Unit 6 merge — create `feature/users-settings-audit`
 
 ---
 
 ## Recently completed
 
+### Unit 6 — Donations (Paystack)
+
+**Status:** Complete on `feature/donations-paystack` (pending push/merge)
+
+* Donate page: preset/custom GHS amounts, one-time vs monthly intent, anonymous option
+* Paystack initialize + hosted checkout when `PAYSTACK_SECRET_KEY` is set
+* Signed webhook (`x-paystack-signature`) with idempotent success handling
+* Thanks page with soft verify fallback; receipt email best-effort via SMTP
+* Organisation transfer details from `ORG_*` env (no invented account numbers)
+* Admin read-only donations list + CSV export
+* Drizzle migration `0003_unit6_donations`
+
 ### Unit 5 — Newsletter
 
-**Status:** Complete on `feature/newsletter` (pending push/merge)
+**Status:** Complete (merged via PR #8)
 
 * Homepage single-field signup with double opt-in confirmation email
 * Confirm (`/newsletter/confirm`) and unsubscribe (`/newsletter/unsubscribe`) flows
@@ -273,7 +284,7 @@ Status flow:
 
 ## 5. Newsletter
 
-**Status:** Complete on `feature/newsletter` (pending remote merge)
+**Status:** Complete (merged via PR #8)
 
 Public:
 
@@ -291,7 +302,7 @@ Admin:
 
 ## 6. Donations — Paystack
 
-**Status:** Planned
+**Status:** Complete on `feature/donations-paystack` (pending remote merge)
 
 Public:
 
@@ -968,10 +979,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1–4 are complete and merged into `main` (Unit 4 via PR #7).
+Unit 1–5 are complete and merged into `main` (Unit 5 via PR #8).
 
-Unit 5 — Newsletter is complete on `feature/newsletter`
-(lint, type-check, Playwright 9, build PASS). Pending push/merge, then Unit 6.
+Unit 6 — Donations (Paystack) is complete on `feature/donations-paystack`
+(lint, type-check, Playwright 11, build PASS). Pending push/merge, then Unit 7.
 
 ---
 
