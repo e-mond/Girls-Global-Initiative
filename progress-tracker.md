@@ -7,28 +7,26 @@
 
 ## Current Phase
 
-* **Unit 2 — Public Website**
-* **Status:** In progress — Origin / Founder / Where we work aligned to attached section screenshots
-* **Previous phase:** Unit 1 — Foundations
-* **Unit 1 status:** Complete and merged into `main` (PR #1)
-* **Current branch:** `feature/public-website`
+* **Unit 3 — Admin Back-Office Core**
+* **Status:** In progress
+* **Previous phase:** Unit 2 — Public Website
+* **Unit 2 status:** Complete and merged into `main` (PR #4)
+* **Current branch:** `feature/admin-back-office-core`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 2 validation/commit for section fidelity polish, then Unit 3 after owner confirmation.
+* **Current objective:** Ship Auth.js staff sign-in, RBAC, content CMS CRUD with draft/publish, and media library.
 
 ---
 
 ## Current Goal
 
-Before writing Unit 2 implementation code:
+Ship Unit 3 Admin Back-Office Core:
 
-1. Confirm the Unit 2 scope against the approved PRD.
-2. Review `AGENTS.md` and the relevant project documentation.
-3. Inspect `GGIHomepage.png` before implementing or restyling public pages.
-4. Confirm the public-site information architecture and page responsibilities.
-5. Confirm which content is static, CMS-read, or mock-backed during the current phase.
-6. Identify any unresolved content or asset dependencies.
-7. Produce a concise implementation plan before starting development.
-8. Do not expand Unit 2 into admin, submissions, newsletter, donations, authentication, or other later units.
+1. Auth.js staff sign-in with secure sessions.
+2. Editor / Administrator RBAC on routes and APIs.
+3. Content CMS CRUD with draft → published workflow.
+4. Media library uploads with mandatory alt text.
+5. Dashboard shell with independent empty/loading-ready cards.
+6. Do not expand into submissions, newsletter, or Paystack units.
 
 ---
 
@@ -91,33 +89,36 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 2 — Public Website
+## Unit 3 — Admin Back-Office Core
 
-**Branch:** `feature/public-website`
+**Branch:** `feature/admin-back-office-core`
 
 ### Done in this increment
 
-* Hero images wired from project assets:
-  * `assets/Hero1.jpg` → arch collage
-  * `assets/HeroLittleGirl.jpg` → secondary hero photo
-* Homepage rebuilt section-by-section against `GGIHomepage.png`:
-  hero, origin, four pillars, founder spotlight, communities, get involved,
-  newsletter band
-* Public pages: Our story, What we do (+ 4 pillar routes), Founder, Team,
-  Communities, Get involved hub, Contact shell
-* Mock content isolated in `features/content/mock-home.ts` (CMS-ready;
-  no fabricated impact statistics)
-* Pre–Unit 3 fidelity pass against attached section screenshots:
-  * Origin — tilted youth-led badge, MessageCircleHeart “How it started” card,
-    challenge tags, vision/mission cards, recropped `origin.jpg`
-  * Founder — darker navy band, exact Philomena body copy, callout cards, CTAs,
-    recropped `founder.jpg`
-  * Where we work — centered gallery, orange “her future matters” badge,
-    Invite GGI / Partner CTA strip, recropped community photos
+* Auth.js (Credentials) staff sign-in with JWT session + `/admin` middleware gate
+* Editor / Administrator RBAC helpers; Users/Settings restricted to Administrator
+* Drizzle schema + migration for users, CMS entities, media metadata, audit logs
+* Content hub CRUD UI for pillars, team, challenge tags, gallery, testimonials,
+  advocacy — draft/publish/unpublish/delete
+* Media library upload with required alt text; local `storage/media` fallback
+  when S3 is unset
+* Audit log writer for content/media mutations
+* Dashboard shell with independent empty summary cards
+* Playwright coverage for RBAC helpers + unauthenticated `/admin` redirect
 
-### Still later (not Unit 2)
+### Still later (not Unit 3)
 
-* Admin CMS writes, Auth.js, submissions persistence, Paystack, live SMTP newsletter
+* Submission workflows, newsletter, Paystack donations, full user invite flow,
+  live S3 wiring, password-reset email flow
+
+---
+
+## Unit 2 — Public Website
+
+**Status:** Complete (merged via PR #4)
+
+* Hero images, homepage sections, and public pages shipped against the approved
+  reference; Origin / Founder / Where we work fidelity pass included.
 
 ---
 
@@ -412,6 +413,20 @@ Until those assets arrive:
 ---
 
 # Architecture Decisions
+
+## Unit 3 — Offline auth and media fallback
+
+When `DATABASE_URL` is unset (local/MSW development), staff credentials are
+validated against `AUTH_DEV_*` environment variables and never in production.
+
+When S3 credentials are unset, media binaries are stored under gitignored
+`storage/media/` and served only to authenticated staff via
+`/api/admin/media/[id]/file`. Database rows still store metadata/URLs only.
+Live S3 wiring remains a later hardening step.
+
+**Source:** `architecture.md` Auth/Storage; Unit 3 implementation.
+
+---
 
 ## Payment Processor — Paystack
 
@@ -912,14 +927,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1 is complete and merged into `main`.
+Unit 1 and Unit 2 are complete and merged into `main`.
 
-Unit 2 — Public Website is on `feature/public-website`. Origin, Founder, and
-Where we work sections were re-aligned to the attached section screenshots
-(copy, overlays, and photo crops) before Unit 3.
-
-Next: complete Unit 2 validation/commit/push for this polish, then begin Unit 3
-only after owner confirmation.
+Unit 3 — Admin Back-Office Core is in progress on
+`feature/admin-back-office-core`.
 
 ---
 

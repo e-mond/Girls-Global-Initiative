@@ -5,6 +5,7 @@ import {
   Red_Hat_Text,
 } from "next/font/google";
 import { MswProvider } from "@/components/providers/msw-provider";
+import { AuthSessionProvider } from "@/components/providers/auth-session-provider";
 import "./globals.css";
 
 const redHatDisplay = Red_Hat_Display({
@@ -44,7 +45,9 @@ export default function RootLayout({
       <body
         className={`${redHatDisplay.variable} ${redHatText.variable} ${jetbrainsMono.variable} min-h-screen antialiased`}
       >
-        <MswProvider>{children}</MswProvider>
+        <AuthSessionProvider>
+          <MswProvider>{children}</MswProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
