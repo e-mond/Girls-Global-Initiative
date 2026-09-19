@@ -7,26 +7,24 @@
 
 ## Current Phase
 
-* **Unit 3 — Admin Back-Office Core**
-* **Status:** In progress
-* **Previous phase:** Unit 2 — Public Website
-* **Unit 2 status:** Complete and merged into `main` (PR #4)
-* **Current branch:** `feature/admin-back-office-core`
+* **Unit 4 — Submission Workflows**
+* **Status:** Not started (branch pending)
+* **Previous phase:** Unit 3 — Admin Back-Office Core
+* **Unit 3 status:** Complete and merged into `main` (PR #5)
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Ship Auth.js staff sign-in, RBAC, content CMS CRUD with draft/publish, and media library.
+* **Current objective:** Volunteer, partnership, and contact submission flows with admin review.
 
 ---
 
 ## Current Goal
 
-Ship Unit 3 Admin Back-Office Core:
+Begin Unit 4 — Submission Workflows:
 
-1. Auth.js staff sign-in with secure sessions.
-2. Editor / Administrator RBAC on routes and APIs.
-3. Content CMS CRUD with draft → published workflow.
-4. Media library uploads with mandatory alt text.
-5. Dashboard shell with independent empty/loading-ready cards.
-6. Do not expand into submissions, newsletter, or Paystack units.
+1. Public volunteer application, partnership request, and contact forms.
+2. Client + server validation, rate limiting, persistence, SMTP acknowledgements.
+3. Admin submission list/detail with New → In review → Accepted/Declined.
+4. Do not expand into newsletter or Paystack units.
 
 ---
 
@@ -89,35 +87,32 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 3 — Admin Back-Office Core
+## Unit 4 — Submission Workflows
 
-**Branch:** `feature/admin-back-office-core`
-
-### Done in this increment
-
-* Auth.js (Credentials) staff sign-in with JWT session + `/admin` middleware gate
-* Editor / Administrator RBAC helpers; Users/Settings restricted to Administrator
-* Drizzle schema + migration for users, CMS entities, media metadata, audit logs
-* Content hub CRUD UI for pillars, team, challenge tags, gallery, testimonials,
-  advocacy — draft/publish/unpublish/delete
-* Media library upload with required alt text; local `storage/media` fallback
-  when S3 is unset
-* Audit log writer for content/media mutations
-* Dashboard shell with independent empty summary cards
-* Playwright coverage for RBAC helpers + unauthenticated `/admin` redirect
-
-### Still later (not Unit 3)
-
-* Submission workflows, newsletter, Paystack donations, full user invite flow,
-  live S3 wiring, password-reset email flow
+**Status:** Next up — create `feature/submission-workflows`
 
 ---
+
+# Recently completed
+
+## Unit 3 — Admin Back-Office Core
+
+**Status:** Complete (merged via PR #5)
+
+* Auth.js Credentials staff sign-in, JWT sessions, `/admin` middleware gate
+* Editor / Administrator RBAC; Users/Settings Administrator-only
+* Content CMS CRUD + draft/publish for pillars, team, challenge tags, gallery,
+  testimonials, advocacy
+* Media library with required alt text; local `storage/media` fallback
+* Audit logging for content/media mutations
+* Drizzle migration `0000_unit3_admin_content`
+* Validation: lint, type-check, Playwright (5), build — PASS
 
 ## Unit 2 — Public Website
 
 **Status:** Complete (merged via PR #4)
 
-* Hero images, homepage sections, and public pages shipped against the approved
+* Hero images, homepage sections, and public pages against the approved
   reference; Origin / Founder / Where we work fidelity pass included.
 
 ---
