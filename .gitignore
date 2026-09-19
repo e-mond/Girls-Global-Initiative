@@ -49,3 +49,7 @@ public/mockServiceWorker.js
 # Misc
 .turbo/
 .vercel/
+
+# Local media binaries (Unit 3 offline storage fallback)
+storage/
+

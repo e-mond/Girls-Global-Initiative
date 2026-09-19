@@ -10,4 +10,14 @@ export const handlers = [
       },
     });
   }),
+  http.get("/api/admin/content/:entity", () => {
+    return HttpResponse.json({
+      data: { items: [] },
+    });
+  }),
+  http.get("/api/admin/media", () => {
+    return HttpResponse.json({
+      data: { items: [] },
+    });
+  }),
 ];

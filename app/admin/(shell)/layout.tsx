@@ -1,7 +1,7 @@
 import { AdminSidebar } from "@/components/layout/admin-sidebar";
 import { AdminTopbar } from "@/components/layout/admin-topbar";
 
-/** Authenticated admin chrome shell — Auth.js arrives in a later unit. */
+/** Authenticated admin chrome — route protection is enforced in middleware. */
 export default function AdminShellLayout({
   children,
 }: {
