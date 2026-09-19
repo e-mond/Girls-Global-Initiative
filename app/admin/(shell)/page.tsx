@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
         />
         <DashboardCard
           title="Recent donations"
-          empty="Paystack donation records will appear here after the Donations unit."
+          empty="Review Paystack-synced donations and monthly giving intents."
           href="/admin/donations"
         />
       </div>
