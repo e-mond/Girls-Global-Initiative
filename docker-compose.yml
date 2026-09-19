@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://ggi:ggi@postgres:5432/ggi
+      NEXT_PUBLIC_MOCK_API: "false"
+      NEXT_PUBLIC_ENABLE_MSW: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ggi
+      POSTGRES_PASSWORD: ggi
+      POSTGRES_DB: ggi
+    ports:
+      - "5432:5432"
+    volumes:
+      - ggi_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ggi -d ggi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ggi_pg_data:

@@ -1,0 +1,96 @@
+import Link from "next/link";
+import Image from "next/image";
+
+const EXPLORE_LINKS = [
+  { href: "/our-story", label: "Our story" },
+  { href: "/what-we-do", label: "What we do" },
+  { href: "/founder", label: "Founder" },
+  { href: "/team", label: "Team" },
+  { href: "/communities", label: "Communities" },
+] as const;
+
+const SUPPORT_LINKS = [
+  { href: "/get-involved/donate", label: "Donate" },
+  { href: "/get-involved/volunteer", label: "Volunteer" },
+  { href: "/get-involved/advocate", label: "Raise your voice" },
+  { href: "/partner", label: "Partner with us" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+/** Public site footer shell aligned with the homepage reference. */
+export function PublicFooter() {
+  return (
+    <footer className="mt-auto bg-brand-navy text-text-on-inverse">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/brand/ggi-logo.png"
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full bg-bg-surface"
+            />
+            <span className="font-display font-semibold">
+              Girls Global Initiative
+            </span>
+          </div>
+          <p className="text-sm text-white/80">
+            Advancing the rights, dignity, health, wellbeing and education of
+            girls in rural, remote and underserved communities.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 text-sm">
+          <div>
+            <p className="mb-3 font-semibold">Explore</p>
+            <ul className="space-y-2">
+              {EXPLORE_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-white/80 hover:text-brand-sky"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-3 font-semibold">Support</p>
+            <ul className="space-y-2">
+              {SUPPORT_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-white/80 hover:text-brand-sky"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="space-y-3 text-sm">
+          <p className="font-semibold">Questions? Say hello</p>
+          <p className="text-white/80">
+            Contact details will be managed via site settings.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-magenta px-4 font-medium text-text-on-inverse hover:bg-brand-magenta/90"
+          >
+            Contact us
+          </Link>
+        </div>
+      </div>
+      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60">
+        © {new Date().getFullYear()} Girls Global Initiative. All rights
+        reserved.
+      </div>
+    </footer>
+  );
+}
