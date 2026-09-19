@@ -7,25 +7,20 @@
 
 ## Current Phase
 
-* **Unit 7 — Users, Settings & Audit**
+* **Unit 8 — Production Readiness**
 * **Status:** Complete — validate, push, and merge this branch
-* **Previous phase:** Unit 6 — Donations (Paystack)
-* **Unit 6 status:** Complete and merged into `main` (PR #9)
-* **Current branch:** `feature/users-settings-audit`
+* **Previous phase:** Unit 7 — Users, Settings & Audit
+* **Unit 7 status:** Complete and merged into `main` (PR #10)
+* **Current branch:** `feature/production-readiness`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 7 merge, then Unit 8 — Production Readiness.
-* **Owner notes:** Neon configured; Paystack/Cloudinary credentials still pending; Eugenia placeholder remains.
+* **Current objective:** Finish Unit 8 merge. Roadmap units 1–8 complete pending this merge.
+* **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Complete Unit 7 merge, then begin Unit 8 — Production Readiness:
-
-1. Environment fail-closed checks (DB, Auth, Paystack, SMTP).
-2. `/api/ready` readiness endpoint.
-3. Docker healthcheck hardening.
-4. Do not invent missing production credentials.
+Complete Unit 8 merge. After merge, remaining work is operational (credentials, Cloudinary, content seeding) rather than new roadmap units unless the owner adds scope.
 
 ---
 
@@ -88,17 +83,30 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 8 — Production Readiness
+## Post-roadmap operational follow-ups
 
-**Status:** Next up after Unit 7 merge — create `feature/production-readiness`
+**Status:** After Unit 8 merge
+
+* Supply Paystack / SMTP / Cloudinary / org transfer credentials
+* Replace Eugenia placeholder photo
+* Seed/publish live CMS content
 
 ---
 
 ## Recently completed
 
+### Unit 8 — Production Readiness
+
+**Status:** Complete on `feature/production-readiness` (pending push/merge)
+
+* `/api/ready` fail-closed readiness checks (auth + database critical)
+* Paystack/SMTP presence reported without blocking readiness
+* Docker Compose app healthcheck on `/api/health`
+* `docs/DEPLOYMENT-RUNBOOK.md`
+
 ### Unit 7 — Users, Settings & Audit
 
-**Status:** Complete on `feature/users-settings-audit` (pending push/merge)
+**Status:** Complete (merged via PR #10)
 
 * Administrator staff user create/list/role update
 * Site settings (social, footer email, SEO defaults, CTA URLs) with footer wiring
@@ -358,7 +366,7 @@ Administrator-only functionality:
 
 ## 8. Production Readiness
 
-**Status:** Planned
+**Status:** Complete on `feature/production-readiness` (pending remote merge)
 
 Scope:
 
@@ -988,10 +996,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1–6 are complete and merged into `main` (Unit 6 via PR #9).
+Unit 1–7 are complete and merged into `main` (Unit 7 via PR #10).
 
-Unit 7 — Users, Settings & Audit is complete on `feature/users-settings-audit`
-(lint, type-check, Playwright, build PASS). Pending push/merge, then Unit 8.
+Unit 8 — Production Readiness is complete on `feature/production-readiness`
+(lint, type-check, Playwright, build PASS). Pending push/merge.
 
 ---
 
