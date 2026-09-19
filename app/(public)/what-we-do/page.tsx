@@ -1,10 +1,15 @@
-import { PageStub } from "@/components/layout/page-stub";
+import { HomePillars } from "@/components/home/home-pillars";
+import { PublicPageIntro } from "@/components/layout/public-page-intro";
 
 export default function WhatWeDoPage() {
   return (
-    <PageStub
-      title="What we do"
-      description="Four programme pillars overview will be CMS-driven in a later unit."
-    />
+    <>
+      <PublicPageIntro
+        eyebrow="What we do"
+        title="Four ways we walk alongside girls."
+        description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity."
+      />
+      <HomePillars showIntro={false} />
+    </>
   );
 }

@@ -54,7 +54,7 @@ export function PublicHeader() {
         <div className="relative z-10 flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             href="/contact"
-            className="hidden h-10 items-center justify-center rounded-xl border border-brand-navy/20 bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40 sm:inline-flex"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-brand-navy/20 bg-bg-surface px-3 text-sm font-medium text-brand-navy hover:border-brand-navy/40 sm:px-4"
           >
             Contact us
           </Link>
@@ -81,12 +81,6 @@ export function PublicHeader() {
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/contact"
-          className="whitespace-nowrap text-sm font-medium text-brand-navy hover:text-brand-magenta sm:hidden"
-        >
-          Contact us
-        </Link>
       </nav>
     </header>
   );

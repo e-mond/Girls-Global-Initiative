@@ -16,7 +16,12 @@ test.describe("public homepage shell", () => {
     ).toBeVisible();
     await expect(page.getByText("Youth-led")).toBeVisible();
     await expect(
-      page.getByRole("navigation", { name: "Primary" }),
+      page.getByRole("navigation", { name: "Primary", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", {
+        name: "Communities",
+      }),
     ).toBeVisible();
     await expect(
       page.getByRole("banner").getByRole("link", { name: "Support a girl" }),
@@ -25,8 +30,13 @@ test.describe("public homepage shell", () => {
       page.getByRole("banner").getByRole("link", { name: "Contact us" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("navigation", { name: "Primary" }).getByRole("link", {
-        name: "Communities",
+      page.getByRole("heading", {
+        name: /Born from listening/i,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        name: /Four ways we walk alongside girls/i,
       }),
     ).toBeVisible();
     await expect(
