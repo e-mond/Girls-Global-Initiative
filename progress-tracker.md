@@ -7,25 +7,25 @@
 
 ## Current Phase
 
-* **Unit 6 — Donations (Paystack)**
+* **Unit 7 — Users, Settings & Audit**
 * **Status:** Complete — validate, push, and merge this branch
-* **Previous phase:** Unit 5 — Newsletter
-* **Unit 5 status:** Complete and merged into `main` (PR #8)
-* **Current branch:** `feature/donations-paystack`
+* **Previous phase:** Unit 6 — Donations (Paystack)
+* **Unit 6 status:** Complete and merged into `main` (PR #9)
+* **Current branch:** `feature/users-settings-audit`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 6 merge, then continue with Unit 7 (Users, Settings & Audit) per roadmap.
-* **Owner notes:** Neon configured; Paystack credentials still pending (checkout disabled until keys exist; transfer details via `ORG_*` env); Cloudinary pending; Eugenia placeholder remains.
+* **Current objective:** Finish Unit 7 merge, then Unit 8 — Production Readiness.
+* **Owner notes:** Neon configured; Paystack/Cloudinary credentials still pending; Eugenia placeholder remains.
 
 ---
 
 ## Current Goal
 
-Complete Unit 6 merge, then begin Unit 7 — Users, Settings & Audit:
+Complete Unit 7 merge, then begin Unit 8 — Production Readiness:
 
-1. Administrator-only staff user management.
-2. Site settings (social, footer contact, SEO defaults, CTA destinations).
-3. Audit log UI.
-4. Do not invent Paystack credentials or organisation bank details.
+1. Environment fail-closed checks (DB, Auth, Paystack, SMTP).
+2. `/api/ready` readiness endpoint.
+3. Docker healthcheck hardening.
+4. Do not invent missing production credentials.
 
 ---
 
@@ -88,17 +88,26 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Unit 7 — Users, Settings & Audit
+## Unit 8 — Production Readiness
 
-**Status:** Next up after Unit 6 merge — create `feature/users-settings-audit`
+**Status:** Next up after Unit 7 merge — create `feature/production-readiness`
 
 ---
 
 ## Recently completed
 
+### Unit 7 — Users, Settings & Audit
+
+**Status:** Complete on `feature/users-settings-audit` (pending push/merge)
+
+* Administrator staff user create/list/role update
+* Site settings (social, footer email, SEO defaults, CTA URLs) with footer wiring
+* Audit log admin UI (searchable)
+* Drizzle migration `0004_unit7_users_settings`
+
 ### Unit 6 — Donations (Paystack)
 
-**Status:** Complete on `feature/donations-paystack` (pending push/merge)
+**Status:** Complete (merged via PR #9)
 
 * Donate page: preset/custom GHS amounts, one-time vs monthly intent, anonymous option
 * Paystack initialize + hosted checkout when `PAYSTACK_SECRET_KEY` is set
@@ -332,7 +341,7 @@ Recurring Paystack subscription billing is a later increment.
 
 ## 7. Users, Settings & Audit
 
-**Status:** Planned
+**Status:** Complete on `feature/users-settings-audit` (pending remote merge)
 
 Administrator-only functionality:
 
@@ -979,10 +988,10 @@ npm run build       PASS
 
 ### Current Status
 
-Unit 1–5 are complete and merged into `main` (Unit 5 via PR #8).
+Unit 1–6 are complete and merged into `main` (Unit 6 via PR #9).
 
-Unit 6 — Donations (Paystack) is complete on `feature/donations-paystack`
-(lint, type-check, Playwright 11, build PASS). Pending push/merge, then Unit 7.
+Unit 7 — Users, Settings & Audit is complete on `feature/users-settings-audit`
+(lint, type-check, Playwright, build PASS). Pending push/merge, then Unit 8.
 
 ---
 

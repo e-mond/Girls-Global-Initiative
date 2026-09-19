@@ -29,6 +29,13 @@
       "when": 1789859398863,
       "tag": "0003_unit6_donations",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789859734765,
+      "tag": "0004_unit7_users_settings",
+      "breakpoints": true
     }
   ]
 }

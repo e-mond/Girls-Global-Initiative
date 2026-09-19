@@ -275,3 +275,25 @@ export const donations = pgTable("donations", {
     .defaultNow()
     .notNull(),
 });
+
+/** Singleton site settings row (id always the fixed UUID). */
+export const siteSettings = pgTable("site_settings", {
+  id: uuid("id").primaryKey(),
+  socialFacebook: text("social_facebook").notNull().default(""),
+  socialInstagram: text("social_instagram").notNull().default(""),
+  socialX: text("social_x").notNull().default(""),
+  socialYoutube: text("social_youtube").notNull().default(""),
+  socialLinkedin: text("social_linkedin").notNull().default(""),
+  footerContactEmail: text("footer_contact_email").notNull().default(""),
+  seoDefaultTitle: text("seo_default_title").notNull().default(""),
+  seoDefaultDescription: text("seo_default_description").notNull().default(""),
+  ctaDonateUrl: text("cta_donate_url").notNull().default("/get-involved/donate"),
+  ctaVolunteerUrl: text("cta_volunteer_url")
+    .notNull()
+    .default("/get-involved/volunteer"),
+  ctaPartnerUrl: text("cta_partner_url").notNull().default("/partner"),
+  updatedById: uuid("updated_by_id").references(() => users.id),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

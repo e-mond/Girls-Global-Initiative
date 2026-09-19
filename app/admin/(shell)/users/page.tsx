@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { AdminSectionStub } from "@/components/layout/admin-section-stub";
 import { canManageUsers } from "@/features/governance/rbac";
+import AdminUsersPageClient from "./users-client";
 
 export default async function AdminUsersPage() {
   const session = await auth();
@@ -9,10 +9,5 @@ export default async function AdminUsersPage() {
     redirect("/admin");
   }
 
-  return (
-    <AdminSectionStub
-      title="Users"
-      description="Staff invite and role management expands here. Administrator-only."
-    />
-  );
+  return <AdminUsersPageClient />;
 }
