@@ -8,12 +8,12 @@
 ## Current Phase
 
 * **Unit 8 — Production Readiness**
-* **Status:** Complete — validate, push, and merge this branch
+* **Status:** Complete and merged into `main` (PR #11)
 * **Previous phase:** Unit 7 — Users, Settings & Audit
 * **Unit 7 status:** Complete and merged into `main` (PR #10)
-* **Current branch:** `feature/production-readiness`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Finish Unit 8 merge. Roadmap units 1–8 complete pending this merge.
+* **Current objective:** Roadmap units 1–8 complete. Operational follow-ups: credentials, Cloudinary, content.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
@@ -97,7 +97,7 @@ A local `.env.local` is present and remains gitignored.
 
 ### Unit 8 — Production Readiness
 
-**Status:** Complete on `feature/production-readiness` (pending push/merge)
+**Status:** Complete (merged via PR #11)
 
 * `/api/ready` fail-closed readiness checks (auth + database critical)
 * Paystack/SMTP presence reported without blocking readiness
@@ -366,7 +366,7 @@ Administrator-only functionality:
 
 ## 8. Production Readiness
 
-**Status:** Complete on `feature/production-readiness` (pending remote merge)
+**Status:** Complete (merged via PR #11)
 
 Scope:
 
@@ -998,8 +998,7 @@ npm run build       PASS
 
 Unit 1–7 are complete and merged into `main` (Unit 7 via PR #10).
 
-Unit 8 — Production Readiness is complete on `feature/production-readiness`
-(lint, type-check, Playwright, build PASS). Pending push/merge.
+Roadmap units 1–8 are complete and merged into `main` (Unit 8 via PR #11).
 
 ---
 
