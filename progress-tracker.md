@@ -8,22 +8,18 @@
 ## Current Phase
 
 * **Content follow-up — Public pages revamp**
-* **Status:** Complete on `feature/content-public-pages` (ready to push/merge)
+* **Status:** Complete — merged via PR #14
 * **Previous phase:** Canonical social links (complete, PR #13)
-* **Current branch:** `feature/content-public-pages`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Revamp non-landing public pages with content-reference/PDF copy; add `/programmes` and `/impact`.
+* **Current objective:** Content-rich non-landing public pages shipped (`/programmes`, `/impact` included).
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Ship content-rich public pages (excluding homepage):
-
-1. Our Story, Founder, What we do + pillars, Communities, Team, Get involved, Advocate, Partner, Donate intros — **done**.
-2. New `/programmes` and `/impact` routes wired into nav/footer — **done**.
-3. Validate, push, merge — validation complete; push/merge next.
+Operational follow-ups (credentials, Cloudinary wiring, CMS content seeding, CMS programmes entity). Homepage remains the approved Unit 2/landing composition.
 
 ---
 
@@ -918,10 +914,7 @@ Purpose:
 * Project baseline
 * **Units 1–8 (merged via PR #1, #4, #5, #7, #8, #9, #10, #11)**
 * **Content social links (merged via PR #13)**
-
-### Active branch — `feature/content-public-pages`
-
-Public pages revamp (non-landing): detailed copy, `/programmes`, `/impact`.
+* **Public pages revamp (merged via PR #14)**
 
 ### Next Branch
 
@@ -970,6 +963,7 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 * Homepage left unchanged.
 * Validation: lint PASS, type-check PASS, Playwright PASS (22 with retries), build PASS (`/programmes`, `/impact` in route table).
 * CMS `programmes` entity deferred — Phase 1 uses static site-copy.
+* Merged via PR #14.
 
 ## Content follow-up — Canonical social links
 
@@ -1001,8 +995,8 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 complete. Content follow-ups: social links (PR #13) and
-public pages revamp (`feature/content-public-pages`) ready to push/merge.
+Roadmap Units 1–8 complete. Content follow-ups merged: social links
+(PR #13) and public pages revamp (PR #14).
 
 ---
 
