@@ -1,5 +1,10 @@
 import Image from "next/image";
 import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import {
+  ContentSection,
+  Prose,
+} from "@/components/layout/content-section";
+import { OUR_STORY, TAGLINE } from "@/content/site-copy";
 import { challengeTags } from "@/features/content/mock-home";
 
 export default function OurStoryPage() {
@@ -8,10 +13,11 @@ export default function OurStoryPage() {
       <PublicPageIntro
         eyebrow="Our story"
         title="Born from listening. Built around girls."
-        description="Girls Global Initiative began as a conversation between two young women who recognised the risks facing girls in their communities — and chose to organise a response."
+        description={TAGLINE}
       />
-      <section className="bg-bg-surface px-4 pb-16 lg:px-6 lg:pb-24">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
+
+      <ContentSection tone="surface">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
             <Image
               src="/home/origin.jpg"
@@ -21,31 +27,74 @@ export default function OurStoryPage() {
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
-          <div className="space-y-5">
-            <p className="text-base leading-relaxed text-text-muted">
-              From that starting point, GGI has focused on rural, remote and
-              underserved communities first — advancing rights, health,
-              confidence and mentorship so no girl has to navigate hard
-              realities alone.
-            </p>
-            <p className="text-sm text-text-muted">
-              Fuller story content will be CMS-managed. Until then, this page
-              reflects the approved homepage narrative without inventing impact
-              figures or unverified claims.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {challengeTags.map((tag) => (
-                <span
-                  key={tag.label}
-                  className="rounded-full border border-border-default bg-bg-base px-3 py-1.5 text-xs font-medium text-brand-navy"
-                >
-                  {tag.label}
-                </span>
-              ))}
-            </div>
-          </div>
+          <Prose>
+            {OUR_STORY.intro.map((paragraph) => (
+              <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+            ))}
+          </Prose>
         </div>
-      </section>
+      </ContentSection>
+
+      <ContentSection
+        eyebrow="Belief"
+        title="When girls are empowered, communities thrive and nations transform."
+        tone="navy"
+        narrow
+      />
+
+      <ContentSection tone="base">
+        <div className="grid gap-8 lg:grid-cols-3">
+          {[
+            { label: "Vision", body: OUR_STORY.vision },
+            { label: "Mission", body: OUR_STORY.mission },
+            { label: "Purpose", body: OUR_STORY.purpose },
+          ].map((item) => (
+            <article
+              key={item.label}
+              className="rounded-3xl border border-border-default bg-bg-surface p-6"
+            >
+              <h2 className="font-display text-xl font-bold text-brand-navy">
+                {item.label}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-text-muted">
+                {item.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </ContentSection>
+
+      <ContentSection
+        eyebrow="Core values"
+        title="What guides every conversation, classroom and community visit."
+        tone="surface"
+      >
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {OUR_STORY.values.map((value) => (
+            <li
+              key={value.name}
+              className="rounded-3xl border border-border-default bg-bg-base p-5"
+            >
+              <h3 className="font-display text-lg font-bold text-brand-navy">
+                {value.name}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {value.description}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-10 flex flex-wrap gap-2">
+          {challengeTags.map((tag) => (
+            <span
+              key={tag.label}
+              className="rounded-full border border-border-default bg-bg-base px-3 py-1.5 text-xs font-medium text-brand-navy"
+            >
+              {tag.label}
+            </span>
+          ))}
+        </div>
+      </ContentSection>
     </>
   );
 }

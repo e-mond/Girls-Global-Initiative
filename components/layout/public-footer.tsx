@@ -7,6 +7,8 @@ import { getSiteSettings } from "@/features/settings/service";
 const EXPLORE_LINKS = [
   { href: "/our-story", label: "Our story" },
   { href: "/what-we-do", label: "What we do" },
+  { href: "/programmes", label: "Programmes" },
+  { href: "/impact", label: "Impact" },
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },
