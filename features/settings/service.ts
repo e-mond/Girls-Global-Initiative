@@ -1,24 +1,13 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { siteSettings } from "@/db/schema";
-import type { SiteSettings } from "@/features/settings/schemas";
+import {
+  SITE_SETTINGS_DEFAULTS,
+  type SiteSettings,
+} from "@/features/settings/schemas";
 
 /** Fixed singleton id for the site settings row. */
 export const SITE_SETTINGS_ID = "00000000-0000-4000-8000-000000000010";
-
-const defaults: SiteSettings = {
-  socialFacebook: "",
-  socialInstagram: "",
-  socialX: "",
-  socialYoutube: "",
-  socialLinkedin: "",
-  footerContactEmail: "",
-  seoDefaultTitle: "",
-  seoDefaultDescription: "",
-  ctaDonateUrl: "/get-involved/donate",
-  ctaVolunteerUrl: "/get-involved/volunteer",
-  ctaPartnerUrl: "/partner",
-};
 
 type Memory = { value: SiteSettings };
 
@@ -28,7 +17,9 @@ const globalStore = globalThis as typeof globalThis & {
 
 function memory(): Memory {
   if (!globalStore.__ggiSiteSettings) {
-    globalStore.__ggiSiteSettings = { value: { ...defaults } };
+    globalStore.__ggiSiteSettings = {
+      value: { ...SITE_SETTINGS_DEFAULTS },
+    };
   }
   return globalStore.__ggiSiteSettings;
 }
@@ -36,8 +27,7 @@ function memory(): Memory {
 function serialize(row: {
   socialFacebook: string;
   socialInstagram: string;
-  socialX: string;
-  socialYoutube: string;
+  socialTiktok: string;
   socialLinkedin: string;
   footerContactEmail: string;
   seoDefaultTitle: string;
@@ -49,8 +39,7 @@ function serialize(row: {
   return {
     socialFacebook: row.socialFacebook,
     socialInstagram: row.socialInstagram,
-    socialX: row.socialX,
-    socialYoutube: row.socialYoutube,
+    socialTiktok: row.socialTiktok,
     socialLinkedin: row.socialLinkedin,
     footerContactEmail: row.footerContactEmail,
     seoDefaultTitle: row.seoDefaultTitle,
@@ -71,7 +60,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     .where(eq(siteSettings.id, SITE_SETTINGS_ID))
     .limit(1);
 
-  if (!row) return { ...defaults };
+  if (!row) return { ...SITE_SETTINGS_DEFAULTS };
   return serialize(row);
 }
 

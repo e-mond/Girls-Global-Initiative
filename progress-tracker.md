@@ -7,20 +7,23 @@
 
 ## Current Phase
 
-* **Unit 8 — Production Readiness**
-* **Status:** Complete and merged into `main` (PR #11)
-* **Previous phase:** Unit 7 — Users, Settings & Audit
-* **Unit 7 status:** Complete and merged into `main` (PR #10)
-* **Current branch:** `main`
+* **Content follow-up — Canonical social links**
+* **Status:** In progress on `feature/content-social-links`
+* **Previous phase:** Unit 8 — Production Readiness (complete, PR #11)
+* **Current branch:** `feature/content-social-links`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Roadmap units 1–8 complete. Operational follow-ups: credentials, Cloudinary, content.
+* **Current objective:** Wire Footer and Contact to four canonical social profiles from content-reference.md via a shared config.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Complete Unit 8 merge. After merge, remaining work is operational (credentials, Cloudinary, content seeding) rather than new roadmap units unless the owner adds scope.
+Complete content social-links follow-up:
+
+1. Shared `content/social-links.ts` + Contact details.
+2. Footer and Contact consume the same four profiles (Instagram, TikTok, Facebook, LinkedIn).
+3. Align admin settings platforms; validate and merge.
 
 ---
 
@@ -64,12 +67,12 @@ The foundation has been implemented and merged to:
 ### Validation
 
 | Check                        | Result             |
-| ---------------------------- | ------------------ |
-| `npm run lint`               | **PASS**           |
-| `npm run type-check`         | **PASS**           |
-| `npm run test` (Playwright)  | **PASS — 2 tests** |
-| `npm run test:e2e` (Cypress) | **PASS — 1 test**  |
-| `npm run build`              | **PASS**           |
+| ----------------------------- | ------------------ |
+| `npm run lint`                | **PASS**           |
+| `npm run type-check`          | **PASS**           |
+| `npm run test` (Playwright)   | **PASS — 2 tests** |
+| `npm run test:e2e` (Cypress)  | **PASS — 1 test**  |
+| `npm run build`               | **PASS**           |
 
 ### Local Development
 
@@ -198,7 +201,7 @@ A local `.env.local` is present and remains gitignored.
 
 ## 2. Public Website
 
-**Status:** Not started
+**Status:** Complete (merged via PR #4)
 
 ### Scope
 
@@ -249,7 +252,7 @@ Those belong to later roadmap units.
 
 ## 3. Admin Back-Office Core
 
-**Status:** Planned
+**Status:** Complete (merged via PR #5)
 
 Scope:
 
@@ -319,7 +322,7 @@ Admin:
 
 ## 6. Donations — Paystack
 
-**Status:** Complete on `feature/donations-paystack` (pending remote merge)
+**Status:** Complete (merged via PR #9)
 
 Public:
 
@@ -349,7 +352,7 @@ Recurring Paystack subscription billing is a later increment.
 
 ## 7. Users, Settings & Audit
 
-**Status:** Complete on `feature/users-settings-audit` (pending remote merge)
+**Status:** Complete (merged via PR #10)
 
 Administrator-only functionality:
 
@@ -407,7 +410,7 @@ Do not hardcode provider-specific assumptions.
 
 The hosting method for:
 
-* “Our story in 2 min”
+* "Our story in 2 min"
 * Founder-message videos
 
 has not yet been finalised.
@@ -463,6 +466,18 @@ Until those assets arrive:
 * Use `GGIHomepage.png` as the current visual reference.
 * Do not invent an official logo.
 * Do not fabricate organisational photography or impact imagery.
+
+---
+
+## Pillar structure vs. source content
+
+`content-reference.md` (from GGI's own brand PDF) gives 6 Focus Areas, 6
+Programmes & Initiatives, and 4 Projects, which don't map one-to-one onto
+the 4 pillars from `GGIHomepage.png`/`GGI-BRD.md`/`GGI-PRD.md`. A proposed
+resolution (4 pillars stay as top-level structure; new `/programmes` and
+`/impact` pages added, with a new `programmes` CMS entity) is documented at
+the bottom of `content-reference.md` — confirm this was applied, or
+reconcile, before treating Unit 2 content as final.
 
 ---
 
@@ -814,7 +829,7 @@ Priorities include:
 * Health checks and monitoring
 * Warm-up strategies where appropriate
 
-Do not introduce unnecessary always-on services merely to keep infrastructure “awake”.
+Do not introduce unnecessary always-on services merely to keep infrastructure "awake".
 
 ---
 
@@ -873,19 +888,19 @@ Do not commit:
 
 The initial public website scope is:
 
-| Page / Area                 | Unit 2  |
-| --------------------------- | ------- |
-| Home                        | Planned |
-| Our Story                   | Planned |
-| What We Do                  | Planned |
-| Pillar 1 detail             | Planned |
-| Pillar 2 detail             | Planned |
-| Pillar 3 detail             | Planned |
-| Pillar 4 detail             | Planned |
-| Founder                     | Planned |
-| Team                        | Planned |
-| Communities / Where We Work | Planned |
-| Contact shell               | Planned |
+| Page / Area                  | Unit 2    |
+| ----------------------------- | --------- |
+| Home                          | Complete  |
+| Our Story                     | Complete  |
+| What We Do                    | Complete  |
+| Pillar 1 detail                | Complete  |
+| Pillar 2 detail                | Complete  |
+| Pillar 3 detail                | Complete  |
+| Pillar 4 detail                | Complete  |
+| Founder                       | Complete  |
+| Team                          | Complete  |
+| Communities / Where We Work   | Complete  |
+| Contact shell                 | Complete  |
 
 The exact naming and content structure must follow the approved PRD and project documentation.
 
@@ -902,23 +917,14 @@ Purpose:
 * Documentation baseline
 * Approved assets
 * Project baseline
-* **Unit 1 Foundations (merged via PR #1)**
-
-### `feature/foundations`
-
-Purpose:
-
-* Unit 1 Foundations implementation
-* Completed
-* Validated
-* Pushed
-* **Merged into `main`**
+* **Units 1–8 (merged via PR #1, #4, #5, #7, #8, #9, #10, #11)**
 
 ### Next Branch
 
-Unit 2 should receive its own feature branch after scope confirmation (recommended: `feature/public-website`).
-
-Do not begin Unit 2 implementation directly on `main`.
+Further roadmap units are not currently scoped. Operational follow-ups
+(credentials, Cloudinary, content seeding) do not require a new feature
+branch unless they involve code changes — in that case, branch per
+`AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 ---
 
@@ -926,79 +932,62 @@ Do not begin Unit 2 implementation directly on `main`.
 
 ## Unit 1 — Foundations
 
-| Check                | Result       |
-| -------------------- | ------------ |
-| Git initialisation   | **PASS**     |
-| Next.js foundation   | **PASS**     |
-| Brand tokens         | **PASS**     |
-| Red Hat fonts        | **PASS**     |
-| Public shell         | **PASS**     |
-| Admin shell          | **PASS**     |
-| IA stub routes       | **PASS**     |
-| Drizzle skeleton     | **PASS**     |
-| MSW stubs            | **PASS**     |
-| `/api/health`        | **PASS**     |
-| Docker               | **PASS**     |
-| `.env.example`       | **PASS**     |
-| `npm run lint`       | **PASS**     |
-| `npm run type-check` | **PASS**     |
-| `npm run test`       | **PASS — 2** |
-| `npm run test:e2e`   | **PASS — 1** |
-| `npm run build`      | **PASS**     |
-| Merge to `main`      | **PASS** (PR #1) |
+| Check                 | Result           |
+| ---------------------- | ---------------- |
+| Git initialisation     | **PASS**         |
+| Next.js foundation     | **PASS**         |
+| Brand tokens           | **PASS**         |
+| Red Hat fonts          | **PASS**         |
+| Public shell           | **PASS**         |
+| Admin shell            | **PASS**         |
+| IA stub routes         | **PASS**         |
+| Drizzle skeleton       | **PASS**         |
+| MSW stubs              | **PASS**         |
+| `/api/health`          | **PASS**         |
+| Docker                 | **PASS**         |
+| `.env.example`         | **PASS**         |
+| `npm run lint`         | **PASS**         |
+| `npm run type-check`   | **PASS**         |
+| `npm run test`         | **PASS — 2**     |
+| `npm run test:e2e`     | **PASS — 1**     |
+| `npm run build`        | **PASS**         |
+| Merge to `main`        | **PASS** (PR #1) |
 
 ---
 
 # Session Notes
 
-## Unit 1 — Foundations
+## Content follow-up — Canonical social links (this session)
 
-**Completed and merged**
+* Social profile URLs taken from authoritative `content reference.md` (not `GGI.pdf`).
+* Footer and Contact page share `content/social-links.ts` + `components/layout/social-links.tsx`.
+* Exactly four platforms: Instagram, TikTok, Facebook, LinkedIn.
+* Stale admin/public X and YouTube fields removed; TikTok added (`0005_content_social_tiktok`).
+* Old Instagram handle `girls.global.initiative` was not used.
+* Contact phones/email from content reference wired on Contact; footer email falls back to the same address.
+* Validation: lint PASS, type-check PASS, Playwright PASS (18 tests with retries), build PASS.
 
-The Next.js App Router foundation is complete and merged into `main` on:
+## Units 1–8 — Complete
 
-`e-mond/Girls-Global-Initiative`
+All roadmap units (Foundations through Production Readiness) are
+implemented and merged into `main` on `e-mond/Girls-Global-Initiative`:
 
-via:
+* PR #1 — Foundations (`feature/foundations`)
+* PR #4 — Public Website (`feature/public-website` or equivalent)
+* PR #5 — Admin Back-Office Core
+* PR #7 — Submission Workflows
+* PR #8 — Newsletter
+* PR #9 — Donations (Paystack)
+* PR #10 — Users, Settings & Audit
+* PR #11 — Production Readiness
 
-PR #1 — `feature/foundations`
-
-The foundation includes:
-
-* Brand tokens
-* Red Hat fonts
-* Public shell
-* Admin shell
-* IA stub routes
-* Drizzle foundation
-* MSW foundation
-* Health endpoint
-* Docker
-* Environment template
-
-The design reference was renamed:
-
-`RefenceImage.png` → `GGIHomepage.png`
-
+The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 `AGENTS.md` was reviewed and confirmed against the approved PRD stack.
-
-### Validation
-
-All Unit 1 validation checks passed:
-
-```text
-npm run lint        PASS
-npm run type-check  PASS
-npm run test        PASS (2)
-npm run test:e2e    PASS (1)
-npm run build       PASS
-```
 
 ### Current Status
 
-Unit 1–7 are complete and merged into `main` (Unit 7 via PR #10).
-
-Roadmap units 1–8 are complete and merged into `main` (Unit 8 via PR #11).
+Roadmap Units 1–8 are complete and merged into `main`. Active work is
+content follow-up (canonical social links) on `feature/content-social-links`.
 
 ---
 

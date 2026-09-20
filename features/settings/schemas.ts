@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { staffRoleSchema } from "@/features/governance/rbac";
+import { CONTACT_EMAIL } from "@/content/contact-details";
+import { SOCIAL_HREFS } from "@/content/social-links";
 
 export const createStaffUserSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -18,8 +20,7 @@ export const updateStaffUserSchema = z.object({
 export const siteSettingsSchema = z.object({
   socialFacebook: z.string().trim().max(300).optional().default(""),
   socialInstagram: z.string().trim().max(300).optional().default(""),
-  socialX: z.string().trim().max(300).optional().default(""),
-  socialYoutube: z.string().trim().max(300).optional().default(""),
+  socialTiktok: z.string().trim().max(300).optional().default(""),
   socialLinkedin: z.string().trim().max(300).optional().default(""),
   footerContactEmail: z
     .string()
@@ -43,3 +44,17 @@ export const siteSettingsSchema = z.object({
 });
 
 export type SiteSettings = z.infer<typeof siteSettingsSchema>;
+
+/** Defaults aligned with content-reference canonical profiles. */
+export const SITE_SETTINGS_DEFAULTS: SiteSettings = {
+  socialFacebook: SOCIAL_HREFS.facebook,
+  socialInstagram: SOCIAL_HREFS.instagram,
+  socialTiktok: SOCIAL_HREFS.tiktok,
+  socialLinkedin: SOCIAL_HREFS.linkedin,
+  footerContactEmail: CONTACT_EMAIL,
+  seoDefaultTitle: "",
+  seoDefaultDescription: "",
+  ctaDonateUrl: "/get-involved/donate",
+  ctaVolunteerUrl: "/get-involved/volunteer",
+  ctaPartnerUrl: "/partner",
+};

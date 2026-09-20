@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { CONTACT_EMAIL } from "@/content/contact-details";
+import { SocialLinks } from "@/components/layout/social-links";
 import { getSiteSettings } from "@/features/settings/service";
 
 const EXPLORE_LINKS = [
@@ -21,13 +23,7 @@ const SUPPORT_LINKS = [
 /** Public site footer — responsive columns and accessible link lists. */
 export async function PublicFooter() {
   const settings = await getSiteSettings();
-  const social = [
-    { href: settings.socialFacebook, label: "Facebook" },
-    { href: settings.socialInstagram, label: "Instagram" },
-    { href: settings.socialX, label: "X" },
-    { href: settings.socialYoutube, label: "YouTube" },
-    { href: settings.socialLinkedin, label: "LinkedIn" },
-  ].filter((item) => item.href);
+  const contactEmail = settings.footerContactEmail.trim() || CONTACT_EMAIL;
 
   return (
     <footer className="mt-auto bg-brand-navy text-text-on-inverse">
@@ -49,22 +45,7 @@ export async function PublicFooter() {
             Advancing the rights, dignity, health, wellbeing and education of
             girls in rural, remote and underserved communities.
           </p>
-          {social.length > 0 ? (
-            <ul className="flex flex-wrap gap-3 text-sm">
-              {social.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="text-white/80 hover:text-brand-sky"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+          <SocialLinks variant="onDark" />
         </div>
 
         <div className="grid grid-cols-2 gap-6 text-sm">
@@ -110,20 +91,14 @@ export async function PublicFooter() {
 
         <div className="space-y-3 text-sm">
           <p className="font-semibold">Questions? Say hello</p>
-          {settings.footerContactEmail ? (
-            <p className="text-white/80">
-              <a
-                href={`mailto:${settings.footerContactEmail}`}
-                className="hover:text-brand-sky"
-              >
-                {settings.footerContactEmail}
-              </a>
-            </p>
-          ) : (
-            <p className="text-white/80">
-              Contact details can be set in admin site settings.
-            </p>
-          )}
+          <p className="text-white/80">
+            <a
+              href={`mailto:${contactEmail}`}
+              className="hover:text-brand-sky"
+            >
+              {contactEmail}
+            </a>
+          </p>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/contact"
