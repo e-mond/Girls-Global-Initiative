@@ -2,24 +2,13 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { SiteSettings } from "@/features/settings/schemas";
-
-const EMPTY: SiteSettings = {
-  socialFacebook: "",
-  socialInstagram: "",
-  socialX: "",
-  socialYoutube: "",
-  socialLinkedin: "",
-  footerContactEmail: "",
-  seoDefaultTitle: "",
-  seoDefaultDescription: "",
-  ctaDonateUrl: "/get-involved/donate",
-  ctaVolunteerUrl: "/get-involved/volunteer",
-  ctaPartnerUrl: "/partner",
-};
+import {
+  SITE_SETTINGS_DEFAULTS,
+  type SiteSettings,
+} from "@/features/settings/schemas";
 
 export default function AdminSettingsPageClient() {
-  const [values, setValues] = useState<SiteSettings>(EMPTY);
+  const [values, setValues] = useState<SiteSettings>(SITE_SETTINGS_DEFAULTS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,10 +116,9 @@ export default function AdminSettingsPageClient() {
           <h3 className="sm:col-span-2 font-semibold text-brand-navy">
             Social links
           </h3>
-          {field("socialFacebook", "Facebook URL")}
           {field("socialInstagram", "Instagram URL")}
-          {field("socialX", "X / Twitter URL")}
-          {field("socialYoutube", "YouTube URL")}
+          {field("socialTiktok", "TikTok URL")}
+          {field("socialFacebook", "Facebook URL")}
           {field("socialLinkedin", "LinkedIn URL")}
         </div>
 

@@ -70,5 +70,9 @@ export async function listAuditLogs(limit = 100): Promise<AuditLogRecord[]> {
 }
 
 export function getMemoryAuditLogs(): AuditEntry[] {
-  return memoryAudit.map(({ id: _id, createdAt: _c, ...entry }) => entry);
+  return memoryAudit.map(({ id, createdAt, ...entry }) => {
+    void id;
+    void createdAt;
+    return entry;
+  });
 }
