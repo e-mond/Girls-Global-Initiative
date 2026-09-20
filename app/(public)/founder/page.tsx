@@ -1,6 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import {
+  ContentSection,
+  Prose,
+} from "@/components/layout/content-section";
+import { FOUNDER_MESSAGE } from "@/content/site-copy";
 import { founderSpotlight } from "@/features/content/mock-home";
 
 export default function FounderPage() {
@@ -11,8 +16,9 @@ export default function FounderPage() {
         title={founderSpotlight.name}
         description={founderSpotlight.role}
       />
-      <section className="bg-bg-surface px-4 pb-16 lg:px-6 lg:pb-24">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-start">
+
+      <ContentSection tone="surface">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky">
             <Image
               src={founderSpotlight.imageSrc}
@@ -27,9 +33,7 @@ export default function FounderPage() {
               &ldquo;{founderSpotlight.quote}&rdquo;
             </p>
             <p className="text-base leading-relaxed text-text-muted">
-              Leadership biography and message content will be CMS-managed. This
-              page follows the approved founder spotlight structure from the
-              homepage reference without inventing additional claims.
+              {founderSpotlight.body}
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
               {founderSpotlight.callouts.map((item) => (
@@ -54,7 +58,26 @@ export default function FounderPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </ContentSection>
+
+      <ContentSection
+        eyebrow="Message from the Founder"
+        title="Every girl deserves the opportunity to dream, learn, grow and lead."
+        tone="base"
+        narrow
+      >
+        <Prose>
+          {FOUNDER_MESSAGE.paragraphs.map((paragraph) => (
+            <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+          ))}
+        </Prose>
+        <p className="mt-8 font-display text-lg font-semibold text-brand-navy">
+          {FOUNDER_MESSAGE.signatureName}
+        </p>
+        <p className="text-sm text-text-muted">
+          {FOUNDER_MESSAGE.signatureRole}
+        </p>
+      </ContentSection>
     </>
   );
 }

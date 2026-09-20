@@ -8,6 +8,8 @@ import { Heart, Menu, X } from "lucide-react";
 const NAV_LINKS = [
   { href: "/our-story", label: "Our story" },
   { href: "/what-we-do", label: "What we do" },
+  { href: "/programmes", label: "Programmes" },
+  { href: "/impact", label: "Impact" },
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },

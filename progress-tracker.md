@@ -7,23 +7,23 @@
 
 ## Current Phase
 
-* **Content follow-up — Canonical social links**
-* **Status:** In progress on `feature/content-social-links`
-* **Previous phase:** Unit 8 — Production Readiness (complete, PR #11)
-* **Current branch:** `feature/content-social-links`
+* **Content follow-up — Public pages revamp**
+* **Status:** Complete on `feature/content-public-pages` (ready to push/merge)
+* **Previous phase:** Canonical social links (complete, PR #13)
+* **Current branch:** `feature/content-public-pages`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Wire Footer and Contact to four canonical social profiles from content-reference.md via a shared config.
+* **Current objective:** Revamp non-landing public pages with content-reference/PDF copy; add `/programmes` and `/impact`.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Complete content social-links follow-up:
+Ship content-rich public pages (excluding homepage):
 
-1. Shared `content/social-links.ts` + Contact details.
-2. Footer and Contact consume the same four profiles (Instagram, TikTok, Facebook, LinkedIn).
-3. Align admin settings platforms; validate and merge.
+1. Our Story, Founder, What we do + pillars, Communities, Team, Get involved, Advocate, Partner, Donate intros — **done**.
+2. New `/programmes` and `/impact` routes wired into nav/footer — **done**.
+3. Validate, push, merge — validation complete; push/merge next.
 
 ---
 
@@ -471,13 +471,12 @@ Until those assets arrive:
 
 ## Pillar structure vs. source content
 
-`content-reference.md` (from GGI's own brand PDF) gives 6 Focus Areas, 6
-Programmes & Initiatives, and 4 Projects, which don't map one-to-one onto
-the 4 pillars from `GGIHomepage.png`/`GGI-BRD.md`/`GGI-PRD.md`. A proposed
-resolution (4 pillars stay as top-level structure; new `/programmes` and
-`/impact` pages added, with a new `programmes` CMS entity) is documented at
-the bottom of `content-reference.md` — confirm this was applied, or
-reconcile, before treating Unit 2 content as final.
+**Resolved (owner direction, content public-pages follow-up):** Keep the 4
+pillars as top-level What we do structure; map focus areas into pillar
+detail pages; add public `/programmes` (initiatives + projects) and
+`/impact` (achievements + theme categories without invented counts). A
+dedicated CMS `programmes` entity remains a later increment — Phase 1
+pages use `content/site-copy.ts`.
 
 ---
 
@@ -918,13 +917,18 @@ Purpose:
 * Approved assets
 * Project baseline
 * **Units 1–8 (merged via PR #1, #4, #5, #7, #8, #9, #10, #11)**
+* **Content social links (merged via PR #13)**
+
+### Active branch — `feature/content-public-pages`
+
+Public pages revamp (non-landing): detailed copy, `/programmes`, `/impact`.
 
 ### Next Branch
 
 Further roadmap units are not currently scoped. Operational follow-ups
-(credentials, Cloudinary, content seeding) do not require a new feature
-branch unless they involve code changes — in that case, branch per
-`AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
+(credentials, Cloudinary, content seeding, CMS programmes entity) do not
+require a new feature branch unless they involve code changes — in that
+case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 ---
 
@@ -957,7 +961,17 @@ branch unless they involve code changes — in that case, branch per
 
 # Session Notes
 
-## Content follow-up — Canonical social links (this session)
+## Content follow-up — Public pages revamp (this session)
+
+* Applied `content reference.md` / `GGI.pdf` copy to non-landing public pages via `content/site-copy.ts` and `ContentSection`.
+* Added `/programmes` and `/impact` (owner-directed IA: keep 4 pillars; add programmes + impact).
+* Nav/footer Explore links include Programmes and Impact.
+* No invented impact numbers — categories shown as narrative themes only (“figures pending”).
+* Homepage left unchanged.
+* Validation: lint PASS, type-check PASS, Playwright PASS (22 with retries), build PASS (`/programmes`, `/impact` in route table).
+* CMS `programmes` entity deferred — Phase 1 uses static site-copy.
+
+## Content follow-up — Canonical social links
 
 * Social profile URLs taken from authoritative `content reference.md` (not `GGI.pdf`).
 * Footer and Contact page share `content/social-links.ts` + `components/layout/social-links.tsx`.
@@ -966,6 +980,7 @@ branch unless they involve code changes — in that case, branch per
 * Old Instagram handle `girls.global.initiative` was not used.
 * Contact phones/email from content reference wired on Contact; footer email falls back to the same address.
 * Validation: lint PASS, type-check PASS, Playwright PASS (18 tests with retries), build PASS.
+* Merged via PR #13.
 
 ## Units 1–8 — Complete
 
@@ -986,8 +1001,8 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 are complete and merged into `main`. Active work is
-content follow-up (canonical social links) on `feature/content-social-links`.
+Roadmap Units 1–8 complete. Content follow-ups: social links (PR #13) and
+public pages revamp (`feature/content-public-pages`) ready to push/merge.
 
 ---
 

@@ -36,7 +36,7 @@ export const pillars: Pillar[] = [
     description:
       "Helping girls understand their rights and speak up for dignity in their homes, schools and communities.",
     detail:
-      "We walk alongside girls so they know their rights, recognise harm, and find trusted adults and peers who will stand with them. Content on this page will expand as CMS-managed pillar copy is published.",
+      "We equip girls with knowledge of their rights, confidence, leadership skills and the ability to speak up, make informed decisions and participate meaningfully in their communities. We also advocate for safer, more supportive environments and engage communities on barriers to education, abuse, harmful practices, early pregnancy and limited opportunities.",
     tone: "navy",
   },
   {
@@ -46,7 +46,7 @@ export const pillars: Pillar[] = [
     description:
       "Opening space for menstrual health, reproductive knowledge and emotional wellbeing without shame.",
     detail:
-      "Health conversations start where girls are — practical, respectful and grounded in community trust. Expanded programme detail will be managed through the back-office CMS.",
+      "We promote health information, menstrual health education, personal hygiene awareness and practical support that helps girls understand and care for their bodies and general wellbeing — with conversations that are practical, respectful and grounded in community trust.",
     tone: "magenta",
   },
   {
@@ -54,9 +54,9 @@ export const pillars: Pillar[] = [
     title: "Confidence & growth",
     shortTitle: "Confidence & growth",
     description:
-      "Building confidence through learning, leadership practice and safe spaces to grow.",
+      "Building confidence through learning, leadership practice, physical development and safe spaces to grow.",
     detail:
-      "Confidence grows when girls are seen, heard and trusted with responsibility. This pillar’s fuller narrative will be CMS-editable after Unit 3.",
+      "We encourage girls' participation in physical education and healthy physical development as part of confidence, wellbeing, discipline and teamwork. We also support girls facing educational barriers with learning resources, school engagement and partnerships that help them remain in school.",
     tone: "sky",
   },
   {
@@ -66,7 +66,7 @@ export const pillars: Pillar[] = [
     description:
       "Connecting girls with mentors and pathways toward education and opportunity.",
     detail:
-      "Mentorship and opportunity keep girls from navigating hard choices alone. Detailed mentor pathways will be published from the CMS.",
+      "We connect girls with mentors, professionals and positive role models who can provide guidance, encouragement, career awareness, decision-making support and practical life skills — while strengthening educational pathways that keep opportunity within reach.",
     tone: "cream",
   },
 ];

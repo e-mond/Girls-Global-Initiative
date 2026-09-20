@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { ContentSection } from "@/components/layout/content-section";
+import { TAGLINE } from "@/content/site-copy";
 import { teamMembers } from "@/features/content/mock-home";
 
 export default function TeamPage() {
@@ -9,10 +11,11 @@ export default function TeamPage() {
       <PublicPageIntro
         eyebrow="Team"
         title="Meet the team"
-        description="The people building Girls Global Initiative — youth-led leadership rooted in community."
+        description={`The people building Girls Global Initiative — youth-led leadership rooted in community. ${TAGLINE}`}
       />
-      <section className="bg-bg-surface px-4 pb-16 lg:px-6 lg:pb-24">
-        <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+      <ContentSection tone="surface">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {teamMembers.map((member) => (
             <article
               key={member.id}
@@ -48,14 +51,14 @@ export default function TeamPage() {
                     href="/founder"
                     className="mt-3 inline-flex text-sm font-semibold text-brand-sky hover:underline"
                   >
-                    Read the founder spotlight
+                    Read the founder message
                   </Link>
                 ) : null}
               </div>
             </article>
           ))}
         </div>
-      </section>
+      </ContentSection>
     </>
   );
 }
