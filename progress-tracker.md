@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Admin UI revamp + homepage events**
+* **Admin UI icons, logout polish & repository documentation**
 * **Status:** In progress on `feature/admin-ui-revamp`
-* **Previous phase:** Public UI/UX revamp (merged via PR #15 and #16)
+* **Previous phase:** Admin UI revamp foundation (shell + pages)
 * **Current branch:** `feature/admin-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Polish staff login and admin shell/pages; add second homepage events placeholder from approved site-copy narrative.
+* **Current objective:** Lucide icons on dashboard/sidebar, account-menu logout, collapsible sidebar, GitHub About + README rewrite.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Complete admin UI revamp Phases A–E, validate, push, and open PR.
+Finish icon/logout/docs follow-up, validate, push to PR #17.
 
 ---
 
@@ -1017,6 +1017,17 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 ---
 
 # Session Notes
+
+## Admin icons, logout & GitHub docs (this session)
+
+* Lucide icons on dashboard KPI cards, quick actions, and every sidebar nav item.
+* Stronger active nav state (background + text/icon colour + subtle border) with `aria-current`.
+* Collapsible desktop sidebar with icon-only mode and accessible labels/tooltips.
+* Account menu in admin topbar (Settings when permitted + Log out); shared `AdminSignOutButton` with pending state via Auth.js `signOut`.
+* Notifications bell shows real attention-count indicator and accessible label.
+* GitHub repository About description and topics updated.
+* README rewritten to document GGI, platform areas, stack, structure, security, and accurate scripts.
+* Validation: lint PASS, type-check PASS, Playwright PASS, build PASS.
 
 ## Admin UI revamp (this session)
 

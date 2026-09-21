@@ -1,6 +1,18 @@
+export type AdminNavIconName =
+  | "layout-dashboard"
+  | "file-text"
+  | "images"
+  | "inbox"
+  | "hand-coins"
+  | "mail"
+  | "users"
+  | "settings"
+  | "history";
+
 export type AdminNavItem = {
   href: string;
   label: string;
+  icon: AdminNavIconName;
 };
 
 export type AdminNavGroup = {
@@ -9,19 +21,14 @@ export type AdminNavGroup = {
   items: AdminNavItem[];
 };
 
-/** Shared admin IA — Administration group filtered by role at render time. */
+/** Shared admin IA — Administration group filtered by role at render time.
+ * Icons are string keys so groups stay serialisable Server → Client. */
 export const ADMIN_NAV_MANAGE: AdminNavItem[] = [
-  { href: "/admin/content", label: "Content" },
-  { href: "/admin/content/media", label: "Media" },
-  { href: "/admin/submissions", label: "Submissions" },
-  { href: "/admin/donations", label: "Donations" },
-  { href: "/admin/subscribers", label: "Subscribers" },
-];
-
-export const ADMIN_NAV_ADMINISTRATION: AdminNavItem[] = [
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/settings", label: "Settings" },
-  { href: "/admin/audit", label: "Audits" },
+  { href: "/admin/content", label: "Content", icon: "file-text" },
+  { href: "/admin/content/media", label: "Media", icon: "images" },
+  { href: "/admin/submissions", label: "Submissions", icon: "inbox" },
+  { href: "/admin/donations", label: "Donations", icon: "hand-coins" },
+  { href: "/admin/subscribers", label: "Subscribers", icon: "mail" },
 ];
 
 export function buildAdminNavGroups(options: {
@@ -32,7 +39,9 @@ export function buildAdminNavGroups(options: {
     {
       id: "overview",
       label: "Overview",
-      items: [{ href: "/admin", label: "Dashboard" }],
+      items: [
+        { href: "/admin", label: "Dashboard", icon: "layout-dashboard" },
+      ],
     },
     {
       id: "manage",
@@ -43,12 +52,16 @@ export function buildAdminNavGroups(options: {
 
   const adminItems: AdminNavItem[] = [];
   if (options.canManageUsers) {
-    adminItems.push({ href: "/admin/users", label: "Users" });
+    adminItems.push({
+      href: "/admin/users",
+      label: "Users",
+      icon: "users",
+    });
   }
   if (options.canManageSettings) {
     adminItems.push(
-      { href: "/admin/settings", label: "Settings" },
-      { href: "/admin/audit", label: "Audits" },
+      { href: "/admin/settings", label: "Settings", icon: "settings" },
+      { href: "/admin/audit", label: "Audits", icon: "history" },
     );
   }
   if (adminItems.length) {

@@ -1,10 +1,18 @@
 import Link from "next/link";
+import {
+  FileText,
+  HandCoins,
+  Images,
+  Inbox,
+  Mail,
+} from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { listAttentionItems } from "@/features/admin/attention";
 import { listDonations } from "@/features/donations/service";
 import { listSubscribers } from "@/features/newsletter/service";
 import { listSubmissions } from "@/features/submissions/service";
 import { auth } from "@/auth";
+import type { LucideIcon } from "lucide-react";
 
 async function safeCount(loader: () => Promise<number>) {
   try {
@@ -45,26 +53,42 @@ export default async function AdminDashboardPage() {
       ? newVolunteer + newPartnership + newContact
       : null;
 
-  const metrics = [
+  const metrics: {
+    label: string;
+    value: number | null;
+    href: string;
+    hint: string;
+    icon: LucideIcon;
+  }[] = [
     {
       label: "Needs review",
       value: newSubmissions,
       href: "/admin/submissions",
       hint: "New submissions",
+      icon: Inbox,
     },
     {
       label: "Donations logged",
       value: donations,
       href: "/admin/donations",
       hint: "All recorded gifts",
+      icon: HandCoins,
     },
     {
       label: "Active subscribers",
       value: subscribers,
       href: "/admin/subscribers",
       hint: "Confirmed list",
+      icon: Mail,
     },
-  ] as const;
+  ];
+
+  const quickActions: { href: string; label: string; icon: LucideIcon }[] = [
+    { href: "/admin/submissions", label: "Review submissions", icon: Inbox },
+    { href: "/admin/content", label: "Manage content", icon: FileText },
+    { href: "/admin/content/media", label: "Open media library", icon: Images },
+    { href: "/admin/subscribers", label: "View subscribers", icon: Mail },
+  ];
 
   return (
     <div className="space-y-8">
@@ -75,21 +99,27 @@ export default async function AdminDashboardPage() {
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
-        {metrics.map((metric) => (
-          <Link
-            key={metric.label}
-            href={metric.href}
-            className="rounded-2xl border border-border-default bg-bg-surface p-5 transition hover:border-brand-sky/40"
-          >
-            <p className="text-xs font-bold uppercase tracking-wide text-text-muted">
-              {metric.label}
-            </p>
-            <p className="mt-3 font-display text-3xl font-bold text-brand-navy">
-              {metric.value === null ? "—" : metric.value}
-            </p>
-            <p className="mt-1 text-sm text-text-muted">{metric.hint}</p>
-          </Link>
-        ))}
+        {metrics.map((metric) => {
+          const Icon = metric.icon;
+          return (
+            <Link
+              key={metric.label}
+              href={metric.href}
+              className="rounded-2xl border border-border-default bg-bg-surface p-5 transition hover:border-brand-sky/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+            >
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-bg-base text-brand-navy">
+                <Icon className="h-4 w-4" aria-hidden />
+              </span>
+              <p className="mt-4 text-xs font-bold uppercase tracking-wide text-text-muted">
+                {metric.label}
+              </p>
+              <p className="mt-2 font-display text-3xl font-bold text-brand-navy">
+                {metric.value === null ? "—" : metric.value}
+              </p>
+              <p className="mt-1 text-sm text-text-muted">{metric.hint}</p>
+            </Link>
+          );
+        })}
       </div>
 
       <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -128,21 +158,20 @@ export default async function AdminDashboardPage() {
             Quick actions
           </h3>
           <ul className="mt-4 space-y-2">
-            {[
-              { href: "/admin/submissions", label: "Review submissions" },
-              { href: "/admin/content", label: "Manage content" },
-              { href: "/admin/content/media", label: "Open media library" },
-              { href: "/admin/subscribers", label: "View subscribers" },
-            ].map((action) => (
-              <li key={action.href}>
-                <Link
-                  href={action.href}
-                  className="flex min-h-11 items-center rounded-xl border border-border-default px-3 text-sm font-semibold text-brand-navy hover:border-brand-sky/40"
-                >
-                  {action.label}
-                </Link>
-              </li>
-            ))}
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <li key={action.href}>
+                  <Link
+                    href={action.href}
+                    className="flex min-h-11 items-center gap-2.5 rounded-xl border border-border-default px-3 text-sm font-semibold text-brand-navy hover:border-brand-sky/40"
+                  >
+                    <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                    {action.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
