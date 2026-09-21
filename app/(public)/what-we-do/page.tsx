@@ -26,7 +26,8 @@ export default function WhatWeDoPage() {
         eyebrow="What we do"
         title="Four connected ways we walk alongside girls."
         description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity. We use a community-centred, girl-focused approach."
-        tone="sky"
+        tone="cream"
+        ambient="flat"
         ctas={[
           { href: "/programmes", label: "View programmes" },
           { href: "/impact", label: "See impact themes", variant: "secondary" },

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 type Cta = {
@@ -8,6 +9,9 @@ type Cta = {
   label: string;
   variant?: "primary" | "secondary" | "onDark";
 };
+
+const heroBleed =
+  "relative -mt-[var(--public-header-offset)] overflow-hidden px-4 pb-14 pt-[calc(var(--public-header-offset)+2rem)] lg:px-6 lg:pb-20";
 
 function CtaGroup({ ctas, onDark = false }: { ctas?: Cta[]; onDark?: boolean }) {
   if (!ctas?.length) {
@@ -41,7 +45,7 @@ function CtaGroup({ ctas, onDark = false }: { ctas?: Cta[]; onDark?: boolean }) 
   );
 }
 
-/** Editorial / colour page opening with soft blobs, no required photo. */
+/** Editorial / colour page opening. Bleeds under sticky nav so colours sync. */
 export function PageHeroEditorial({
   eyebrow,
   title,
@@ -49,6 +53,7 @@ export function PageHeroEditorial({
   ctas,
   children,
   tone = "cream",
+  ambient = "default",
 }: {
   eyebrow?: string;
   title: string;
@@ -56,31 +61,44 @@ export function PageHeroEditorial({
   ctas?: Cta[];
   children?: ReactNode;
   tone?: "cream" | "navy" | "sky" | "blush";
+  /** `flat` skips gradient blobs (e.g. What we do cream sync). */
+  ambient?: "default" | "flat";
 }) {
   const onDark = tone === "navy";
+  const showPink =
+    ambient === "default" && (tone === "cream" || tone === "blush");
+  const showSky =
+    ambient === "default" && (tone === "cream" || tone === "sky");
+
   return (
     <section
       className={cn(
-        "relative overflow-hidden px-4 py-14 lg:px-6 lg:py-20",
+        heroBleed,
         tone === "cream" && "bg-bg-base text-brand-navy",
         tone === "navy" && "bg-brand-navy text-text-on-inverse",
         tone === "sky" && "bg-blob-sky/40 text-brand-navy",
         tone === "blush" && "bg-blob-pink/40 text-brand-navy",
       )}
     >
-      {tone === "cream" ? (
-        <>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-20 -top-24 h-72 w-72 rounded-full bg-blob-pink/70 blur-2xl"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-16 top-10 h-80 w-80 rounded-full bg-blob-sky/80 blur-2xl"
-          />
-        </>
+      {showPink ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-36 -top-28 h-[34rem] w-[34rem] rounded-full bg-blob-pink/90 blur-2xl"
+        />
       ) : null}
-      <div className="relative mx-auto max-w-6xl">
+      {tone === "sky" ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-blob-sky/25"
+        />
+      ) : null}
+      {showSky ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 top-0 h-[28rem] w-[28rem] rounded-full bg-blob-sky/75 blur-2xl"
+        />
+      ) : null}
+      <Reveal className="relative mx-auto max-w-6xl">
         <div className="max-w-3xl">
           {eyebrow ? (
             <p
@@ -111,7 +129,7 @@ export function PageHeroEditorial({
           <CtaGroup ctas={ctas} onDark={onDark} />
           {children ? <div className="mt-8">{children}</div> : null}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -129,8 +147,17 @@ export function PageHeroCompact({
   children?: ReactNode;
 }) {
   return (
-    <section className="bg-bg-base px-4 py-10 lg:px-6 lg:py-14">
-      <div className="mx-auto max-w-6xl">
+    <section
+      className={cn(
+        heroBleed,
+        "bg-bg-base pb-10 pt-[calc(var(--public-header-offset)+1.5rem)] lg:pb-14",
+      )}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-36 -top-28 h-[30rem] w-[30rem] rounded-full bg-blob-pink/90 blur-2xl"
+      />
+      <Reveal className="relative mx-auto max-w-6xl">
         <div className="max-w-3xl">
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
@@ -145,7 +172,7 @@ export function PageHeroCompact({
           </p>
           {children ? <div className="mt-6">{children}</div> : null}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -173,13 +200,13 @@ export function PageHeroSplit({
   reverse?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden bg-bg-base px-4 py-14 lg:px-6 lg:py-20">
+    <section className={cn(heroBleed, "bg-bg-base")}>
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-blob-pink/60 blur-2xl"
+        className="pointer-events-none absolute -left-36 -top-28 h-[34rem] w-[34rem] rounded-full bg-blob-pink/90 blur-2xl"
       />
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-14">
-        <div className={cn(reverse && "lg:order-2")}>
+        <Reveal className={cn(reverse && "lg:order-2")}>
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
               {eyebrow}
@@ -193,8 +220,8 @@ export function PageHeroSplit({
           </p>
           <CtaGroup ctas={ctas} />
           {children ? <div className="mt-8">{children}</div> : null}
-        </div>
-        <div className={cn("relative", reverse && "lg:order-1")}>
+        </Reveal>
+        <Reveal delay={0.12} className={cn("relative", reverse && "lg:order-1")}>
           <div
             className={cn(
               "relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden bg-blob-sky",
@@ -212,7 +239,7 @@ export function PageHeroSplit({
               sizes="(max-width: 1024px) 90vw, 40vw"
             />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -235,8 +262,8 @@ export function PageHeroPhoto({
   ctas?: Cta[];
 }) {
   return (
-    <section className="relative overflow-hidden">
-      <div className="relative min-h-[22rem] sm:min-h-[28rem]">
+    <section className="relative -mt-[var(--public-header-offset)] overflow-hidden">
+      <div className="relative min-h-[24rem] sm:min-h-[30rem]">
         <Image
           src={imageSrc}
           alt={imageAlt}
@@ -249,9 +276,9 @@ export function PageHeroPhoto({
           aria-hidden
           className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/70 to-brand-navy/35"
         />
-        <div className="relative px-4 py-12 sm:min-h-[28rem] lg:px-6 lg:py-16">
-          <div className="mx-auto flex min-h-[22rem] max-w-6xl items-end sm:min-h-[24rem]">
-            <div className="max-w-2xl text-text-on-inverse">
+        <div className="relative px-4 pb-12 pt-[calc(var(--public-header-offset)+2rem)] sm:min-h-[30rem] lg:px-6 lg:pb-16">
+          <div className="mx-auto flex min-h-[18rem] max-w-6xl items-end sm:min-h-[22rem]">
+            <Reveal className="max-w-2xl text-text-on-inverse">
               {eyebrow ? (
                 <p className="text-xs font-bold uppercase tracking-wide text-blob-pink">
                   {eyebrow}
@@ -264,7 +291,7 @@ export function PageHeroPhoto({
                 {description}
               </p>
               <CtaGroup ctas={ctas} onDark />
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Crown, GraduationCap, Megaphone, Users } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { founderSpotlight } from "@/features/content/mock-home";
 
 const calloutIcons = {
@@ -23,7 +24,7 @@ export function HomeFounder() {
       />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-        <div className="relative mx-auto w-full max-w-sm pb-8">
+        <Reveal className="relative mx-auto w-full max-w-sm pb-8">
           <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] rounded-b-3xl ring-1 ring-brand-sky/35">
             <Image
               src={founderSpotlight.imageSrc}
@@ -41,9 +42,12 @@ export function HomeFounder() {
               {founderSpotlight.role}
             </p>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="flex flex-col justify-center space-y-6 lg:space-y-7">
+        <Reveal
+          delay={0.1}
+          className="flex flex-col justify-center space-y-6 lg:space-y-7"
+        >
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-white">
             <Crown className="h-3.5 w-3.5" aria-hidden />
             {founderSpotlight.badge}
@@ -57,23 +61,22 @@ export function HomeFounder() {
             {founderSpotlight.body}
           </p>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <Stagger className="grid gap-3 sm:grid-cols-3">
             {founderSpotlight.callouts.map((item) => {
               const Icon = calloutIcons[item.icon];
               return (
-                <div
-                  key={item.title}
-                  className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10"
-                >
-                  <Icon className="h-4 w-4 text-white/90" aria-hidden />
-                  <p className="mt-3 text-sm font-semibold">{item.title}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-white/65">
-                    {item.body}
-                  </p>
-                </div>
+                <StaggerItem key={item.title}>
+                  <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+                    <Icon className="h-4 w-4 text-white/90" aria-hidden />
+                    <p className="mt-3 text-sm font-semibold">{item.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-white/65">
+                      {item.body}
+                    </p>
+                  </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
 
           <div className="flex flex-wrap items-center gap-5 pt-1">
             <Link
@@ -90,7 +93,7 @@ export function HomeFounder() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

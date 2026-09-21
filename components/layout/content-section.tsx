@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 export type ContentTone =
@@ -41,7 +42,7 @@ export function ContentSection({
 
   return (
     <section className={cn("px-4 py-14 lg:px-6 lg:py-20", toneClass)}>
-      <div className="mx-auto max-w-6xl">
+      <Reveal className="mx-auto max-w-6xl">
         {eyebrow ? (
           <p
             className={cn(
@@ -83,7 +84,7 @@ export function ContentSection({
             {children}
           </div>
         ) : null}
-      </div>
+      </Reveal>
     </section>
   );
 }

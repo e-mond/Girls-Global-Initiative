@@ -47,6 +47,13 @@ body {
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-sans);
+  --public-header-offset: 5.75rem;
+}
+
+@media (min-width: 640px) {
+  body {
+    --public-header-offset: 6.25rem;
+  }
 }
 
 h1,

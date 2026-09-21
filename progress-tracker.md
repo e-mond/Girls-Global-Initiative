@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Public UI/UX revamp + content surfaces**
-* **Status:** Updated on `feature/public-ui-revamp` (push to PR #15)
+* **Status:** Admin auth UI + hero/nav sync + Framer Motion on `feature/public-ui-revamp`
 * **Previous phase:** Content public pages (complete, PR #14)
 * **Current branch:** `feature/public-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Contact/Donate UI, Gallery/News/Events CMS surfaces, em-dash cleanup, hero variety. Homepage hero/origin/pillars/founder/communities/get-involved bands unchanged except added News/Events strips.
+* **Current objective:** Staff login/forgot/reset polish; hero bleed under transparent nav; Framer Motion across public UI.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Finish validation and push updates to PR #15 (`feature/public-ui-revamp`).
+Validate and push motion/auth/nav-sync updates to PR #15 (`feature/public-ui-revamp`).
 
 ---
 
@@ -487,6 +487,40 @@ Impact, News and Events stay discoverable via footer and contextual
 in-page links. Navbar is a floating sticky surface.
 
 **Source:** Public UI/UX revamp directive; `feature/public-ui-revamp`.
+
+---
+
+## Hero bleed under transparent sticky nav
+
+Heroes use negative top margin equal to `--public-header-offset` so page
+background and left pink / sky washes continue into the sticky header
+zone. The floating nav pill stays translucent white; What we do uses a
+flat cream hero (`ambient="flat"`) so the nav surround matches without
+pink blobs.
+
+**Source:** Owner screenshots (What we do / Get involved); `feature/public-ui-revamp`.
+
+---
+
+## Staff password reset (FR-33)
+
+Hashed one-hour reset tokens on `users` (`0007_staff_password_reset`),
+request/confirm API routes with IP rate limits, generic success copy
+(no email enumeration), and SMTP via the existing acknowledgement mailer
+when configured. Public Auth.js paths: `/admin/forgot-password`,
+`/admin/reset-password`, `/api/admin/password-reset/*`.
+
+**Source:** PRD FR-33; owner admin-login revamp request.
+
+---
+
+## Framer Motion public UI
+
+Shared `components/motion/reveal.tsx` (`Reveal`, `Stagger`, `StaggerItem`)
+honours `prefers-reduced-motion`. Applied across homepage sections, page
+heroes, and `ContentSection` bands.
+
+**Source:** Owner UI motion request; `feature/public-ui-revamp`.
 
 ---
 
@@ -983,6 +1017,15 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 ---
 
 # Session Notes
+
+## Admin login + nav sync + Framer Motion (this session)
+
+* Staff auth shell revamp: `/admin/login`, `/admin/forgot-password`, `/admin/reset-password`.
+* Password reset API (`/api/admin/password-reset/request|confirm`) with hashed tokens, rate limits, no email enumeration; migration `0007_staff_password_reset`.
+* Transparent sticky header; heroes bleed under `--public-header-offset` so colours sync behind the floating nav.
+* What we do uses flat cream hero (`ambient="flat"`) so nav zone matches the section colour; other cream heroes extend the left pink wash into the header zone.
+* `framer-motion` via shared `Reveal` / `Stagger` on homepage sections, page heroes, and `ContentSection`.
+* Validation: migrate PASS, lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
 
 ## Public UI/UX revamp (this session)
 

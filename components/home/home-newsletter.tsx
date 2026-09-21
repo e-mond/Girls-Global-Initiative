@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -56,7 +57,7 @@ export function HomeNewsletter() {
       id="newsletter"
       className="bg-brand-navy px-4 py-10 text-text-on-inverse lg:px-6"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <Reveal className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
             Letters for her future, monthly
@@ -117,7 +118,7 @@ export function HomeNewsletter() {
             {status === "loading" ? "Sending…" : "Subscribe"}
           </Button>
         </form>
-      </div>
+      </Reveal>
     </section>
   );
 }

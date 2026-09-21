@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { getPublicNews } from "@/features/content/public-content";
 
 /** Homepage news strip. Uses CMS when published; otherwise clear placeholders. */
@@ -9,7 +10,7 @@ export async function HomeNews() {
   return (
     <section className="bg-bg-surface px-4 py-16 lg:px-6 lg:py-20">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <Reveal className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
               News
@@ -24,10 +25,10 @@ export async function HomeNews() {
           >
             All news
           </Link>
-        </div>
-        <ul className="mt-10 grid gap-5 md:grid-cols-2">
+        </Reveal>
+        <Stagger className="mt-10 grid gap-5 md:grid-cols-2">
           {items.map((item) => (
-            <li key={item.id}>
+            <StaggerItem key={item.id}>
               <article className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-base">
                 {item.imageSrc ? (
                   <div className="relative h-44">
@@ -52,9 +53,9 @@ export async function HomeNews() {
                   ) : null}
                 </div>
               </article>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </div>
     </section>
   );

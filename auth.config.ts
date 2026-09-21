@@ -23,12 +23,21 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;
-      const isLogin = pathname.startsWith("/admin/login");
+      const isPublicAdminPage =
+        pathname.startsWith("/admin/login") ||
+        pathname.startsWith("/admin/forgot-password") ||
+        pathname.startsWith("/admin/reset-password");
+      const isPublicAdminApi = pathname.startsWith(
+        "/api/admin/password-reset/",
+      );
       const isAdmin = pathname.startsWith("/admin");
       const isAdminApi = pathname.startsWith("/api/admin");
       const signedIn = Boolean(auth?.user);
 
-      if ((isAdmin && !isLogin) || isAdminApi) {
+      if (
+        (isAdmin && !isPublicAdminPage) ||
+        (isAdminApi && !isPublicAdminApi)
+      ) {
         return signedIn;
       }
       return true;
