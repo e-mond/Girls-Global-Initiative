@@ -1,25 +1,47 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeroSplit } from "@/components/layout/public-page-intro";
+import {
+  Crown,
+  GraduationCap,
+  HeartHandshake,
+  Megaphone,
+  Users,
+} from "lucide-react";
+import {
+  DualToneCards,
+  PhotoBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
   Prose,
   QuoteBand,
 } from "@/components/layout/content-section";
+import { PageHeroSplit } from "@/components/layout/public-page-intro";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { FOUNDER_MESSAGE } from "@/content/site-copy";
 import { founderSpotlight } from "@/features/content/mock-home";
+
+const calloutIcons = {
+  megaphone: Megaphone,
+  graduation: GraduationCap,
+  users: Users,
+} as const;
 
 export default function FounderPage() {
   return (
     <>
       <PageHeroSplit
-        eyebrow="Founder & Executive Director"
+        breadcrumb="Founder"
+        badge="Leadership"
+        meta="Founder & Executive Director"
         title={founderSpotlight.name}
-        description={founderSpotlight.role}
+        description={founderSpotlight.body}
         imageSrc={founderSpotlight.imageSrc}
         imageAlt={founderSpotlight.name}
         imageShape="arch"
+        imageCaption={founderSpotlight.name}
+        imageTags={founderSpotlight.role}
         ctas={[
           { href: "/team", label: "Meet the team", variant: "secondary" },
           { href: "/get-involved", label: "Support the mission" },
@@ -31,52 +53,76 @@ export default function FounderPage() {
       </PageHeroSplit>
 
       <ContentSection tone="surface">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-          <div className="space-y-4">
-            <p className="text-base leading-relaxed text-text-muted sm:text-lg">
-              {founderSpotlight.body}
-            </p>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {founderSpotlight.callouts.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-border-default bg-bg-base p-4"
-                >
-                  <p className="text-sm font-semibold text-brand-navy">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 text-xs leading-relaxed text-text-muted">
-                    {item.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <aside className="rounded-3xl border border-border-default bg-blob-sky/30 p-6">
-            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
-              Leadership
-            </p>
-            <p className="mt-3 font-display text-lg font-bold text-brand-navy">
-              Youth-led. Community-rooted. Girls first.
-            </p>
-            <p className="mt-3 text-sm leading-relaxed text-text-muted">
-              Philomena leads GGI so girls do not have to navigate rights,
-              health, school and opportunity alone.
-            </p>
-            <Link
-              href="/our-story"
-              className="mt-5 inline-flex text-sm font-semibold text-brand-sky hover:underline"
-            >
-              Read our story
-            </Link>
-          </aside>
+        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+          <Reveal>
+            <span className="inline-flex items-center gap-2 rounded-full border border-border-default bg-bg-base px-3 py-1.5 text-xs font-medium text-brand-navy">
+              <Crown className="h-3.5 w-3.5 text-brand-magenta" aria-hidden />
+              {founderSpotlight.badge}
+            </span>
+            <Stagger className="mt-6 grid gap-3 sm:grid-cols-3">
+              {founderSpotlight.callouts.map((item) => {
+                const Icon = calloutIcons[item.icon];
+                return (
+                  <StaggerItem key={item.title}>
+                    <div className="h-full rounded-2xl border border-border-default bg-bg-base p-4">
+                      <Icon
+                        className="h-4 w-4 text-brand-magenta"
+                        aria-hidden
+                      />
+                      <p className="mt-3 text-sm font-semibold text-brand-navy">
+                        {item.title}
+                      </p>
+                      <p className="mt-2 text-xs leading-relaxed text-text-muted">
+                        {item.body}
+                      </p>
+                    </div>
+                  </StaggerItem>
+                );
+              })}
+            </Stagger>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <aside className="rounded-[1.75rem] border border-border-default bg-blob-sky/35 p-6">
+              <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+                Leadership
+              </p>
+              <p className="mt-3 font-display text-lg font-bold text-brand-navy">
+                Youth-led. Community-rooted. Girls first.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-text-muted">
+                Philomena leads GGI so girls do not have to navigate rights,
+                health, school and opportunity alone.
+              </p>
+              <Link
+                href="/our-story"
+                className="mt-5 inline-flex text-sm font-semibold text-brand-sky hover:underline"
+              >
+                Read our story
+              </Link>
+            </aside>
+          </Reveal>
         </div>
       </ContentSection>
 
       <QuoteBand
         quote="Every girl deserves the opportunity to dream, learn, grow, lead and build a meaningful future."
         attribution={FOUNDER_MESSAGE.signatureName}
-        tone="blush"
+        tone="navy"
+      />
+
+      <DualToneCards
+        left={{
+          label: "Lived understanding",
+          body: "Leadership shaped by listening to girls in rural, remote and underserved communities.",
+          icon: HeartHandshake,
+          tone: "pink",
+        }}
+        right={{
+          label: "A clear charge",
+          body: "Close the gap where barriers are greatest — with education, rights, health and mentorship.",
+          icon: Users,
+          tone: "sky",
+        }}
       />
 
       <ContentSection
@@ -110,6 +156,8 @@ export default function FounderPage() {
           </div>
         </div>
       </ContentSection>
+
+      <PhotoBand src="/our-story/community.jpg" alt="Community work with GGI" />
 
       <CtaBand
         title="Stand with the girls GGI serves."

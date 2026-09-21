@@ -1,17 +1,31 @@
 import Link from "next/link";
+import {
+  HeartHandshake,
+  MapPin,
+  School,
+  Shield,
+  Users,
+} from "lucide-react";
 import { HomeCommunities } from "@/components/home/home-communities";
-import { PageHeroPhoto } from "@/components/layout/public-page-intro";
+import {
+  IconFeatureGrid,
+  MediaBeliefSplit,
+  PhotoBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
+import { PageHeroPhoto } from "@/components/layout/public-page-intro";
 import { COMMUNITIES_COPY } from "@/content/site-copy";
 
 export default function CommunitiesPage() {
   return (
     <>
       <PageHeroPhoto
-        eyebrow="Communities"
+        breadcrumb="Communities"
+        badge="Communities"
+        meta="Rural · Remote · Underserved"
         title="Rural, remote & underserved: first, not last."
         description={COMMUNITIES_COPY.lead}
         imageSrc="/home/community-1.jpg"
@@ -28,19 +42,55 @@ export default function CommunitiesPage() {
         description="GGI does not publish fabricated location counts. What we do share is the focus: girls in rural, remote and underserved communities."
         tone="cream"
       >
-        <ul className="grid gap-4 lg:grid-cols-3">
-          {COMMUNITIES_COPY.points.map((point) => (
-            <li
-              key={point.slice(0, 32)}
-              className="rounded-3xl border border-border-default bg-bg-surface p-5 text-sm leading-relaxed text-text-muted"
-            >
-              {point}
-            </li>
-          ))}
-        </ul>
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Rural first",
+              body: COMMUNITIES_COPY.points[0],
+              icon: MapPin,
+            },
+            {
+              title: "Schools & safe spaces",
+              body: COMMUNITIES_COPY.points[1],
+              icon: School,
+            },
+            {
+              title: "Families & partners",
+              body: COMMUNITIES_COPY.points[2],
+              icon: Users,
+            },
+          ]}
+        />
       </ContentSection>
 
       <HomeCommunities showIntro={false} />
+
+      <MediaBeliefSplit
+        eyebrow="How we show up"
+        title="Presence that protects dignity."
+        description="Community work means listening first, then walking with schools, families and girls."
+        imageSrc="/our-story/challenges.jpg"
+        imageAlt="Girls gathering in community"
+        items={[
+          {
+            title: "Listen before leading",
+            body: "Programmes start from what girls and caretakers name as barriers.",
+            icon: HeartHandshake,
+          },
+          {
+            title: "Protect dignity",
+            body: "Photography and storytelling never invent numbers or expose girls.",
+            icon: Shield,
+          },
+          {
+            title: "Stay accountable",
+            body: "Impact is documented through story and verified figures only.",
+            icon: Users,
+          },
+        ]}
+      />
+
+      <PhotoBand src="/our-story/journey.jpg" alt="Community journey with GGI" />
 
       <ContentSection tone="sky" narrow>
         <p className="text-sm text-text-muted">

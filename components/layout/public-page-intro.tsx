@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import {
+  PageBadgeRow,
+  PageBreadcrumb,
+} from "@/components/layout/editorial";
 import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +58,9 @@ export function PageHeroEditorial({
   children,
   tone = "cream",
   ambient = "default",
+  breadcrumb,
+  badge,
+  meta,
 }: {
   eyebrow?: string;
   title: string;
@@ -63,6 +70,9 @@ export function PageHeroEditorial({
   tone?: "cream" | "navy" | "sky" | "blush";
   /** `flat` skips gradient blobs (e.g. What we do cream sync). */
   ambient?: "default" | "flat";
+  breadcrumb?: string;
+  badge?: string;
+  meta?: string;
 }) {
   const onDark = tone === "navy";
   const showPink =
@@ -100,9 +110,15 @@ export function PageHeroEditorial({
       ) : null}
       <Reveal className="relative mx-auto max-w-6xl">
         <div className="max-w-3xl">
-          {eyebrow ? (
+          {breadcrumb ? (
+            <PageBreadcrumb current={breadcrumb} onDark={onDark} />
+          ) : null}
+          {badge ? (
+            <PageBadgeRow badge={badge} meta={meta} onDark={onDark} />
+          ) : eyebrow ? (
             <p
               className={cn(
+                breadcrumb ? "mt-5" : "",
                 "text-xs font-bold uppercase tracking-wide",
                 onDark ? "text-blob-pink" : "text-brand-magenta",
               )}
@@ -140,11 +156,19 @@ export function PageHeroCompact({
   title,
   description,
   children,
+  breadcrumb,
+  badge,
+  meta,
+  ctas,
 }: {
   eyebrow?: string;
   title: string;
   description: string;
   children?: ReactNode;
+  breadcrumb?: string;
+  badge?: string;
+  meta?: string;
+  ctas?: Cta[];
 }) {
   return (
     <section
@@ -157,10 +181,22 @@ export function PageHeroCompact({
         aria-hidden
         className="pointer-events-none absolute -left-36 -top-28 h-[30rem] w-[30rem] rounded-full bg-blob-pink/90 blur-2xl"
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 top-8 h-[22rem] w-[22rem] rounded-full bg-blob-sky/60 blur-2xl"
+      />
       <Reveal className="relative mx-auto max-w-6xl">
         <div className="max-w-3xl">
-          {eyebrow ? (
-            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+          {breadcrumb ? <PageBreadcrumb current={breadcrumb} /> : null}
+          {badge ? (
+            <PageBadgeRow badge={badge} meta={meta} />
+          ) : eyebrow ? (
+            <p
+              className={cn(
+                breadcrumb ? "mt-5" : "",
+                "text-xs font-bold uppercase tracking-wide text-brand-magenta",
+              )}
+            >
               {eyebrow}
             </p>
           ) : null}
@@ -170,6 +206,7 @@ export function PageHeroCompact({
           <p className="mt-3 text-base leading-relaxed text-text-muted">
             {description}
           </p>
+          <CtaGroup ctas={ctas} />
           {children ? <div className="mt-6">{children}</div> : null}
         </div>
       </Reveal>
@@ -188,6 +225,11 @@ export function PageHeroSplit({
   ctas,
   children,
   reverse = false,
+  breadcrumb,
+  badge,
+  meta,
+  imageCaption,
+  imageTags,
 }: {
   eyebrow?: string;
   title: string;
@@ -198,6 +240,11 @@ export function PageHeroSplit({
   ctas?: Cta[];
   children?: ReactNode;
   reverse?: boolean;
+  breadcrumb?: string;
+  badge?: string;
+  meta?: string;
+  imageCaption?: string;
+  imageTags?: string;
 }) {
   return (
     <section className={cn(heroBleed, "bg-bg-base")}>
@@ -205,10 +252,22 @@ export function PageHeroSplit({
         aria-hidden
         className="pointer-events-none absolute -left-36 -top-28 h-[34rem] w-[34rem] rounded-full bg-blob-pink/90 blur-2xl"
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 top-16 h-[28rem] w-[28rem] rounded-full bg-blob-sky/70 blur-2xl"
+      />
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-14">
         <Reveal className={cn(reverse && "lg:order-2")}>
-          {eyebrow ? (
-            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+          {breadcrumb ? <PageBreadcrumb current={breadcrumb} /> : null}
+          {badge ? (
+            <PageBadgeRow badge={badge} meta={meta} />
+          ) : eyebrow ? (
+            <p
+              className={cn(
+                breadcrumb ? "mt-5" : "",
+                "text-xs font-bold uppercase tracking-wide text-brand-magenta",
+              )}
+            >
               {eyebrow}
             </p>
           ) : null}
@@ -238,6 +297,16 @@ export function PageHeroSplit({
               className="object-cover object-top"
               sizes="(max-width: 1024px) 90vw, 40vw"
             />
+            {imageCaption ? (
+              <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-brand-navy/95 px-4 py-3 text-text-on-inverse shadow-lg sm:right-auto sm:max-w-[16rem]">
+                <p className="text-sm font-bold">{imageCaption}</p>
+                {imageTags ? (
+                  <p className="mt-1 text-[11px] font-medium text-white/75">
+                    {imageTags}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </Reveal>
       </div>
@@ -253,6 +322,9 @@ export function PageHeroPhoto({
   imageSrc,
   imageAlt,
   ctas,
+  breadcrumb,
+  badge,
+  meta,
 }: {
   eyebrow?: string;
   title: string;
@@ -260,6 +332,9 @@ export function PageHeroPhoto({
   imageSrc: string;
   imageAlt: string;
   ctas?: Cta[];
+  breadcrumb?: string;
+  badge?: string;
+  meta?: string;
 }) {
   return (
     <section className="relative -mt-[var(--public-header-offset)] overflow-hidden">
@@ -279,8 +354,31 @@ export function PageHeroPhoto({
         <div className="relative px-4 pb-12 pt-[calc(var(--public-header-offset)+2rem)] sm:min-h-[30rem] lg:px-6 lg:pb-16">
           <div className="mx-auto flex min-h-[18rem] max-w-6xl items-end sm:min-h-[22rem]">
             <Reveal className="max-w-2xl text-text-on-inverse">
-              {eyebrow ? (
-                <p className="text-xs font-bold uppercase tracking-wide text-blob-pink">
+              {breadcrumb ? (
+                <nav
+                  aria-label="Breadcrumb"
+                  className="text-xs font-medium text-white/70"
+                >
+                  <ol className="flex flex-wrap items-center gap-1.5">
+                    <li>
+                      <Link href="/" className="hover:text-white">
+                        Home
+                      </Link>
+                    </li>
+                    <li aria-hidden>/</li>
+                    <li className="text-white">{breadcrumb}</li>
+                  </ol>
+                </nav>
+              ) : null}
+              {badge ? (
+                <PageBadgeRow badge={badge} meta={meta} onDark />
+              ) : eyebrow ? (
+                <p
+                  className={cn(
+                    breadcrumb ? "mt-5" : "",
+                    "text-xs font-bold uppercase tracking-wide text-blob-pink",
+                  )}
+                >
                   {eyebrow}
                 </p>
               ) : null}

@@ -1,17 +1,27 @@
 import Link from "next/link";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
-import { ContentSection } from "@/components/layout/content-section";
+import { Handshake, School, Users } from "lucide-react";
+import {
+  IconFeatureGrid,
+  ProcessBand,
+} from "@/components/layout/editorial";
+import { ContentSection, CtaBand } from "@/components/layout/content-section";
+import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import { PublicSubmissionForm } from "@/components/forms/public-submission-form";
 import { PROJECTS } from "@/content/site-copy";
 
 export default function PartnerPage() {
   return (
     <>
-      <PageHeroEditorial
-        eyebrow="Partner"
+      <PageHeroSplit
+        breadcrumb="Partner"
+        badge="Partner"
+        meta="Schools · Families · Communities"
         title="Invite GGI to your community"
-        description="Schools, families and local leaders can request a conversation about bringing GGI support (school tours, mentorship, health education and rural girl empowerment) to girls who need it most."
-        tone="sky"
+        description="Schools, families and local leaders can request a conversation about bringing GGI support — school tours, mentorship, health education and rural girl empowerment — to girls who need it most."
+        imageSrc="/home/community-3.jpg"
+        imageAlt="Community partnership with Girls Global Initiative"
+        imageCaption="Open a door"
+        imageTags="Conversation · Trust · Care"
         ctas={[
           { href: "/programmes", label: "Browse programmes", variant: "secondary" },
         ]}
@@ -56,11 +66,55 @@ export default function PartnerPage() {
         </div>
       </ContentSection>
 
-      <ContentSection title="Request a conversation" tone="surface" narrow>
+      <ProcessBand
+        eyebrow="Partnership path"
+        title="From hello to girls in the room."
+        steps={[
+          {
+            step: "01",
+            title: "Request a conversation",
+            body: "Tell us about your school, family network or community.",
+          },
+          {
+            step: "02",
+            title: "Shape the visit",
+            body: "GGI aligns programmes to local needs without one-size drops.",
+          },
+          {
+            step: "03",
+            title: "Walk with girls",
+            body: "Education, health, mentorship and advocacy stay close to home.",
+          },
+        ]}
+      />
+
+      <ContentSection tone="surface">
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Schools",
+              body: "Host tours, rights conversations and learning support.",
+              icon: School,
+            },
+            {
+              title: "Families",
+              body: "Open guidance pathways so girls are not walking alone.",
+              icon: Users,
+            },
+            {
+              title: "Community leaders",
+              body: "Build durable local partnership around girls' dignity.",
+              icon: Handshake,
+            },
+          ]}
+        />
+      </ContentSection>
+
+      <ContentSection title="Request a conversation" tone="sky" narrow>
         <PublicSubmissionForm
           kind="partnership"
           successTitle="Request received"
-          successBody="Thank you. We’ve received your partnership request and will review it soon."
+          successBody="Thank you. We've received your partnership request and will review it soon."
           fields={[
             {
               name: "requesterName",
@@ -84,6 +138,12 @@ export default function PartnerPage() {
           ]}
         />
       </ContentSection>
+
+      <CtaBand
+        title="Prefer another path?"
+        primary={{ href: "/get-involved/volunteer", label: "Volunteer" }}
+        secondary={{ href: "/contact", label: "Contact GGI" }}
+      />
     </>
   );
 }

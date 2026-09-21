@@ -1,10 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeroPhoto } from "@/components/layout/public-page-intro";
+import { Camera, MapPin, Users } from "lucide-react";
+import {
+  IconFeatureGrid,
+  PhotoBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
+import { PageHeroPhoto } from "@/components/layout/public-page-intro";
 import { getPublicGalleryItems } from "@/features/content/public-content";
 
 export default async function GalleryPage() {
@@ -14,7 +19,9 @@ export default async function GalleryPage() {
   return (
     <>
       <PageHeroPhoto
-        eyebrow="Gallery"
+        breadcrumb="Gallery"
+        badge="Gallery"
+        meta="Field moments · Dignity first"
         title="Moments from the work with girls."
         description="Photography from school engagement, community visits and safe spaces. Staff can publish gallery items from the CMS media library."
         imageSrc="/home/community-1.jpg"
@@ -24,6 +31,32 @@ export default async function GalleryPage() {
           { href: "/partner", label: "Invite GGI", variant: "onDark" },
         ]}
       />
+
+      <ContentSection
+        eyebrow="How we photograph"
+        title="Images that honour girls and communities."
+        tone="surface"
+      >
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Field truth",
+              body: "Moments from outreach, learning and celebration — not staged hardship.",
+              icon: Camera,
+            },
+            {
+              title: "Place with care",
+              body: "Locations appear when GGI documents them; we never invent maps or counts.",
+              icon: MapPin,
+            },
+            {
+              title: "Shared story",
+              body: "Gallery grows as partners and communities invite GGI in.",
+              icon: Users,
+            },
+          ]}
+        />
+      </ContentSection>
 
       <ContentSection
         eyebrow="From the field"
@@ -82,6 +115,8 @@ export default async function GalleryPage() {
           .
         </p>
       </ContentSection>
+
+      <PhotoBand src="/our-story/journey.jpg" alt="More moments from GGI work" />
 
       <CtaBand
         title="Share a community invitation."
