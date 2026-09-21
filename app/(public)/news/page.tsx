@@ -1,9 +1,15 @@
 import Image from "next/image";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { Newspaper, Radio } from "lucide-react";
+import {
+  DualToneCards,
+  PhotoBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { getPublicNews } from "@/features/content/public-content";
 
 export default async function NewsPage() {
@@ -13,7 +19,9 @@ export default async function NewsPage() {
   return (
     <>
       <PageHeroEditorial
-        eyebrow="News"
+        breadcrumb="News"
+        badge="News"
+        meta="Updates · Letters · Moments"
         title="Updates from Girls Global Initiative."
         description="Stories and updates from school outreach, community work and partnership moments. Publish news posts from the admin CMS to replace placeholders."
         tone="sky"
@@ -21,6 +29,21 @@ export default async function NewsPage() {
           { href: "/events", label: "See events", variant: "secondary" },
           { href: "/gallery", label: "Gallery" },
         ]}
+      />
+
+      <DualToneCards
+        left={{
+          label: "What we share",
+          body: "School visits, community invitations and partnership notes — written with care for girls' dignity.",
+          icon: Newspaper,
+          tone: "sky",
+        }}
+        right={{
+          label: "How it grows",
+          body: "Staff publish news from the CMS. Placeholders stay clearly labelled until then.",
+          icon: Radio,
+          tone: "pink",
+        }}
       />
 
       <ContentSection
@@ -33,9 +56,9 @@ export default async function NewsPage() {
         }
         tone="surface"
       >
-        <ul className="grid gap-6 lg:grid-cols-2">
+        <Stagger className="grid gap-6 lg:grid-cols-2">
           {items.map((item) => (
-            <li key={item.id}>
+            <StaggerItem key={item.id}>
               <article className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base">
                 {item.imageSrc ? (
                   <div className="relative h-48">
@@ -66,10 +89,12 @@ export default async function NewsPage() {
                   </p>
                 </div>
               </article>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </ContentSection>
+
+      <PhotoBand src="/our-story/values.jpg" alt="Stories from girls and communities" />
 
       <CtaBand
         title="Stay closer to the work."

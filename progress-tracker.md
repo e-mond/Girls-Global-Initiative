@@ -1018,15 +1018,24 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Branded email + Our Story revamp (this session)
+## Public pages story-structure revamp (this session)
+
+* Merged PR #19 (branded emails + Our Story).
+* Added shared editorial primitives (`components/layout/editorial.tsx`) and
+  extended page heroes with breadcrumb / badge / meta / image captions.
+* Revamped remaining public editorial pages to follow Our Story rhythm
+  without cloning the same sections — each page keeps its own content job
+  (founder message, pillars, programmes, impact honesty, forms, gallery, etc.).
+* Validation: type-check, lint, Playwright content-pages (pass with retries),
+  production build — green.
+
+## Branded email + Our Story revamp (prior)
 
 * Added `features/email/branded.ts` — GGI navy/magenta HTML shell with logo,
   CTA buttons, and invitation/action links for all transactional mail.
 * Wired branded HTML into newsletter confirm, password reset, submissions ack,
   donation thanks, and monthly intent sends (`html` + `text` multipart).
-* Revamped `/our-story` from `GGIOurStory.png`: hero split, challenge cards,
-  navy journey timeline, vision/mission, founder arch, beliefs + imagery,
-  using `public/our-story/*` assets from the new `assets/` photos.
+* Revamped `/our-story` from `GGIOurStory.png`.
 * Unit tests: `tests/unit/branded-email.spec.ts`.
 * Validation: lint, type-check, Playwright (32 passed), production build — all green.
 
@@ -1109,9 +1118,9 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 complete. Content follow-ups merged through PR #18.
-In progress on `feature/branded-email-our-story`: branded transactional
-emails + Our Story page revamp from `GGIOurStory.png`.
+Roadmap Units 1–8 complete. PR #19 merged (branded email + Our Story).
+In progress on `feature/public-pages-story-structure`: remaining public
+pages adapted to the Our Story editorial system.
 
 ---
 

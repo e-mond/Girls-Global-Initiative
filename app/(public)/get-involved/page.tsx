@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { ArrowRight, Heart, Megaphone, Users } from "lucide-react";
+import {
+  IconFeatureGrid,
+  ProcessBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
-import { getInvolvedCards } from "@/features/content/mock-home";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { TAGLINE } from "@/content/site-copy";
+import { getInvolvedCards } from "@/features/content/mock-home";
 import { cn } from "@/lib/utils";
 
 const cardTones = [
@@ -40,10 +45,20 @@ export default function GetInvolvedPage() {
   return (
     <>
       <PageHeroEditorial
-        eyebrow="Get involved"
+        breadcrumb="Get involved"
+        badge="Get involved"
+        meta="Give · Serve · Speak · Partner"
         title="There's a place for you in her story."
         description={`${TAGLINE} Choose how you want to support girls: donate, volunteer, raise your voice, or partner with GGI.`}
         tone="cream"
+        ctas={[
+          { href: "/get-involved/donate", label: "Donate" },
+          {
+            href: "/get-involved/volunteer",
+            label: "Volunteer",
+            variant: "secondary",
+          },
+        ]}
       />
 
       <ContentSection
@@ -82,11 +97,12 @@ export default function GetInvolvedPage() {
                 </p>
                 <p
                   className={cn(
-                    "mt-5 text-sm font-semibold",
+                    "mt-5 inline-flex items-center gap-2 text-sm font-semibold",
                     onDark ? "text-blob-pink" : "text-brand-magenta",
                   )}
                 >
                   {card.cta}
+                  <ArrowRight className="h-4 w-4" aria-hidden />
                 </p>
               </Link>
             );
@@ -94,13 +110,53 @@ export default function GetInvolvedPage() {
         </div>
       </ContentSection>
 
+      <ProcessBand
+        eyebrow="A simple path"
+        title="Start where you are. Stay as long as you can."
+        steps={[
+          {
+            step: "01",
+            title: "Choose a lane",
+            body: "Give, volunteer, advocate or open a community door.",
+          },
+          {
+            step: "02",
+            title: "Tell us a little",
+            body: "Forms and conversations help GGI match your offer to real needs.",
+          },
+          {
+            step: "03",
+            title: "Walk with girls",
+            body: "Support that reaches rural and underserved communities first.",
+          },
+        ]}
+      />
+
       <ContentSection
         eyebrow="Why it matters"
         title="Support that reaches girls where barriers are greatest."
-        description="Whether you give, mentor, advocate or open a door in your community, you help GGI close the gap between rural girls and the opportunities they deserve."
         tone="sky"
-        narrow
-      />
+      >
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Your gift",
+              body: "Funds education, health support and rural outreach.",
+              icon: Heart,
+            },
+            {
+              title: "Your time",
+              body: "Mentorship and volunteering steady girls who need a guide.",
+              icon: Users,
+            },
+            {
+              title: "Your voice",
+              body: "Advocacy amplifies rights, safety and school belonging.",
+              icon: Megaphone,
+            },
+          ]}
+        />
+      </ContentSection>
 
       <CtaBand
         title="Start with the path that fits you today."

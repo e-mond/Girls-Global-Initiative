@@ -1,6 +1,10 @@
 import Image from "next/image";
+import { Mail, MessageCircle, Phone } from "lucide-react";
+import {
+  IconFeatureGrid,
+} from "@/components/layout/editorial";
+import { ContentSection, CtaBand } from "@/components/layout/content-section";
 import { PageHeroSplit } from "@/components/layout/public-page-intro";
-import { ContentSection } from "@/components/layout/content-section";
 import { SocialLinks } from "@/components/layout/social-links";
 import { PublicSubmissionForm } from "@/components/forms/public-submission-form";
 import {
@@ -13,13 +17,43 @@ export default function ContactPage() {
   return (
     <>
       <PageHeroSplit
-        eyebrow="Contact"
+        breadcrumb="Contact"
+        badge="Contact"
+        meta="Questions · Introductions · Invitations"
         title="Let's connect."
         description="Send a message to Girls Global Initiative. We will get back to you as soon as we can."
         imageSrc="/home/community-2.jpg"
         imageAlt="Girls Global Initiative community engagement"
         imageShape="rounded"
+        imageCaption="Say hello"
+        imageTags="Phone · Email · Form"
       />
+
+      <ContentSection
+        eyebrow="Reach us"
+        title="Choose the channel that fits."
+        tone="cream"
+      >
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Call",
+              body: CONTACT_PHONES.join(" · "),
+              icon: Phone,
+            },
+            {
+              title: "Email",
+              body: CONTACT_EMAIL,
+              icon: Mail,
+            },
+            {
+              title: "Write here",
+              body: "Use the form for introductions, invitations and questions.",
+              icon: MessageCircle,
+            },
+          ]}
+        />
+      </ContentSection>
 
       <ContentSection tone="surface">
         <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
@@ -107,6 +141,12 @@ export default function ContactPage() {
           </div>
         </div>
       </ContentSection>
+
+      <CtaBand
+        title="Looking for a specific path?"
+        primary={{ href: "/partner", label: "Partner with us" }}
+        secondary={{ href: "/get-involved", label: "Get involved" }}
+      />
     </>
   );
 }

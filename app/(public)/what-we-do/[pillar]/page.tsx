@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { HeartHandshake, Sparkles } from "lucide-react";
+import {
+  DualToneCards,
+  ProcessBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
   RelatedLinks,
 } from "@/components/layout/content-section";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { PILLAR_FOCUS } from "@/content/site-copy";
 import { getPillar, pillars } from "@/features/content/mock-home";
 
@@ -28,7 +33,9 @@ export default async function PillarDetailPage({
   return (
     <>
       <PageHeroEditorial
-        eyebrow="What we do"
+        breadcrumb={pillar.title}
+        badge="What we do"
+        meta="Pillar detail"
         title={pillar.title}
         description={pillar.description}
         ctas={[
@@ -72,12 +79,42 @@ export default async function PillarDetailPage({
         </ContentSection>
       ) : null}
 
-      <ContentSection
+      <ProcessBand
         eyebrow="How we work"
         title="Community-centred. Girl-focused. Empowerment-driven."
-        description="Pillar work travels through school engagement, safe conversations, mentorship and local partnerships. Never as a one-size programme dropped from outside."
-        tone="blush"
-        narrow
+        description="Pillar work travels through school engagement, safe conversations, mentorship and local partnerships."
+        steps={[
+          {
+            step: "01",
+            title: "Listen",
+            body: "Start from what girls and communities name as barriers.",
+          },
+          {
+            step: "02",
+            title: "Educate & support",
+            body: "Bring rights, health, confidence and mentorship into the room.",
+          },
+          {
+            step: "03",
+            title: "Partner locally",
+            body: "Never as a one-size programme dropped from outside.",
+          },
+        ]}
+      />
+
+      <DualToneCards
+        left={{
+          label: "Girl-focused",
+          body: "This pillar exists so girls are informed, protected and hopeful.",
+          icon: HeartHandshake,
+          tone: "pink",
+        }}
+        right={{
+          label: "Community-rooted",
+          body: "Delivery stays close to schools, families and local partners.",
+          icon: Sparkles,
+          tone: "sky",
+        }}
       />
 
       <RelatedLinks

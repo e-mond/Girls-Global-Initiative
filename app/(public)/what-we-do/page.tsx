@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { ArrowRight, HeartHandshake, Sparkles } from "lucide-react";
+import {
+  DualToneCards,
+  ProcessBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
   RelatedLinks,
 } from "@/components/layout/content-section";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { APPROACH_STEPS, FOCUS_AREAS } from "@/content/site-copy";
 import { pillars, type Pillar } from "@/features/content/mock-home";
 import { cn } from "@/lib/utils";
@@ -19,13 +24,20 @@ const toneClasses: Record<Pillar["tone"], string> = {
 
 export default function WhatWeDoPage() {
   const [featured, ...rest] = pillars;
+  const approachSteps = APPROACH_STEPS.slice(0, 4).map((step, index) => ({
+    step: String(index + 1).padStart(2, "0"),
+    title: step,
+    body: "Part of GGI's community-centred approach in schools and neighbourhoods.",
+  }));
 
   return (
     <>
       <PageHeroEditorial
-        eyebrow="What we do"
+        breadcrumb="What we do"
+        badge="What we do"
+        meta="Four pillars · One mission"
         title="Four connected ways we walk alongside girls."
-        description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity. We use a community-centred, girl-focused approach."
+        description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity."
         tone="cream"
         ambient="flat"
         ctas={[
@@ -40,87 +52,94 @@ export default function WhatWeDoPage() {
         tone="cream"
       >
         <div className="grid gap-4 lg:grid-cols-5">
-          <article
-            className={cn(
-              "flex min-h-[320px] flex-col rounded-[2rem] p-8 lg:col-span-2",
-              toneClasses[featured.tone],
-            )}
-          >
-            <p className="text-xs font-bold uppercase tracking-wide text-white/70">
-              Featured pillar
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-bold">
-              {featured.title}
-            </h2>
-            <p className="mt-4 flex-1 text-base leading-relaxed text-white/85">
-              {featured.description}
-            </p>
-            <Link
-              href={`/what-we-do/${featured.slug}`}
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-text-on-inverse"
+          <Reveal>
+            <article
+              className={cn(
+                "flex min-h-[320px] flex-col rounded-[2rem] p-8 lg:col-span-2",
+                toneClasses[featured.tone],
+              )}
             >
-              Explore this pillar
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-          </article>
-
-          <div className="grid gap-4 sm:grid-cols-3 lg:col-span-3 lg:grid-cols-1">
-            {rest.map((pillar) => (
-              <article
-                key={pillar.slug}
-                className={cn(
-                  "flex flex-col rounded-3xl p-6 sm:min-h-[140px]",
-                  toneClasses[pillar.tone],
-                )}
+              <p className="text-xs font-bold uppercase tracking-wide text-white/70">
+                Featured pillar
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold">
+                {featured.title}
+              </h2>
+              <p className="mt-4 flex-1 text-base leading-relaxed text-white/85">
+                {featured.description}
+              </p>
+              <Link
+                href={`/what-we-do/${featured.slug}`}
+                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-text-on-inverse"
               >
-                <h3 className="font-display text-xl font-bold">{pillar.title}</h3>
-                <p
+                Explore this pillar
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </article>
+          </Reveal>
+
+          <Stagger className="grid gap-4 sm:grid-cols-3 lg:col-span-3 lg:grid-cols-1">
+            {rest.map((pillar) => (
+              <StaggerItem key={pillar.slug}>
+                <article
                   className={cn(
-                    "mt-2 flex-1 text-sm leading-relaxed",
-                    pillar.tone === "cream"
-                      ? "text-brand-navy/80"
-                      : "text-white/85",
+                    "flex flex-col rounded-3xl p-6 sm:min-h-[140px]",
+                    toneClasses[pillar.tone],
                   )}
                 >
-                  {pillar.description}
-                </p>
-                <Link
-                  href={`/what-we-do/${pillar.slug}`}
-                  className={cn(
-                    "mt-4 inline-flex items-center gap-2 text-sm font-semibold",
-                    pillar.tone === "cream"
-                      ? "text-brand-navy"
-                      : "text-text-on-inverse",
-                  )}
-                >
-                  Learn more
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </article>
+                  <h3 className="font-display text-xl font-bold">
+                    {pillar.title}
+                  </h3>
+                  <p
+                    className={cn(
+                      "mt-2 flex-1 text-sm leading-relaxed",
+                      pillar.tone === "cream"
+                        ? "text-brand-navy/80"
+                        : "text-white/85",
+                    )}
+                  >
+                    {pillar.description}
+                  </p>
+                  <Link
+                    href={`/what-we-do/${pillar.slug}`}
+                    className={cn(
+                      "mt-4 inline-flex items-center gap-2 text-sm font-semibold",
+                      pillar.tone === "cream"
+                        ? "text-brand-navy"
+                        : "text-text-on-inverse",
+                    )}
+                  >
+                    Learn more
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
+                </article>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </ContentSection>
 
-      <ContentSection
+      <ProcessBand
         eyebrow="Our approach"
         title="How we show up in schools and communities."
-        tone="surface"
-      >
-        <ol className="grid gap-3 sm:grid-cols-2">
-          {APPROACH_STEPS.map((step, index) => (
-            <li
-              key={step}
-              className="flex gap-3 rounded-2xl border border-border-default bg-bg-base p-4 text-sm text-brand-navy"
-            >
-              <span className="font-display text-lg font-bold text-brand-magenta">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="leading-relaxed">{step}</span>
-            </li>
-          ))}
-        </ol>
-      </ContentSection>
+        description="A girl-focused rhythm that listens first, then educates, supports and advocates."
+        steps={approachSteps}
+      />
+
+      <DualToneCards
+        left={{
+          label: "Girl-focused",
+          body: "Every pillar starts with what girls need to stay safe, informed and hopeful.",
+          icon: HeartHandshake,
+          tone: "pink",
+        }}
+        right={{
+          label: "Community-centred",
+          body: "Lasting change travels through schools, families and local partners.",
+          icon: Sparkles,
+          tone: "sky",
+        }}
+      />
 
       <ContentSection
         eyebrow="Focus areas"
@@ -143,6 +162,11 @@ export default function WhatWeDoPage() {
             </li>
           ))}
         </ul>
+        <p className="mt-8 text-sm text-text-muted">
+          Full approach list includes education support, mentorship, health
+          education, menstrual hygiene, rights awareness, economic empowerment,
+          outreach, advocacy, partnerships and physical education.
+        </p>
       </ContentSection>
 
       <RelatedLinks

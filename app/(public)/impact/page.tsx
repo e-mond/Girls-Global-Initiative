@@ -1,17 +1,26 @@
+import { Camera, HeartHandshake, School, Sparkles } from "lucide-react";
 import { HomeCommunities } from "@/components/home/home-communities";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import {
+  DualToneCards,
+  IconFeatureGrid,
+  PhotoBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
   RelatedLinks,
 } from "@/components/layout/content-section";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { Reveal } from "@/components/motion/reveal";
 import { IMPACT } from "@/content/site-copy";
 
 export default function ImpactPage() {
   return (
     <>
       <PageHeroEditorial
-        eyebrow="Impact"
+        breadcrumb="Impact"
+        badge="Impact"
+        meta="Story first · Figures when verified"
         title="What we have begun, and what we are building next."
         description="GGI documents real achievements from school tours, hygiene support, safe spaces and rural-focused initiatives. Numeric counters appear only when GGI publishes verified figures."
         tone="cream"
@@ -28,19 +37,33 @@ export default function ImpactPage() {
       >
         <ul className="space-y-4">
           {IMPACT.achievements.map((item) => (
-            <li
-              key={item}
-              className="flex gap-3 rounded-2xl border border-white/15 bg-white/5 p-5 text-sm leading-relaxed text-white/90"
-            >
-              <span
-                className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-magenta"
-                aria-hidden
-              />
-              {item}
-            </li>
+            <Reveal key={item}>
+              <li className="flex gap-3 rounded-2xl border border-white/15 bg-white/5 p-5 text-sm leading-relaxed text-white/90">
+                <span
+                  className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-magenta"
+                  aria-hidden
+                />
+                {item}
+              </li>
+            </Reveal>
           ))}
         </ul>
       </ContentSection>
+
+      <DualToneCards
+        left={{
+          label: "Honest documentation",
+          body: "We share what has begun — school tours, sanitary support, safe conversations — without inventing tallies.",
+          icon: Camera,
+          tone: "sky",
+        }}
+        right={{
+          label: "Themes before totals",
+          body: "Impact categories hold photography and narrative until verified numbers are ready.",
+          icon: Sparkles,
+          tone: "pink",
+        }}
+      />
 
       <ContentSection
         eyebrow="Impact themes"
@@ -58,14 +81,41 @@ export default function ImpactPage() {
                 {label}
               </p>
               <p className="mt-2 text-xs text-text-muted">
-                Photography &amp; narrative. Figures pending
+                Photography &amp; narrative · Figures pending
               </p>
             </li>
           ))}
         </ul>
       </ContentSection>
 
+      <ContentSection
+        eyebrow="Where impact lands"
+        title="Change that girls can feel close to home."
+        tone="surface"
+      >
+        <IconFeatureGrid
+          items={[
+            {
+              title: "Learning spaces",
+              body: "Educational tours and conversations that keep girls learning.",
+              icon: School,
+            },
+            {
+              title: "Care delivered",
+              body: "Hygiene materials and health education offered with dignity.",
+              icon: HeartHandshake,
+            },
+            {
+              title: "Stories held",
+              body: "Safe spaces where girls speak, and communities listen.",
+              icon: Camera,
+            },
+          ]}
+        />
+      </ContentSection>
+
       <HomeCommunities showIntro={false} />
+      <PhotoBand src="/our-story/community.jpg" alt="Community impact moments" />
 
       <RelatedLinks
         links={[

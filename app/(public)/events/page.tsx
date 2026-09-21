@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { CalendarDays, MapPin, Sparkles } from "lucide-react";
+import {
+  IconFeatureGrid,
+  ProcessBand,
+} from "@/components/layout/editorial";
 import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { getPublicEvents } from "@/features/content/public-content";
 
 export default async function EventsPage() {
@@ -14,13 +20,63 @@ export default async function EventsPage() {
   return (
     <>
       <PageHeroEditorial
-        eyebrow="Events"
+        breadcrumb="Events"
+        badge="Events"
+        meta="Outreach · Gatherings · Invitations"
         title="Gatherings, outreach and invitations."
         description="Upcoming and recent GGI activities. Publish events from the admin CMS with dates and locations when available. Do not invent schedules."
         tone="blush"
         ctas={[
           { href: "/partner", label: "Invite GGI" },
           { href: "/news", label: "Read news", variant: "secondary" },
+        ]}
+      />
+
+      <ContentSection
+        eyebrow="What an event can be"
+        title="Spaces where girls and communities meet the work."
+        tone="surface"
+      >
+        <IconFeatureGrid
+          items={[
+            {
+              title: "School visits",
+              body: "Tours and conversations that keep learning and rights in the room.",
+              icon: Sparkles,
+            },
+            {
+              title: "Community days",
+              body: "Gatherings hosted with schools, families and local partners.",
+              icon: CalendarDays,
+            },
+            {
+              title: "Open invitations",
+              body: "Ask GGI to come where girls already learn and live.",
+              icon: MapPin,
+            },
+          ]}
+        />
+      </ContentSection>
+
+      <ProcessBand
+        eyebrow="Hosting with GGI"
+        title="From invitation to a day with girls."
+        steps={[
+          {
+            step: "01",
+            title: "Reach out",
+            body: "Schools and community leaders request a conversation.",
+          },
+          {
+            step: "02",
+            title: "Plan with care",
+            body: "Dates and locations are published only when confirmed.",
+          },
+          {
+            step: "03",
+            title: "Walk together",
+            body: "Outreach focuses on dignity, learning and local partnership.",
+          },
         ]}
       />
 
@@ -34,9 +90,9 @@ export default async function EventsPage() {
         }
         tone="cream"
       >
-        <ul className="space-y-5">
+        <Stagger className="space-y-5">
           {items.map((item) => (
-            <li key={item.id}>
+            <StaggerItem key={item.id}>
               <article className="grid overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface md:grid-cols-[220px_1fr]">
                 <div className="relative min-h-[160px] bg-blob-sky/40">
                   {item.imageSrc ? (
@@ -74,9 +130,9 @@ export default async function EventsPage() {
                   </Link>
                 </div>
               </article>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </ContentSection>
 
       <CtaBand
