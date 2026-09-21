@@ -3,11 +3,13 @@ import nodemailer from "nodemailer";
 /**
  * Best-effort SMTP send (SekoFund pattern).
  * Never throws to the caller — acknowledgement failure must not block saves.
+ * Prefer providing both text and html for branded transactional mail.
  */
 export async function sendAcknowledgementEmail(input: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 }): Promise<{ sent: boolean; reason?: string }> {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -31,6 +33,7 @@ export async function sendAcknowledgementEmail(input: {
       to: input.to,
       subject: input.subject,
       text: input.text,
+      html: input.html,
     });
 
     return { sent: true };

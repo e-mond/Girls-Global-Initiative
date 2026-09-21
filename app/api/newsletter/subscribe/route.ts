@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
+import { newsletterConfirmEmail } from "@/features/email/branded";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { subscribeSchema } from "@/features/newsletter/schemas";
@@ -56,10 +57,12 @@ export async function POST(request: Request) {
 
   const confirmUrl = `${siteOrigin()}/newsletter/confirm?token=${confirmToken}`;
   const unsubscribeUrl = `${siteOrigin()}/newsletter/unsubscribe?token=${record.unsubscribeToken}`;
+  const mail = newsletterConfirmEmail({ confirmUrl, unsubscribeUrl });
   const emailResult = await sendAcknowledgementEmail({
     to: record.email,
-    subject: "Confirm your GGI newsletter subscription",
-    text: `Hello,\n\nPlease confirm your subscription to Letters for her future by opening this link:\n\n${confirmUrl}\n\nIf you did not request this, you can ignore this email.\n\nTo unsubscribe later: ${unsubscribeUrl}\n\nGirls Global Initiative`,
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
   });
 
   await writeAuditLog({

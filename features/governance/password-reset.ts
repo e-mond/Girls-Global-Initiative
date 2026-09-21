@@ -3,18 +3,12 @@ import { and, eq, gt, isNotNull } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema";
 import { hashPassword } from "@/features/governance/credentials";
+import { passwordResetEmail } from "@/features/email/branded";
+import { emailSiteOrigin } from "@/features/email/site-origin";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
-}
-
-function appOrigin() {
-  return (
-    process.env.NEXTAUTH_URL?.replace(/\/$/, "") ||
-    process.env.AUTH_URL?.replace(/\/$/, "") ||
-    "http://localhost:3000"
-  );
 }
 
 /**
@@ -54,11 +48,13 @@ export async function requestStaffPasswordReset(
       })
       .where(eq(users.id, row.id));
 
-    const resetUrl = `${appOrigin()}/admin/reset-password?token=${rawToken}`;
+    const resetUrl = `${emailSiteOrigin()}/admin/reset-password?token=${rawToken}`;
+    const mail = passwordResetEmail({ name: row.name, resetUrl });
     await sendAcknowledgementEmail({
       to: row.email,
-      subject: "Reset your GGI staff password",
-      text: `Hello ${row.name},\n\nWe received a request to reset your Girls Global Initiative staff password.\n\nOpen this link within one hour:\n${resetUrl}\n\nIf you did not request this, you can ignore this email.\n`,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
   } catch {
     // Soft-fail: never reveal infrastructure issues to the public form.

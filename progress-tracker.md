@@ -1018,7 +1018,19 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Admin icons, logout & GitHub docs (this session)
+## Branded email + Our Story revamp (this session)
+
+* Added `features/email/branded.ts` — GGI navy/magenta HTML shell with logo,
+  CTA buttons, and invitation/action links for all transactional mail.
+* Wired branded HTML into newsletter confirm, password reset, submissions ack,
+  donation thanks, and monthly intent sends (`html` + `text` multipart).
+* Revamped `/our-story` from `GGIOurStory.png`: hero split, challenge cards,
+  navy journey timeline, vision/mission, founder arch, beliefs + imagery,
+  using `public/our-story/*` assets from the new `assets/` photos.
+* Unit tests: `tests/unit/branded-email.spec.ts`.
+* Validation: lint, type-check, Playwright (32 passed), production build — all green.
+
+## Admin icons, logout & GitHub docs (prior)
 
 * Lucide icons on dashboard KPI cards, quick actions, and every sidebar nav item.
 * Stronger active nav state (background + text/icon colour + subtle border) with `aria-current`.
@@ -1097,8 +1109,9 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 complete. Content follow-ups merged: social links
-(PR #13) and public pages revamp (PR #14).
+Roadmap Units 1–8 complete. Content follow-ups merged through PR #18.
+In progress on `feature/branded-email-our-story`: branded transactional
+emails + Our Story page revamp from `GGIOurStory.png`.
 
 ---
 

@@ -4,7 +4,12 @@ test.describe("content public pages", () => {
   test("our story shows vision mission and values", async ({ page }) => {
     await page.goto("/our-story");
     await expect(
-      page.getByRole("heading", { name: /Born from listening/i }),
+      page.getByRole("heading", {
+        name: /It started with a conversation/i,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "The challenges girls named" }),
     ).toBeVisible();
     await expect(page.getByRole("heading", { name: "Vision" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Empowerment" })).toBeVisible();
