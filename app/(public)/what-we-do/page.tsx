@@ -46,16 +46,21 @@ export default function WhatWeDoPage() {
         ]}
       />
 
+      <div
+        aria-hidden
+        className="mx-auto h-px w-full max-w-6xl bg-gradient-to-r from-transparent via-brand-navy/20 to-transparent px-4"
+      />
+
       <ContentSection
         eyebrow="Our pillars"
         title="One mission. Four areas of care."
         tone="cream"
       >
-        <div className="grid gap-4 lg:grid-cols-5">
-          <Reveal>
+        <div className="grid gap-4 lg:grid-cols-12">
+          <Reveal className="lg:col-span-7">
             <article
               className={cn(
-                "flex min-h-[320px] flex-col rounded-[2rem] p-8 lg:col-span-2",
+                "flex min-h-[320px] flex-col rounded-[2rem] p-8",
                 toneClasses[featured.tone],
               )}
             >
@@ -78,7 +83,7 @@ export default function WhatWeDoPage() {
             </article>
           </Reveal>
 
-          <Stagger className="grid gap-4 sm:grid-cols-3 lg:col-span-3 lg:grid-cols-1">
+          <Stagger className="grid gap-4 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1">
             {rest.map((pillar) => (
               <StaggerItem key={pillar.slug}>
                 <article

@@ -1018,7 +1018,18 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Public pages story-structure revamp (this session)
+## Public UI polish (this session)
+
+* Homepage Our Story / origin image → woman dancing photo.
+* Footer Explore links laid out in two columns.
+* Our Story: post-beliefs gallery mosaic that shuffles and links to `/gallery`.
+* What we do: hero/pillars separator; wider featured pillar card.
+* Founder: removed photo band after founder message.
+* Team: photo-backed hero.
+* Contact: sky editorial hero, coloured Reach us cards, Write here → `#contact-form`.
+* Pre-footer separator line (layout + CtaBand top border).
+
+## Public pages story-structure revamp (prior)
 
 * Merged PR #19 (branded emails + Our Story).
 * Added shared editorial primitives (`components/layout/editorial.tsx`) and

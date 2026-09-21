@@ -154,39 +154,41 @@ export function CtaBand({
   tone?: "navy" | "sky" | "blush";
 }) {
   return (
-    <ContentSection
-      eyebrow={eyebrow}
-      title={title}
-      description={description}
-      tone={tone}
-    >
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Link
-          href={primary.href}
-          className={cn(
-            "inline-flex h-11 min-h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold",
-            tone === "navy"
-              ? "bg-brand-magenta text-text-on-inverse hover:bg-brand-magenta/90"
-              : "bg-brand-navy text-text-on-inverse hover:bg-brand-navy/90",
-          )}
-        >
-          {primary.label}
-        </Link>
-        {secondary ? (
+    <div className="border-t border-border-default/80">
+      <ContentSection
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        tone={tone}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
           <Link
-            href={secondary.href}
+            href={primary.href}
             className={cn(
-              "inline-flex h-11 min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-semibold",
+              "inline-flex h-11 min-h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold",
               tone === "navy"
-                ? "border-white/30 text-text-on-inverse hover:border-brand-sky hover:text-brand-sky"
-                : "border-border-default bg-bg-surface text-brand-navy hover:border-brand-navy/30",
+                ? "bg-brand-magenta text-text-on-inverse hover:bg-brand-magenta/90"
+                : "bg-brand-navy text-text-on-inverse hover:bg-brand-navy/90",
             )}
           >
-            {secondary.label}
+            {primary.label}
           </Link>
-        ) : null}
-      </div>
-    </ContentSection>
+          {secondary ? (
+            <Link
+              href={secondary.href}
+              className={cn(
+                "inline-flex h-11 min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-semibold",
+                tone === "navy"
+                  ? "border-white/30 text-text-on-inverse hover:border-brand-sky hover:text-brand-sky"
+                  : "border-border-default bg-bg-surface text-brand-navy hover:border-brand-navy/30",
+              )}
+            >
+              {secondary.label}
+            </Link>
+          ) : null}
+        </div>
+      </ContentSection>
+    </div>
   );
 }
 

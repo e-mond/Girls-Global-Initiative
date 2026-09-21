@@ -30,10 +30,10 @@ export function HomeOrigin() {
         <Reveal className="relative pb-12 sm:pb-10">
           <div className="relative aspect-[5/4] overflow-hidden rounded-[1.5rem] bg-[#f3e6d8]">
             <Image
-              src="/home/origin.jpg"
-              alt="Community gathering in colourful patterned clothing"
+              src="/home/woman-dancing.jpg"
+              alt="Community celebration with colourful patterned clothing"
               fill
-              className="object-cover object-[50%_35%]"
+              className="object-cover object-[50%_20%]"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
