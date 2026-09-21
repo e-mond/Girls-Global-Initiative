@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Content follow-up — Public pages revamp**
-* **Status:** Complete — merged via PR #14
-* **Previous phase:** Canonical social links (complete, PR #13)
-* **Current branch:** `main`
+* **Public UI/UX revamp**
+* **Status:** Validation complete on `feature/public-ui-revamp` — ready to push/PR
+* **Previous phase:** Content public pages (complete, PR #14)
+* **Current branch:** `feature/public-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Content-rich non-landing public pages shipped (`/programmes`, `/impact` included).
+* **Current objective:** Sticky floating primary nav + footer IA; distinct inner-page heroes/section rhythm. Homepage body untouched.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Operational follow-ups (credentials, Cloudinary wiring, CMS content seeding, CMS programmes entity). Homepage remains the approved Unit 2/landing composition.
+Open and merge PR for `feature/public-ui-revamp`.
 
 ---
 
@@ -478,6 +478,18 @@ pages use `content/site-copy.ts`.
 
 # Architecture Decisions
 
+## Public navbar IA — compact primary + About dropdown
+
+Owner-approved UI revamp (2026-09-21): primary public nav exposes only
+Our Story, What we do, About (Founder / Team / Communities), Get involved,
+and Contact, plus the Support a girl CTA. Programmes, Impact and pillar
+detail routes stay discoverable via footer and contextual in-page links.
+Navbar is a floating sticky surface; homepage body sections remain unchanged.
+
+**Source:** Public UI/UX revamp directive; `feature/public-ui-revamp`.
+
+---
+
 ## Media storage — Cloudinary
 
 Owner decision (2026-09-19): image and video uploads for the media library
@@ -916,6 +928,11 @@ Purpose:
 * **Content social links (merged via PR #13)**
 * **Public pages revamp (merged via PR #14)**
 
+### Active branch — `feature/public-ui-revamp`
+
+Sticky floating nav + About dropdown; distinct inner-page heroes/sections.
+Homepage body untouched.
+
 ### Next Branch
 
 Further roadmap units are not currently scoped. Operational follow-ups
@@ -953,6 +970,16 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 ---
 
 # Session Notes
+
+## Public UI/UX revamp (this session)
+
+* Branch: `feature/public-ui-revamp` (logical commits: nav/footer → primitives → pages).
+* Primary navbar trimmed to Our Story, What we do, About ▾ (Founder/Team/Communities), Get involved, Contact + Support CTA.
+* Floating sticky surface nav; Programmes/Impact remain in footer + contextual links.
+* Inner pages redesigned with editorial / split / photo / compact heroes and sky/blush/navy section rhythm.
+* Homepage body sections untouched (shared chrome only).
+* No invented impact numbers or addresses.
+* Validation: lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
 
 ## Content follow-up — Public pages revamp (this session)
 

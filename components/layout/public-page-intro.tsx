@@ -55,7 +55,7 @@ export function PageHeroEditorial({
   description: string;
   ctas?: Cta[];
   children?: ReactNode;
-  tone?: "cream" | "navy" | "sky";
+  tone?: "cream" | "navy" | "sky" | "blush";
 }) {
   const onDark = tone === "navy";
   return (
@@ -65,6 +65,7 @@ export function PageHeroEditorial({
         tone === "cream" && "bg-bg-base text-brand-navy",
         tone === "navy" && "bg-brand-navy text-text-on-inverse",
         tone === "sky" && "bg-blob-sky/40 text-brand-navy",
+        tone === "blush" && "bg-blob-pink/40 text-brand-navy",
       )}
     >
       {tone === "cream" ? (
