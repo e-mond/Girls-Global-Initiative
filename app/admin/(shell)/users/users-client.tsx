@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Item = {
   id: string;
@@ -62,10 +64,14 @@ export default function AdminUsersPageClient() {
     await load();
   }
 
-  async function setUserRole(
-    id: string,
-    next: "administrator" | "editor",
-  ) {
+  async function setUserRole(id: string, next: "administrator" | "editor") {
+    if (
+      !window.confirm(
+        `Change this staff account to ${next === "administrator" ? "Administrator" : "Editor"}?`,
+      )
+    ) {
+      return;
+    }
     setError(null);
     const response = await fetch("/api/admin/users", {
       method: "PATCH",
@@ -82,18 +88,15 @@ export default function AdminUsersPageClient() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Users
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Invite and manage staff accounts. Administrator-only.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Administration"
+        title="Users"
+        description="Invite and manage staff accounts. Roles are Administrator or Editor only."
+      />
 
       <form
         onSubmit={onCreate}
-        className="grid gap-3 rounded-xl border border-border-default bg-bg-surface p-4 sm:grid-cols-2"
+        className="grid gap-3 rounded-2xl border border-border-default bg-bg-surface p-4 sm:grid-cols-2"
       >
         <input
           value={name}
@@ -147,7 +150,7 @@ export default function AdminUsersPageClient() {
       {loading ? (
         <p className="text-sm text-text-muted">Loading users…</p>
       ) : items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
+        <p className="rounded-2xl border border-dashed border-border-default bg-bg-surface p-8 text-sm text-text-muted">
           No staff users in the database yet. Seed an administrator or add one
           above.
         </p>
@@ -156,15 +159,24 @@ export default function AdminUsersPageClient() {
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-xl border border-border-default bg-bg-surface p-4"
+              className="rounded-2xl border border-border-default bg-bg-surface p-4"
             >
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="font-medium text-brand-navy">{item.name}</p>
                   <p className="text-sm text-text-muted">{item.email}</p>
                   <p className="mt-1 text-xs text-text-muted">
-                    {item.role} · created{" "}
-                    {new Date(item.createdAt).toLocaleDateString()}
+                    <span
+                      className={cn(
+                        "mr-2 inline-flex rounded-full px-2 py-0.5 font-semibold capitalize",
+                        item.role === "administrator"
+                          ? "bg-brand-navy text-text-on-inverse"
+                          : "bg-blob-sky/50 text-brand-navy",
+                      )}
+                    >
+                      {item.role}
+                    </span>
+                    created {new Date(item.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

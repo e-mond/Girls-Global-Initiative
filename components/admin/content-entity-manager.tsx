@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import type { ContentEntity, ContentStatus } from "@/features/governance/rbac";
 
@@ -117,6 +118,9 @@ export function ContentEntityManager({
   }
 
   async function remove(id: string) {
+    if (!window.confirm("Delete this content item? This cannot be undone.")) {
+      return;
+    }
     setError(null);
     const response = await fetch(
       `/api/admin/content/${entity}?id=${encodeURIComponent(id)}`,
@@ -132,16 +136,15 @@ export function ContentEntityManager({
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          {title}
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">{description}</p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Content"
+        title={title}
+        description={description}
+      />
 
       <form
         onSubmit={onCreate}
-        className="space-y-4 rounded-xl border border-border-default bg-bg-surface p-5"
+        className="space-y-4 rounded-2xl border border-border-default bg-bg-surface p-5"
       >
         <p className="text-sm font-semibold text-brand-navy">Create draft</p>
         <div className="grid gap-4 sm:grid-cols-2">

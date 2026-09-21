@@ -5,7 +5,7 @@ import { getPublicEvents } from "@/features/content/public-content";
 
 /** Homepage events strip. Uses CMS when published; otherwise clear placeholders. */
 export async function HomeEvents() {
-  const items = await getPublicEvents(2);
+  const items = await getPublicEvents(3);
 
   return (
     <section className="bg-blob-sky/30 px-4 py-16 lg:px-6 lg:py-20">
@@ -26,10 +26,16 @@ export async function HomeEvents() {
             All events
           </Link>
         </Reveal>
-        <Stagger className="mt-10 grid gap-5 lg:grid-cols-2">
+        <Stagger
+          className={
+            items.length >= 3
+              ? "mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+              : "mt-10 grid gap-5 lg:grid-cols-2"
+          }
+        >
           {items.map((item) => (
             <StaggerItem key={item.id}>
-              <article className="grid overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-surface sm:grid-cols-[160px_1fr]">
+              <article className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-surface">
                 <div className="relative min-h-[140px] bg-blob-pink/30">
                   {item.imageSrc ? (
                     <Image
@@ -37,17 +43,20 @@ export async function HomeEvents() {
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="160px"
+                      sizes="(max-width: 1024px) 100vw, 33vw"
                     />
                   ) : null}
                 </div>
-                <div className="p-5">
+                <div className="flex flex-1 flex-col p-5">
                   <h3 className="font-display text-xl font-bold text-brand-navy">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
                     {item.summary}
                   </p>
+                  {item.isPlaceholder ? (
+                    <p className="mt-3 text-xs text-text-muted">Placeholder</p>
+                  ) : null}
                   <Link
                     href="/partner"
                     className="mt-4 inline-flex text-sm font-semibold text-brand-magenta hover:underline"

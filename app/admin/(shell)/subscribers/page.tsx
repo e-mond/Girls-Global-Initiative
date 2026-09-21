@@ -1,11 +1,13 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import {
   STATUS_LABELS,
   type SubscriberStatus,
 } from "@/features/newsletter/schemas";
+import { cn } from "@/lib/utils";
 
 type Item = {
   id: string;
@@ -91,19 +93,23 @@ export default function AdminSubscribersPage() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Subscribers
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Manage Letters for her future. Unsubscribed addresses stay flagged —
-          they are never silently deleted.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Manage"
+        title="Subscribers"
+        description="Manage Letters for her future. Unsubscribed addresses stay flagged — they are never silently deleted."
+        actions={
+          <a
+            href="/api/admin/subscribers?format=csv"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
+          >
+            Export CSV
+          </a>
+        }
+      />
 
       <form
         onSubmit={onAdd}
-        className="flex flex-col gap-3 rounded-xl border border-border-default bg-bg-surface p-4 sm:flex-row"
+        className="flex flex-col gap-3 rounded-2xl border border-border-default bg-bg-surface p-4 sm:flex-row"
       >
         <input
           value={email}
@@ -141,12 +147,6 @@ export default function AdminSubscribersPage() {
         <Button type="button" variant="outline" onClick={() => void load()}>
           Refresh
         </Button>
-        <a
-          href="/api/admin/subscribers?format=csv"
-          className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
-        >
-          Export CSV
-        </a>
       </div>
 
       {error ? (
@@ -158,7 +158,7 @@ export default function AdminSubscribersPage() {
       {loading ? (
         <p className="text-sm text-text-muted">Loading subscribers…</p>
       ) : items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
+        <p className="rounded-2xl border border-dashed border-border-default bg-bg-surface p-8 text-sm text-text-muted">
           No subscribers in this view yet.
         </p>
       ) : (
@@ -166,14 +166,26 @@ export default function AdminSubscribersPage() {
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-xl border border-border-default bg-bg-surface p-4"
+              className="rounded-2xl border border-border-default bg-bg-surface p-4"
             >
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="font-medium text-brand-navy">{item.email}</p>
                   <p className="mt-1 text-xs text-text-muted">
-                    {STATUS_LABELS[item.status]} · {item.source} ·{" "}
-                    {new Date(item.createdAt).toLocaleString()}
+                    <span
+                      className={cn(
+                        "mr-2 inline-flex rounded-full px-2 py-0.5 font-semibold",
+                        item.status === "subscribed" &&
+                          "bg-blob-sky/50 text-brand-navy",
+                        item.status === "pending" &&
+                          "bg-blob-pink/50 text-brand-magenta",
+                        item.status === "unsubscribed" &&
+                          "bg-bg-base text-text-muted",
+                      )}
+                    >
+                      {STATUS_LABELS[item.status]}
+                    </span>
+                    {item.source} · {new Date(item.createdAt).toLocaleString()}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

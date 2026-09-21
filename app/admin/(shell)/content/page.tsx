@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 
 const CONTENT_SECTIONS = [
   {
@@ -41,39 +42,45 @@ const CONTENT_SECTIONS = [
     title: "Advocacy",
     body: "Advocacy toolkit content blocks.",
   },
-  {
-    href: "/admin/content/media",
-    title: "Media library",
-    body: "Upload, preview and manage images with required alt text.",
-  },
 ] as const;
 
 export default function AdminContentHubPage() {
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Content
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Draft and publish public-facing content. Only published items appear
-          on the website.
-        </p>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {CONTENT_SECTIONS.map((section) => (
+      <AdminPageHeader
+        eyebrow="Manage"
+        title="Content"
+        description="Draft and publish public-facing content. Only published items appear on the website."
+        actions={
           <Link
-            key={section.href}
-            href={section.href}
-            className="rounded-xl border border-border-default bg-bg-surface p-5 transition hover:border-brand-sky/40"
+            href="/admin/content/media"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-brand-navy px-4 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90"
           >
-            <p className="font-display text-base font-semibold text-brand-navy">
-              {section.title}
-            </p>
-            <p className="mt-2 text-sm text-text-muted">{section.body}</p>
+            Media library
           </Link>
+        }
+      />
+
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {CONTENT_SECTIONS.map((section) => (
+          <li key={section.href}>
+            <Link
+              href={section.href}
+              className="flex h-full flex-col rounded-2xl border border-border-default bg-bg-surface p-5 transition hover:border-brand-sky/40"
+            >
+              <span className="font-display text-lg font-bold text-brand-navy">
+                {section.title}
+              </span>
+              <span className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
+                {section.body}
+              </span>
+              <span className="mt-4 text-sm font-semibold text-brand-magenta">
+                Open →
+              </span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

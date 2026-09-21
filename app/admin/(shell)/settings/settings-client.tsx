@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import {
   SITE_SETTINGS_DEFAULTS,
@@ -101,47 +102,58 @@ export default function AdminSettingsPageClient() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Settings
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Social links, footer contact, default SEO, and CTA destinations.
-          Administrator-only.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Administration"
+        title="Settings"
+        description="Organisation contact, website SEO defaults, social profiles and CTA destinations. Administrator-only."
+      />
 
       <form onSubmit={onSave} className="space-y-6">
-        <div className="grid gap-4 rounded-xl border border-border-default bg-bg-surface p-4 sm:grid-cols-2">
-          <h3 className="sm:col-span-2 font-semibold text-brand-navy">
-            Social links
-          </h3>
-          {field("socialInstagram", "Instagram URL")}
-          {field("socialTiktok", "TikTok URL")}
-          {field("socialFacebook", "Facebook URL")}
-          {field("socialLinkedin", "LinkedIn URL")}
+        <div className="grid gap-4 rounded-2xl border border-border-default bg-bg-surface p-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <h3 className="font-display text-base font-bold text-brand-navy">
+              Organisation
+            </h3>
+            <p className="mt-1 text-sm text-text-muted">
+              Public contact details shown in the footer.
+            </p>
+          </div>
+          {field("footerContactEmail", "Footer contact email")}
         </div>
 
-        <div className="grid gap-4 rounded-xl border border-border-default bg-bg-surface p-4 sm:grid-cols-2">
-          <h3 className="sm:col-span-2 font-semibold text-brand-navy">
-            Footer & SEO
-          </h3>
-          {field("footerContactEmail", "Footer contact email")}
+        <div className="grid gap-4 rounded-2xl border border-border-default bg-bg-surface p-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <h3 className="font-display text-base font-bold text-brand-navy">
+              Website
+            </h3>
+            <p className="mt-1 text-sm text-text-muted">
+              Default SEO and primary call-to-action destinations.
+            </p>
+          </div>
           {field("seoDefaultTitle", "Default SEO title")}
           <div className="sm:col-span-2">
             {field("seoDefaultDescription", "Default SEO description", {
               multiline: true,
             })}
           </div>
-        </div>
-
-        <div className="grid gap-4 rounded-xl border border-border-default bg-bg-surface p-4 sm:grid-cols-2">
-          <h3 className="sm:col-span-2 font-semibold text-brand-navy">
-            CTA destinations
-          </h3>
           {field("ctaDonateUrl", "Donate CTA URL")}
           {field("ctaVolunteerUrl", "Volunteer CTA URL")}
           {field("ctaPartnerUrl", "Partner CTA URL")}
+        </div>
+
+        <div className="grid gap-4 rounded-2xl border border-border-default bg-bg-surface p-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <h3 className="font-display text-base font-bold text-brand-navy">
+              Social profiles
+            </h3>
+            <p className="mt-1 text-sm text-text-muted">
+              Links used in the public footer and contact page.
+            </p>
+          </div>
+          {field("socialInstagram", "Instagram URL")}
+          {field("socialTiktok", "TikTok URL")}
+          {field("socialFacebook", "Facebook URL")}
+          {field("socialLinkedin", "LinkedIn URL")}
         </div>
 
         {error ? (
