@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroCompact } from "@/components/layout/public-page-intro";
 import { Button } from "@/components/ui/button";
 
 export default function NewsletterUnsubscribeClient() {
@@ -52,7 +52,7 @@ export default function NewsletterUnsubscribeClient() {
   }, [token, auto, unsubscribe]);
 
   return (
-    <PublicPageIntro
+    <PageHeroCompact
       eyebrow="Newsletter"
       title="Unsubscribe"
       description="You can leave Letters for her future at any time. Unsubscribed addresses stay on record as unsubscribed."
@@ -76,6 +76,6 @@ export default function NewsletterUnsubscribeClient() {
           </Button>
         ) : null}
       </div>
-    </PublicPageIntro>
+    </PageHeroCompact>
   );
 }

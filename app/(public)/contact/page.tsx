@@ -1,4 +1,5 @@
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { ContentSection } from "@/components/layout/content-section";
 import { SocialLinks } from "@/components/layout/social-links";
 import { PublicSubmissionForm } from "@/components/forms/public-submission-form";
 import {
@@ -9,59 +10,85 @@ import {
 
 export default function ContactPage() {
   return (
-    <PublicPageIntro
-      eyebrow="Contact"
-      title="Say hello"
-      description="Send a message to Girls Global Initiative. We’ll get back to you as soon as we can."
-    >
-      <div className="mb-8 space-y-4 rounded-3xl border border-border-default bg-bg-surface p-6">
-        <div>
-          <h2 className="font-display text-lg font-semibold text-brand-navy">
-            Reach us directly
-          </h2>
-          <ul className="mt-3 space-y-2 text-sm text-text-muted">
-            {CONTACT_PHONES.map((phone) => (
-              <li key={phone}>
-                <a
-                  href={phoneTelHref(phone)}
-                  className="text-brand-navy hover:text-brand-sky"
-                >
-                  {phone}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="text-brand-navy hover:text-brand-sky"
-              >
-                {CONTACT_EMAIL}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-brand-navy">Follow GGI</p>
-          <SocialLinks variant="onLight" className="mt-2" />
-        </div>
-      </div>
-
-      <PublicSubmissionForm
-        kind="contact"
-        successTitle="Message sent"
-        successBody="Thank you for writing to us. Your message is with the team."
-        fields={[
-          { name: "fullName", label: "Name", required: true },
-          { name: "email", label: "Email", type: "email", required: true },
-          { name: "subject", label: "Subject", required: true },
-          {
-            name: "message",
-            label: "Message",
-            type: "textarea",
-            required: true,
-          },
-        ]}
+    <>
+      <PageHeroEditorial
+        eyebrow="Contact"
+        title="Let's connect."
+        description="Send a message to Girls Global Initiative. We’ll get back to you as soon as we can."
+        tone="cream"
       />
-    </PublicPageIntro>
+
+      <ContentSection tone="surface">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+          <aside className="space-y-6 rounded-[1.75rem] bg-brand-navy p-6 text-text-on-inverse sm:p-8">
+            <div>
+              <h2 className="font-display text-xl font-bold">
+                Reach us directly
+              </h2>
+              <ul className="mt-4 space-y-3 text-sm text-white/85">
+                {CONTACT_PHONES.map((phone) => (
+                  <li key={phone}>
+                    <a
+                      href={phoneTelHref(phone)}
+                      className="hover:text-brand-sky"
+                    >
+                      {phone}
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="hover:text-brand-sky"
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-white">Follow GGI</p>
+              <SocialLinks variant="onDark" className="mt-3" />
+            </div>
+            <p className="text-xs leading-relaxed text-white/60">
+              GGI does not publish a public street address on this site.
+            </p>
+          </aside>
+
+          <div>
+            <h2 className="font-display text-xl font-bold text-brand-navy">
+              Send a message
+            </h2>
+            <p className="mt-2 text-sm text-text-muted">
+              Tell us how we can help — introductions, invitations and questions
+              are all welcome.
+            </p>
+            <div className="mt-6">
+              <PublicSubmissionForm
+                kind="contact"
+                successTitle="Message sent"
+                successBody="Thank you for writing to us. Your message is with the team."
+                fields={[
+                  { name: "fullName", label: "Name", required: true },
+                  {
+                    name: "email",
+                    label: "Email",
+                    type: "email",
+                    required: true,
+                  },
+                  { name: "subject", label: "Subject", required: true },
+                  {
+                    name: "message",
+                    label: "Message",
+                    type: "textarea",
+                    required: true,
+                  },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
+      </ContentSection>
+    </>
   );
 }

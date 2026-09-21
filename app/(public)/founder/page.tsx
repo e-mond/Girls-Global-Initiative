@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import {
   ContentSection,
+  CtaBand,
   Prose,
+  QuoteBand,
 } from "@/components/layout/content-section";
 import { FOUNDER_MESSAGE } from "@/content/site-copy";
 import { founderSpotlight } from "@/features/content/mock-home";
@@ -11,28 +13,27 @@ import { founderSpotlight } from "@/features/content/mock-home";
 export default function FounderPage() {
   return (
     <>
-      <PublicPageIntro
-        eyebrow="Founder"
+      <PageHeroSplit
+        eyebrow="Founder & Executive Director"
         title={founderSpotlight.name}
         description={founderSpotlight.role}
-      />
+        imageSrc={founderSpotlight.imageSrc}
+        imageAlt={founderSpotlight.name}
+        imageShape="arch"
+        ctas={[
+          { href: "/team", label: "Meet the team", variant: "secondary" },
+          { href: "/get-involved", label: "Support the mission" },
+        ]}
+      >
+        <p className="font-display text-xl font-bold text-brand-navy sm:text-2xl">
+          &ldquo;{founderSpotlight.quote}&rdquo;
+        </p>
+      </PageHeroSplit>
 
       <ContentSection tone="surface">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky">
-            <Image
-              src={founderSpotlight.imageSrc}
-              alt={founderSpotlight.name}
-              fill
-              className="object-cover object-top"
-              sizes="(max-width: 1024px) 90vw, 40vw"
-            />
-          </div>
-          <div className="space-y-6">
-            <p className="font-display text-2xl font-bold text-brand-navy sm:text-3xl">
-              &ldquo;{founderSpotlight.quote}&rdquo;
-            </p>
-            <p className="text-base leading-relaxed text-text-muted">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+          <div className="space-y-4">
+            <p className="text-base leading-relaxed text-text-muted sm:text-lg">
               {founderSpotlight.body}
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
@@ -50,20 +51,38 @@ export default function FounderPage() {
                 </div>
               ))}
             </div>
-            <Link
-              href="/team"
-              className="inline-flex h-11 items-center justify-center rounded-xl bg-brand-navy px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-navy/90"
-            >
-              Meet the team
-            </Link>
           </div>
+          <aside className="rounded-3xl border border-border-default bg-blob-sky/30 p-6">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              Leadership
+            </p>
+            <p className="mt-3 font-display text-lg font-bold text-brand-navy">
+              Youth-led. Community-rooted. Girls first.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-text-muted">
+              Philomena leads GGI so girls do not have to navigate rights,
+              health, school and opportunity alone.
+            </p>
+            <Link
+              href="/our-story"
+              className="mt-5 inline-flex text-sm font-semibold text-brand-sky hover:underline"
+            >
+              Read our story
+            </Link>
+          </aside>
         </div>
       </ContentSection>
 
+      <QuoteBand
+        quote="Every girl deserves the opportunity to dream, learn, grow, lead and build a meaningful future."
+        attribution={FOUNDER_MESSAGE.signatureName}
+        tone="blush"
+      />
+
       <ContentSection
         eyebrow="Message from the Founder"
-        title="Every girl deserves the opportunity to dream, learn, grow and lead."
-        tone="base"
+        title="Closing the gap where barriers are greatest."
+        tone="cream"
         narrow
       >
         <Prose>
@@ -71,13 +90,32 @@ export default function FounderPage() {
             <p key={paragraph.slice(0, 40)}>{paragraph}</p>
           ))}
         </Prose>
-        <p className="mt-8 font-display text-lg font-semibold text-brand-navy">
-          {FOUNDER_MESSAGE.signatureName}
-        </p>
-        <p className="text-sm text-text-muted">
-          {FOUNDER_MESSAGE.signatureRole}
-        </p>
+        <div className="mt-10 flex items-center gap-4">
+          <div className="relative h-14 w-14 overflow-hidden rounded-full">
+            <Image
+              src={founderSpotlight.imageSrc}
+              alt=""
+              fill
+              className="object-cover object-top"
+              sizes="56px"
+            />
+          </div>
+          <div>
+            <p className="font-display text-lg font-semibold text-brand-navy">
+              {FOUNDER_MESSAGE.signatureName}
+            </p>
+            <p className="text-sm text-text-muted">
+              {FOUNDER_MESSAGE.signatureRole}
+            </p>
+          </div>
+        </div>
       </ContentSection>
+
+      <CtaBand
+        title="Stand with the girls GGI serves."
+        primary={{ href: "/get-involved/donate", label: "Support a girl" }}
+        secondary={{ href: "/team", label: "Meet the team" }}
+      />
     </>
   );
 }

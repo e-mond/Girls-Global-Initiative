@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroCompact } from "@/components/layout/public-page-intro";
 import { ContentSection } from "@/components/layout/content-section";
 import { DonationForm } from "@/components/donations/donation-form";
 import { TAGLINE } from "@/content/site-copy";
@@ -7,7 +7,7 @@ import { TAGLINE } from "@/content/site-copy";
 export default function DonatePage() {
   return (
     <>
-      <PublicPageIntro
+      <PageHeroCompact
         eyebrow="Donate"
         title="Donate & support"
         description={`${TAGLINE} Your gift helps Girls Global Initiative advance the rights, dignity, health and opportunity of girls in rural and underserved communities.`}
@@ -20,7 +20,7 @@ export default function DonatePage() {
         description="One-time gifts process through Paystack when configured. You can also use organisation transfer details on this page. Monthly giving is captured as interest until recurring billing launches."
       />
 
-      <ContentSection tone="base" narrow>
+      <ContentSection tone="surface" narrow>
         <DonationForm />
         <p className="mt-6 text-sm text-text-muted">
           Want to give time instead?{" "}
