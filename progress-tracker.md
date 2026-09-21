@@ -8,7 +8,7 @@
 ## Current Phase
 
 * **Public UI/UX revamp + content surfaces**
-* **Status:** In progress on `feature/public-ui-revamp`
+* **Status:** Updated on `feature/public-ui-revamp` (push to PR #15)
 * **Previous phase:** Content public pages (complete, PR #14)
 * **Current branch:** `feature/public-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
@@ -986,12 +986,12 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 ## Public UI/UX revamp (this session)
 
-* Branch: `feature/public-ui-revamp` (logical commits: nav/footer → primitives → pages).
-* Primary navbar trimmed to Our Story, What we do, About ▾ (Founder/Team/Communities), Get involved, Contact + Support CTA.
-* Floating sticky surface nav; Programmes/Impact remain in footer + contextual links.
-* Inner pages redesigned with editorial / split / photo / compact heroes and sky/blush/navy section rhythm.
-* Homepage body sections untouched (shared chrome only).
-* No invented impact numbers or addresses.
+* Branch: `feature/public-ui-revamp` (nav → primitives → pages → alignment → content surfaces).
+* Em dashes removed from public UI copy.
+* Contact and Donate pages revamped with photography-led layouts.
+* Public `/gallery`, `/news`, `/events` plus homepage News/Events strips; CMS entities + migration `0006`.
+* Gallery About-dropdown + footer discovery for News/Events/Gallery.
+* Soft-fail settings/content reads when Neon is unreachable during build.
 * Validation: lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
 
 ## Content follow-up — Public pages revamp (this session)
