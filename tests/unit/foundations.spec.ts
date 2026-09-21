@@ -22,14 +22,21 @@ test.describe("public homepage shell", () => {
     ).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", {
-        name: "Communities",
+        name: "Our story",
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("button", {
+        name: "About",
       }),
     ).toBeVisible();
     await expect(
       page.getByRole("banner").getByRole("link", { name: "Support a girl" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("banner").getByRole("link", { name: "Contact us" }),
+      page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", {
+        name: "Contact",
+      }),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", {

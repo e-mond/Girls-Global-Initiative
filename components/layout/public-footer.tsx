@@ -15,6 +15,7 @@ const EXPLORE_LINKS = [
 ] as const;
 
 const SUPPORT_LINKS = [
+  { href: "/get-involved", label: "Get involved" },
   { href: "/get-involved/donate", label: "Donate" },
   { href: "/get-involved/volunteer", label: "Volunteer" },
   { href: "/get-involved/advocate", label: "Raise your voice" },
