@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import {
   ContentSection,
-  Prose,
+  CtaBand,
+  RelatedLinks,
 } from "@/components/layout/content-section";
 import { PILLAR_FOCUS } from "@/content/site-copy";
 import { getPillar, pillars } from "@/features/content/mock-home";
@@ -22,27 +23,34 @@ export default async function PillarDetailPage({
   if (!pillar) notFound();
 
   const focus = PILLAR_FOCUS[slug];
+  const related = pillars.filter((item) => item.slug !== slug).slice(0, 3);
 
   return (
     <>
-      <PublicPageIntro
+      <PageHeroEditorial
         eyebrow="What we do"
         title={pillar.title}
         description={pillar.description}
+        ctas={[
+          { href: "/what-we-do", label: "All pillars", variant: "secondary" },
+          { href: "/programmes", label: "Programmes" },
+        ]}
+      />
+
+      <ContentSection
+        eyebrow="Why this matters"
+        title="Meeting girls where barriers are real."
+        tone="sky"
+        narrow
       >
-        <Prose>
-          <p>{pillar.detail}</p>
-        </Prose>
-        <p className="mt-6 text-sm text-text-muted">
-          <Link href="/what-we-do" className="text-brand-sky hover:underline">
-            Back to all pillars
-          </Link>
+        <p className="text-base leading-relaxed text-text-muted sm:text-lg">
+          {pillar.detail}
         </p>
-      </PublicPageIntro>
+      </ContentSection>
 
       {focus ? (
         <ContentSection
-          eyebrow="Focus within this pillar"
+          eyebrow="What we do"
           title="How this pillar shows up in GGI's work."
           tone="surface"
         >
@@ -61,22 +69,39 @@ export default async function PillarDetailPage({
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex flex-wrap gap-3 text-sm">
-            <Link
-              href="/programmes"
-              className="font-semibold text-brand-sky hover:underline"
-            >
-              View programmes &amp; projects
-            </Link>
-            <Link
-              href="/get-involved"
-              className="font-semibold text-brand-magenta hover:underline"
-            >
-              Get involved
-            </Link>
-          </div>
         </ContentSection>
       ) : null}
+
+      <ContentSection
+        eyebrow="How we work"
+        title="Community-centred. Girl-focused. Empowerment-driven."
+        description="Pillar work travels through school engagement, safe conversations, mentorship and local partnerships — never as a one-size programme dropped from outside."
+        tone="blush"
+        narrow
+      />
+
+      <RelatedLinks
+        title="Related pillars"
+        links={related.map((item) => ({
+          href: `/what-we-do/${item.slug}`,
+          label: item.title,
+          description: item.description,
+        }))}
+      />
+
+      <CtaBand
+        title="Bring this work closer to girls who need it."
+        primary={{ href: "/get-involved", label: "Get involved" }}
+        secondary={{ href: "/programmes", label: "View programmes" }}
+      />
+
+      <ContentSection tone="cream" narrow>
+        <p className="text-sm text-text-muted">
+          <Link href="/what-we-do" className="font-semibold text-brand-sky hover:underline">
+            Back to all pillars
+          </Link>
+        </p>
+      </ContentSection>
     </>
   );
 }

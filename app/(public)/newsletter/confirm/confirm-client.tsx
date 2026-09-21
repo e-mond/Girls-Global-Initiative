@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroCompact } from "@/components/layout/public-page-intro";
 
 export default function NewsletterConfirmClient() {
   const searchParams = useSearchParams();
@@ -55,7 +55,7 @@ export default function NewsletterConfirmClient() {
   }, [token]);
 
   return (
-    <PublicPageIntro
+    <PageHeroCompact
       eyebrow="Newsletter"
       title="Confirm subscription"
       description="Double opt-in keeps Letters for her future consent clear and deliverable."
@@ -72,6 +72,6 @@ export default function NewsletterConfirmClient() {
           {message}
         </p>
       </div>
-    </PublicPageIntro>
+    </PageHeroCompact>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
+import { PageHeroCompact } from "@/components/layout/public-page-intro";
 
 export default function DonateThanksClient() {
   const searchParams = useSearchParams();
@@ -67,7 +67,7 @@ export default function DonateThanksClient() {
   }, [reference, mode]);
 
   return (
-    <PublicPageIntro
+    <PageHeroCompact
       eyebrow="Donate"
       title="Donation status"
       description="We confirm outcomes from Paystack securely — never from the browser alone."
@@ -104,6 +104,6 @@ export default function DonateThanksClient() {
           </Link>
         </div>
       </div>
-    </PublicPageIntro>
+    </PageHeroCompact>
   );
 }

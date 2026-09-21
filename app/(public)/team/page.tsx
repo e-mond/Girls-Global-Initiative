@@ -1,27 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PublicPageIntro } from "@/components/layout/public-page-intro";
-import { ContentSection } from "@/components/layout/content-section";
+import { PageHeroCompact } from "@/components/layout/public-page-intro";
+import {
+  ContentSection,
+  CtaBand,
+} from "@/components/layout/content-section";
 import { TAGLINE } from "@/content/site-copy";
 import { teamMembers } from "@/features/content/mock-home";
 
 export default function TeamPage() {
   return (
     <>
-      <PublicPageIntro
+      <PageHeroCompact
         eyebrow="Team"
-        title="Meet the team"
-        description={`The people building Girls Global Initiative — youth-led leadership rooted in community. ${TAGLINE}`}
+        title="Meet the people building GGI."
+        description={`Youth-led leadership rooted in community. ${TAGLINE}`}
       />
 
-      <ContentSection tone="surface">
+      <ContentSection tone="sky">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {teamMembers.map((member) => (
             <article
               key={member.id}
-              className="overflow-hidden rounded-3xl border border-border-default bg-bg-base"
+              className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface shadow-sm"
             >
-              <div className="relative aspect-[4/5] bg-blob-sky">
+              <div className="relative aspect-[4/5] bg-blob-pink/40">
                 <Image
                   src={member.imageSrc}
                   alt={
@@ -59,6 +62,14 @@ export default function TeamPage() {
           ))}
         </div>
       </ContentSection>
+
+      <CtaBand
+        title="Want to work alongside this team?"
+        description="Volunteer, partner or write to GGI."
+        primary={{ href: "/get-involved/volunteer", label: "Volunteer" }}
+        secondary={{ href: "/contact", label: "Contact us" }}
+        tone="navy"
+      />
     </>
   );
 }
