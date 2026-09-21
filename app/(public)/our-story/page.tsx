@@ -1,8 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import {
-  PageHeroEditorial,
-} from "@/components/layout/public-page-intro";
+import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import {
   ContentSection,
   CtaBand,
@@ -15,10 +12,13 @@ import { challengeTags } from "@/features/content/mock-home";
 export default function OurStoryPage() {
   return (
     <>
-      <PageHeroEditorial
+      <PageHeroSplit
         eyebrow="Our story"
         title="Born from listening. Built around girls."
         description={TAGLINE}
+        imageSrc="/home/origin.jpg"
+        imageAlt="Community members gathered together"
+        imageShape="rounded"
         ctas={[
           { href: "/what-we-do", label: "See what we do" },
           { href: "/get-involved", label: "Get involved", variant: "secondary" },
@@ -30,39 +30,27 @@ export default function OurStoryPage() {
         title="A conversation between two young women became GGI."
         tone="surface"
       >
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
-            <Image
-              src="/home/origin.jpg"
-              alt="Community members gathered together"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
-          </div>
-          <div className="space-y-6">
-            <div className="rounded-3xl border border-border-default bg-bg-base p-5">
-              <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
-                Our beginning
-              </p>
-              <p className="mt-2 font-display text-xl font-bold text-brand-navy">
-                From YMK Foundation to Girls Global Initiative — December 2024.
-              </p>
-            </div>
-            <Prose>
-              {OUR_STORY.intro.map((paragraph) => (
-                <p key={paragraph.slice(0, 48)}>{paragraph}</p>
-              ))}
-            </Prose>
-          </div>
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <Prose>
+            {OUR_STORY.intro.map((paragraph) => (
+              <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+            ))}
+          </Prose>
+          <aside className="rounded-3xl border border-border-default bg-bg-base p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              Our beginning
+            </p>
+            <p className="mt-2 font-display text-xl font-bold text-brand-navy">
+              From YMK Foundation to Girls Global Initiative (December 2024).
+            </p>
+          </aside>
         </div>
       </ContentSection>
 
       <ContentSection
         eyebrow="Why GGI exists"
         title="Closing the gap for girls facing the greatest barriers."
-        description="Poverty, early pregnancy, school dropout, menstrual health challenges and limited guidance still shape too many girls' futures — especially in rural and underserved communities."
+        description="Poverty, early pregnancy, school dropout, menstrual health challenges and limited guidance still shape too many girls' futures, especially in rural and underserved communities."
         tone="sky"
       >
         <div className="flex flex-wrap gap-2">

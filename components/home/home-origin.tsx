@@ -21,7 +21,7 @@ const tagIcons = {
   briefcase: Briefcase,
 } as const;
 
-/** Origin section — pixel-faithful to the approved Our Origin screenshot. */
+/** Origin section , pixel-faithful to the approved Our Origin screenshot. */
 export function HomeOrigin() {
   return (
     <section className="bg-bg-base px-4 py-16 lg:px-6 lg:py-24">

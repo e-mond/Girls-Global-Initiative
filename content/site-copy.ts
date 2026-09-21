@@ -1,6 +1,6 @@
 /**
  * Public site copy from content-reference.md (extracted from GGI.pdf).
- * Use verbatim or lightly edited — do not invent claims or impact numbers.
+ * Use verbatim or lightly edited. Do not invent claims or impact numbers.
  */
 
 export const TAGLINE =
@@ -235,7 +235,7 @@ export const IMPACT = {
     "Developed mentorship and educational support initiatives.",
     "Developed initiatives focused on girls in rural and underserved communities.",
   ],
-  /** Labels only — no invented numeric counts (data honesty). */
+  /** Labels only. No invented numeric counts (data honesty). */
   categories: [
     "Schools Reached",
     "Girls Supported",
@@ -246,7 +246,7 @@ export const IMPACT = {
 } as const;
 
 export const COMMUNITIES_COPY = {
-  lead: "GGI prioritises rural, remote and underserved communities — places where barriers to education, health support and guidance are often greatest, and where girls are too often reached last.",
+  lead: "GGI prioritises rural, remote and underserved communities: places where barriers to education, health support and guidance are often greatest, and where girls are too often reached last.",
   points: [
     "We work where poverty, geography and limited services can leave girls with fewer opportunities than their urban peers.",
     "Our programmes combine school engagement, community outreach and partnership so support stays close to where girls live and learn.",
@@ -259,7 +259,7 @@ export const ADVOCATE_COPY = {
   actions: [
     {
       title: "Share girls' stories responsibly",
-      body: "Amplify GGI's mission and community updates on your channels — always with dignity, never sensationalising hardship.",
+      body: "Amplify GGI's mission and community updates on your channels, always with dignity, never sensationalising hardship.",
     },
     {
       title: "Speak up for girls' rights",

@@ -42,13 +42,13 @@ export default function GetInvolvedPage() {
       <PageHeroEditorial
         eyebrow="Get involved"
         title="There's a place for you in her story."
-        description={`${TAGLINE} Choose how you want to support girls — donate, volunteer, raise your voice, or partner with GGI.`}
+        description={`${TAGLINE} Choose how you want to support girls: donate, volunteer, raise your voice, or partner with GGI.`}
         tone="cream"
       />
 
       <ContentSection
         eyebrow="Ways to show up"
-        title="Participation should feel inviting — not transactional."
+        title="Participation should feel inviting, not transactional."
         tone="surface"
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

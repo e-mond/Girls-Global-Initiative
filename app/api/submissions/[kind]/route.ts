@@ -21,17 +21,17 @@ const ACK: Record<
   { subject: string; text: (name: string) => string }
 > = {
   volunteer: {
-    subject: "We received your volunteer application — Girls Global Initiative",
+    subject: "We received your volunteer application from Girls Global Initiative",
     text: (name) =>
       `Hello ${name},\n\nThank you for offering your time to Girls Global Initiative. Our team will review your application and follow up soon.\n\nWith appreciation,\nGirls Global Initiative`,
   },
   partnership: {
-    subject: "We received your partnership request — Girls Global Initiative",
+    subject: "We received your partnership request from Girls Global Initiative",
     text: (name) =>
       `Hello ${name},\n\nThank you for reaching out about partnering with Girls Global Initiative. We will review your request and respond shortly.\n\nWith appreciation,\nGirls Global Initiative`,
   },
   contact: {
-    subject: "We received your message — Girls Global Initiative",
+    subject: "We received your message from Girls Global Initiative",
     text: (name) =>
       `Hello ${name},\n\nThank you for contacting Girls Global Initiative. We have received your message and will reply as soon as we can.\n\nWith appreciation,\nGirls Global Initiative`,
   },

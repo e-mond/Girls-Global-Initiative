@@ -54,14 +54,18 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const db = getDb();
   if (!db) return { ...memory().value };
 
-  const [row] = await db
-    .select()
-    .from(siteSettings)
-    .where(eq(siteSettings.id, SITE_SETTINGS_ID))
-    .limit(1);
+  try {
+    const [row] = await db
+      .select()
+      .from(siteSettings)
+      .where(eq(siteSettings.id, SITE_SETTINGS_ID))
+      .limit(1);
 
-  if (!row) return { ...SITE_SETTINGS_DEFAULTS };
-  return serialize(row);
+    if (!row) return { ...SITE_SETTINGS_DEFAULTS };
+    return serialize(row);
+  } catch {
+    return { ...SITE_SETTINGS_DEFAULTS };
+  }
 }
 
 export async function upsertSiteSettings(

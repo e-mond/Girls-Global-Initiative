@@ -38,7 +38,7 @@ export function HomeHero() {
 
           <p className="max-w-lg text-base leading-relaxed text-text-muted sm:text-lg">
             Girls Global Initiative advances the rights, dignity, health,
-            wellbeing and potential of girls — starting where support is needed
+            wellbeing and potential of girls , starting where support is needed
             most.
           </p>
 

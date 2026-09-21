@@ -75,7 +75,7 @@ export default async function PillarDetailPage({
       <ContentSection
         eyebrow="How we work"
         title="Community-centred. Girl-focused. Empowerment-driven."
-        description="Pillar work travels through school engagement, safe conversations, mentorship and local partnerships — never as a one-size programme dropped from outside."
+        description="Pillar work travels through school engagement, safe conversations, mentorship and local partnerships. Never as a one-size programme dropped from outside."
         tone="blush"
         narrow
       />

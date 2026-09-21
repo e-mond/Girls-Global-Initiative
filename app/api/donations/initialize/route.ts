@@ -79,8 +79,8 @@ export async function POST(request: Request) {
     if (parsed.data.donorEmail) {
       await sendAcknowledgementEmail({
         to: parsed.data.donorEmail,
-        subject: "We received your monthly giving interest — GGI",
-        text: `Hello${donorName ? ` ${donorName}` : ""},\n\nThank you for sharing interest in monthly giving of GHS ${(amountMinor / 100).toFixed(2)}. Recurring billing launches in a later phase — our team will follow up.\n\nGirls Global Initiative`,
+        subject: "We received your monthly giving interest (GGI)",
+        text: `Hello${donorName ? ` ${donorName}` : ""},\n\nThank you for sharing interest in monthly giving of GHS ${(amountMinor / 100).toFixed(2)}. Recurring billing launches in a later phase. Our team will follow up.\n\nGirls Global Initiative`,
       });
     }
 

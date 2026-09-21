@@ -18,6 +18,7 @@ const ABOUT_LINKS = [
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },
+  { href: "/gallery", label: "Gallery" },
 ] as const;
 
 function linkIsActive(pathname: string, href: string) {
@@ -28,7 +29,7 @@ function linkIsActive(pathname: string, href: string) {
 }
 
 /**
- * Public header — floating sticky nav with compact primary links and About dropdown.
+ * Public header: floating sticky nav with compact primary links and About dropdown.
  */
 export function PublicHeader() {
   const pathname = usePathname();

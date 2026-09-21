@@ -91,7 +91,35 @@ export const galleryItems = pgTable("gallery_items", {
   caption: text("caption").notNull().default(""),
   location: text("location"),
   imageMediaId: uuid("image_media_id"),
+  /** Public image URL (media library URL or approved static path). */
+  imageUrl: text("image_url"),
   badge: text("badge"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  ...contentTimestamps,
+});
+
+export const newsPosts = pgTable("news_posts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  summary: text("summary").notNull().default(""),
+  body: text("body").notNull().default(""),
+  imageUrl: text("image_url"),
+  publishedOn: text("published_on"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  ...contentTimestamps,
+});
+
+export const events = pgTable("events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  summary: text("summary").notNull().default(""),
+  body: text("body").notNull().default(""),
+  location: text("location"),
+  startsOn: text("starts_on"),
+  endsOn: text("ends_on"),
+  imageUrl: text("image_url"),
   sortOrder: integer("sort_order").notNull().default(0),
   ...contentTimestamps,
 });

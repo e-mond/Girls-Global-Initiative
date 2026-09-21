@@ -25,7 +25,7 @@ export default function WhatWeDoPage() {
       <PageHeroEditorial
         eyebrow="What we do"
         title="Four connected ways we walk alongside girls."
-        description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity — using a community-centred, girl-focused approach."
+        description="GGI organises its work around rights and dignity, health and wellbeing, confidence and growth, and mentorship and opportunity. We use a community-centred, girl-focused approach."
         tone="sky"
         ctas={[
           { href: "/programmes", label: "View programmes" },

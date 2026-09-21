@@ -9,7 +9,7 @@ const calloutIcons = {
   users: Users,
 } as const;
 
-/** Founder spotlight — matches the approved navy leadership screenshot. */
+/** Founder spotlight , matches the approved navy leadership screenshot. */
 export function HomeFounder() {
   return (
     <section className="relative overflow-hidden bg-[#050b20] px-4 py-16 text-text-on-inverse lg:px-6 lg:py-24">

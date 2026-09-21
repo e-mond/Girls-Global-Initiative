@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Public UI/UX revamp**
-* **Status:** Validation complete on `feature/public-ui-revamp` — ready to push/PR
+* **Public UI/UX revamp + content surfaces**
+* **Status:** In progress on `feature/public-ui-revamp`
 * **Previous phase:** Content public pages (complete, PR #14)
 * **Current branch:** `feature/public-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Sticky floating primary nav + footer IA; distinct inner-page heroes/section rhythm. Homepage body untouched.
+* **Current objective:** Contact/Donate UI, Gallery/News/Events CMS surfaces, em-dash cleanup, hero variety. Homepage hero/origin/pillars/founder/communities/get-involved bands unchanged except added News/Events strips.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Open and merge PR for `feature/public-ui-revamp`.
+Finish validation and push updates to PR #15 (`feature/public-ui-revamp`).
 
 ---
 
@@ -481,12 +481,25 @@ pages use `content/site-copy.ts`.
 ## Public navbar IA — compact primary + About dropdown
 
 Owner-approved UI revamp (2026-09-21): primary public nav exposes only
-Our Story, What we do, About (Founder / Team / Communities), Get involved,
-and Contact, plus the Support a girl CTA. Programmes, Impact and pillar
-detail routes stay discoverable via footer and contextual in-page links.
-Navbar is a floating sticky surface; homepage body sections remain unchanged.
+Our Story, What we do, About (Founder / Team / Communities / Gallery),
+Get involved, and Contact, plus the Support a girl CTA. Programmes,
+Impact, News and Events stay discoverable via footer and contextual
+in-page links. Navbar is a floating sticky surface.
 
 **Source:** Public UI/UX revamp directive; `feature/public-ui-revamp`.
+
+---
+
+## News and Events CMS entities (owner-directed)
+
+Owner request (2026-09-21): add News and Events public pages plus
+homepage sections, backed by CMS entities `news_posts` and `events`
+(migration `0006_news_events_gallery_url`). Gallery gains `image_url`
+for CMS posting via Media library URLs. Placeholders are clearly labelled
+until staff publish. Not in original PRD Release 1.0 list; added by
+explicit owner instruction.
+
+**Source:** Owner request in public UI follow-up.
 
 ---
 

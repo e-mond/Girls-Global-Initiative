@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { communitiesCopy, communityStories } from "@/features/content/mock-home";
 
-/** Where we work — matches the approved centered gallery screenshot. */
+/** Where we work , matches the approved centered gallery screenshot. */
 export function HomeCommunities({
   showIntro = true,
 }: {

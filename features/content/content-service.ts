@@ -4,7 +4,9 @@ import { getDb } from "@/db/client";
 import {
   advocacyContent,
   challengeTags,
+  events,
   galleryItems,
+  newsPosts,
   pillars,
   teamMembers,
   testimonials,
@@ -35,6 +37,8 @@ function store(): MemoryStore {
       gallery_items: [],
       testimonials: [],
       advocacy_content: [],
+      news_posts: [],
+      events: [],
     };
   }
   return globalStore.__ggiContentStore;
@@ -142,6 +146,10 @@ function tableFor(entity: ContentEntity) {
       return testimonials;
     case "advocacy_content":
       return advocacyContent;
+    case "news_posts":
+      return newsPosts;
+    case "events":
+      return events;
   }
 }
 
@@ -298,4 +306,16 @@ export async function deleteContent(
   const table = tableFor(entity);
   const deleted = await db.delete(table).where(eq(table.id, id)).returning();
   return deleted.length > 0;
+}
+
+/** Published rows only, for public surfaces. Soft-fails offline/unreachable DB. */
+export async function listPublishedContent(
+  entity: ContentEntity,
+): Promise<ContentRecord[]> {
+  try {
+    const items = await listContent(entity);
+    return items.filter((item) => item.status === "published");
+  } catch {
+    return [];
+  }
 }

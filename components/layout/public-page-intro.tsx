@@ -41,7 +41,7 @@ function CtaGroup({ ctas, onDark = false }: { ctas?: Cta[]; onDark?: boolean }) 
   );
 }
 
-/** Editorial / colour page opening — soft blobs, no required photo. */
+/** Editorial / colour page opening with soft blobs, no required photo. */
 export function PageHeroEditorial({
   eyebrow,
   title,

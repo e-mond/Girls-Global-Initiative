@@ -12,7 +12,7 @@ export default function AdvocatePage() {
     <>
       <PageHeroEditorial
         eyebrow="Raise your voice"
-        title="Stand with girls — loudly and carefully."
+        title="Stand with girls, loudly and carefully."
         description={ADVOCATE_COPY.lead}
         tone="blush"
         ctas={[

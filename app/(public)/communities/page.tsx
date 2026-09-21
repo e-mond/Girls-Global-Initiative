@@ -12,7 +12,7 @@ export default function CommunitiesPage() {
     <>
       <PageHeroPhoto
         eyebrow="Communities"
-        title="Rural, remote & underserved — first, not last."
+        title="Rural, remote & underserved: first, not last."
         description={COMMUNITIES_COPY.lead}
         imageSrc="/home/community-1.jpg"
         imageAlt="Girls and community members in a learning setting"

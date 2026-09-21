@@ -39,4 +39,25 @@ test.describe("content public pages", () => {
       page.getByRole("heading", { name: /Stand with girls/i }),
     ).toBeVisible();
   });
+
+  test("gallery page renders", async ({ page }) => {
+    await page.goto("/gallery");
+    await expect(
+      page.getByRole("heading", { name: /Moments from the work/i }),
+    ).toBeVisible();
+  });
+
+  test("news page renders", async ({ page }) => {
+    await page.goto("/news");
+    await expect(
+      page.getByRole("heading", { name: /Updates from Girls Global Initiative/i }),
+    ).toBeVisible();
+  });
+
+  test("events page renders", async ({ page }) => {
+    await page.goto("/events");
+    await expect(
+      page.getByRole("heading", { name: /Gatherings, outreach and invitations/i }),
+    ).toBeVisible();
+  });
 });

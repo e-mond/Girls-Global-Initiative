@@ -9,6 +9,9 @@ const EXPLORE_LINKS = [
   { href: "/what-we-do", label: "What we do" },
   { href: "/programmes", label: "Programmes" },
   { href: "/impact", label: "Impact" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/news", label: "News" },
+  { href: "/events", label: "Events" },
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },
@@ -23,7 +26,7 @@ const SUPPORT_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-/** Public site footer — responsive columns and accessible link lists. */
+/** Public site footer: responsive columns and accessible link lists. */
 export async function PublicFooter() {
   const settings = await getSiteSettings();
   const contactEmail = settings.footerContactEmail.trim() || CONTACT_EMAIL;
