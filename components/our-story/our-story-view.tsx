@@ -16,6 +16,10 @@ import {
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { CtaBand } from "@/components/layout/content-section";
 import {
+  GalleryShuffleBand,
+  type GalleryShuffleImage,
+} from "@/components/our-story/gallery-shuffle-band";
+import {
   STORY_BELIEFS,
   STORY_CHALLENGES,
   STORY_HERO,
@@ -40,7 +44,11 @@ const beliefIcons = {
   heartHandshake: HeartHandshake,
 } as const;
 
-export function OurStoryView() {
+export function OurStoryView({
+  galleryImages = [],
+}: {
+  galleryImages?: GalleryShuffleImage[];
+}) {
   return (
     <>
       {/* Hero — matches GGIOurStory.png split layout */}
@@ -394,20 +402,8 @@ export function OurStoryView() {
         </div>
       </section>
 
-      {/* Community photo band */}
-      <section className="bg-bg-surface px-4 py-10 lg:px-6">
-        <Reveal className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem]">
-          <div className="relative aspect-[21/8] min-h-[10rem]">
-            <Image
-              src="/our-story/community.jpg"
-              alt="Girls learning and growing together"
-              fill
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        </Reveal>
-      </section>
+      {/* Gallery shuffle mosaic */}
+      <GalleryShuffleBand images={galleryImages} />
 
       <CtaBand
         title="Walk with us for the girls who need it most."

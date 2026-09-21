@@ -32,7 +32,7 @@ export async function PublicFooter() {
   const contactEmail = settings.footerContactEmail.trim() || CONTACT_EMAIL;
 
   return (
-    <footer className="mt-auto bg-brand-navy text-text-on-inverse">
+    <footer className="mt-auto border-t border-white/15 bg-brand-navy text-text-on-inverse">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-4 md:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export async function PublicFooter() {
         <div className="grid grid-cols-2 gap-6 text-sm">
           <nav aria-label="Explore">
             <p className="mb-3 font-semibold">Explore</p>
-            <ul className="space-y-1">
+            <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link

@@ -19,6 +19,10 @@ export default function PublicLayout({
       <main id="main-content" className="flex-1" tabIndex={-1}>
         {children}
       </main>
+      <div
+        aria-hidden
+        className="h-px w-full bg-gradient-to-r from-transparent via-brand-navy/25 to-transparent"
+      />
       <PublicFooter />
     </div>
   );

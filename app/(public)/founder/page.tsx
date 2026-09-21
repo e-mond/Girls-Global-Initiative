@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import {
   DualToneCards,
-  PhotoBand,
 } from "@/components/layout/editorial";
 import {
   ContentSection,
@@ -156,8 +155,6 @@ export default function FounderPage() {
           </div>
         </div>
       </ContentSection>
-
-      <PhotoBand src="/our-story/community.jpg" alt="Community work with GGI" />
 
       <CtaBand
         title="Stand with the girls GGI serves."

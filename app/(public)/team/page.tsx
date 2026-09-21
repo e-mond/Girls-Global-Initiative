@@ -9,7 +9,7 @@ import {
   ContentSection,
   CtaBand,
 } from "@/components/layout/content-section";
-import { PageHeroSplit } from "@/components/layout/public-page-intro";
+import { PageHeroPhoto } from "@/components/layout/public-page-intro";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { TAGLINE } from "@/content/site-copy";
 import { teamMembers } from "@/features/content/mock-home";
@@ -17,18 +17,16 @@ import { teamMembers } from "@/features/content/mock-home";
 export default function TeamPage() {
   return (
     <>
-      <PageHeroSplit
+      <PageHeroPhoto
         breadcrumb="Team"
         badge="Team"
         meta="Youth-led · Community-rooted"
         title="Meet the people building GGI."
         description={`A small leadership circle advancing rights, health and opportunity for girls. ${TAGLINE}`}
-        imageSrc="/home/founder.jpg"
-        imageAlt="Girls Global Initiative leadership"
-        imageCaption="Built around girls"
-        imageTags="Leadership · Trust · Care"
+        imageSrc="/home/community-1.jpg"
+        imageAlt="Girls Global Initiative team and community"
         ctas={[
-          { href: "/founder", label: "Meet the founder" },
+          { href: "/founder", label: "Meet the founder", variant: "onDark" },
           {
             href: "/get-involved/volunteer",
             label: "Volunteer",
