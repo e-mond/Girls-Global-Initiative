@@ -25,7 +25,11 @@ export default async function AdminShellLayout({
   return (
     <AdminShellProvider>
       <div className="flex min-h-screen bg-bg-base">
-        <AdminSidebar />
+        <AdminSidebar
+          groups={groups}
+          staffName={session?.user?.name}
+          staffRole={session?.user?.role}
+        />
         <AdminMobileNav
           groups={groups}
           staffName={session?.user?.name}
@@ -35,6 +39,7 @@ export default async function AdminShellLayout({
           <AdminTopbar
             staffName={session?.user?.name}
             staffRole={session?.user?.role}
+            canManageSettings={canManageSettings(role)}
           />
           <div className="flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
             {children}

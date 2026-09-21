@@ -1,6 +1,20 @@
+import type { LucideIcon } from "lucide-react";
+import {
+  FileText,
+  HandCoins,
+  History,
+  Images,
+  Inbox,
+  LayoutDashboard,
+  Mail,
+  Settings,
+  Users,
+} from "lucide-react";
+
 export type AdminNavItem = {
   href: string;
   label: string;
+  icon: LucideIcon;
 };
 
 export type AdminNavGroup = {
@@ -11,17 +25,11 @@ export type AdminNavGroup = {
 
 /** Shared admin IA — Administration group filtered by role at render time. */
 export const ADMIN_NAV_MANAGE: AdminNavItem[] = [
-  { href: "/admin/content", label: "Content" },
-  { href: "/admin/content/media", label: "Media" },
-  { href: "/admin/submissions", label: "Submissions" },
-  { href: "/admin/donations", label: "Donations" },
-  { href: "/admin/subscribers", label: "Subscribers" },
-];
-
-export const ADMIN_NAV_ADMINISTRATION: AdminNavItem[] = [
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/settings", label: "Settings" },
-  { href: "/admin/audit", label: "Audits" },
+  { href: "/admin/content", label: "Content", icon: FileText },
+  { href: "/admin/content/media", label: "Media", icon: Images },
+  { href: "/admin/submissions", label: "Submissions", icon: Inbox },
+  { href: "/admin/donations", label: "Donations", icon: HandCoins },
+  { href: "/admin/subscribers", label: "Subscribers", icon: Mail },
 ];
 
 export function buildAdminNavGroups(options: {
@@ -32,7 +40,9 @@ export function buildAdminNavGroups(options: {
     {
       id: "overview",
       label: "Overview",
-      items: [{ href: "/admin", label: "Dashboard" }],
+      items: [
+        { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      ],
     },
     {
       id: "manage",
@@ -43,12 +53,12 @@ export function buildAdminNavGroups(options: {
 
   const adminItems: AdminNavItem[] = [];
   if (options.canManageUsers) {
-    adminItems.push({ href: "/admin/users", label: "Users" });
+    adminItems.push({ href: "/admin/users", label: "Users", icon: Users });
   }
   if (options.canManageSettings) {
     adminItems.push(
-      { href: "/admin/settings", label: "Settings" },
-      { href: "/admin/audit", label: "Audits" },
+      { href: "/admin/settings", label: "Settings", icon: Settings },
+      { href: "/admin/audit", label: "Audits", icon: History },
     );
   }
   if (adminItems.length) {

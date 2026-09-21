@@ -16,6 +16,7 @@ type AttentionItem = {
 export function AdminNotifications() {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<AttentionItem[]>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const panelId = useId();
@@ -32,7 +33,9 @@ export function AdminNotifications() {
           json?.error?.message ?? "Could not load notifications.",
         );
       }
-      setItems(json.data.items ?? []);
+      const next = (json.data.items ?? []) as AttentionItem[];
+      setItems(next);
+      setCount(next.length);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Could not load notifications.",
@@ -42,6 +45,10 @@ export function AdminNotifications() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   useEffect(() => {
     if (!open) return;
@@ -66,21 +73,32 @@ export function AdminNotifications() {
     };
   }, [open]);
 
+  const ariaLabel =
+    count > 0
+      ? `Notifications — ${count} needing attention`
+      : "Notifications";
+
   return (
     <div className="relative" ref={rootRef}>
       <button
         type="button"
         className={cn(
-          "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border-default bg-bg-base text-brand-navy hover:bg-bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky",
+          "relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border-default bg-bg-base text-brand-navy hover:bg-bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky",
           open && "border-brand-sky/40",
         )}
         aria-expanded={open}
         aria-controls={panelId}
         aria-haspopup="dialog"
-        aria-label="Notifications"
+        aria-label={ariaLabel}
         onClick={() => setOpen((value) => !value)}
       >
         <Bell className="h-4 w-4" aria-hidden />
+        {count > 0 ? (
+          <span
+            aria-hidden
+            className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-brand-magenta"
+          />
+        ) : null}
       </button>
       {open ? (
         <div
