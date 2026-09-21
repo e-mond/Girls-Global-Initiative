@@ -80,35 +80,37 @@ export function PageHeroEditorial({
           />
         </>
       ) : null}
-      <div className="relative mx-auto max-w-3xl">
-        {eyebrow ? (
-          <p
+      <div className="relative mx-auto max-w-6xl">
+        <div className="max-w-3xl">
+          {eyebrow ? (
+            <p
+              className={cn(
+                "text-xs font-bold uppercase tracking-wide",
+                onDark ? "text-blob-pink" : "text-brand-magenta",
+              )}
+            >
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1
             className={cn(
-              "text-xs font-bold uppercase tracking-wide",
-              onDark ? "text-blob-pink" : "text-brand-magenta",
+              "mt-3 font-display text-3xl font-bold leading-tight sm:text-5xl",
+              onDark ? "text-text-on-inverse" : "text-brand-navy",
             )}
           >
-            {eyebrow}
+            {title}
+          </h1>
+          <p
+            className={cn(
+              "mt-4 text-base leading-relaxed sm:text-lg",
+              onDark ? "text-white/80" : "text-text-muted",
+            )}
+          >
+            {description}
           </p>
-        ) : null}
-        <h1
-          className={cn(
-            "mt-3 font-display text-3xl font-bold leading-tight sm:text-5xl",
-            onDark ? "text-text-on-inverse" : "text-brand-navy",
-          )}
-        >
-          {title}
-        </h1>
-        <p
-          className={cn(
-            "mt-4 text-base leading-relaxed sm:text-lg",
-            onDark ? "text-white/80" : "text-text-muted",
-          )}
-        >
-          {description}
-        </p>
-        <CtaGroup ctas={ctas} onDark={onDark} />
-        {children ? <div className="mt-8">{children}</div> : null}
+          <CtaGroup ctas={ctas} onDark={onDark} />
+          {children ? <div className="mt-8">{children}</div> : null}
+        </div>
       </div>
     </section>
   );
@@ -128,19 +130,21 @@ export function PageHeroCompact({
 }) {
   return (
     <section className="bg-bg-base px-4 py-10 lg:px-6 lg:py-14">
-      <div className="mx-auto max-w-3xl">
-        {eyebrow ? (
-          <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
-            {eyebrow}
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-3xl">
+          {eyebrow ? (
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1 className="mt-2 font-display text-2xl font-bold text-brand-navy sm:text-4xl">
+            {title}
+          </h1>
+          <p className="mt-3 text-base leading-relaxed text-text-muted">
+            {description}
           </p>
-        ) : null}
-        <h1 className="mt-2 font-display text-2xl font-bold text-brand-navy sm:text-4xl">
-          {title}
-        </h1>
-        <p className="mt-3 text-base leading-relaxed text-text-muted">
-          {description}
-        </p>
-        {children ? <div className="mt-6">{children}</div> : null}
+          {children ? <div className="mt-6">{children}</div> : null}
+        </div>
       </div>
     </section>
   );
@@ -245,20 +249,22 @@ export function PageHeroPhoto({
           aria-hidden
           className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/70 to-brand-navy/35"
         />
-        <div className="relative mx-auto flex min-h-[22rem] max-w-6xl items-end px-4 py-12 sm:min-h-[28rem] lg:px-6 lg:py-16">
-          <div className="max-w-2xl text-text-on-inverse">
-            {eyebrow ? (
-              <p className="text-xs font-bold uppercase tracking-wide text-blob-pink">
-                {eyebrow}
+        <div className="relative px-4 py-12 sm:min-h-[28rem] lg:px-6 lg:py-16">
+          <div className="mx-auto flex min-h-[22rem] max-w-6xl items-end sm:min-h-[24rem]">
+            <div className="max-w-2xl text-text-on-inverse">
+              {eyebrow ? (
+                <p className="text-xs font-bold uppercase tracking-wide text-blob-pink">
+                  {eyebrow}
+                </p>
+              ) : null}
+              <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-5xl">
+                {title}
+              </h1>
+              <p className="mt-4 text-base leading-relaxed text-white/85 sm:text-lg">
+                {description}
               </p>
-            ) : null}
-            <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-5xl">
-              {title}
-            </h1>
-            <p className="mt-4 text-base leading-relaxed text-white/85 sm:text-lg">
-              {description}
-            </p>
-            <CtaGroup ctas={ctas} onDark />
+              <CtaGroup ctas={ctas} onDark />
+            </div>
           </div>
         </div>
       </div>
