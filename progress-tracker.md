@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Public UI/UX revamp + content surfaces**
-* **Status:** Admin auth UI + hero/nav sync + Framer Motion on `feature/public-ui-revamp`
-* **Previous phase:** Content public pages (complete, PR #14)
-* **Current branch:** `feature/public-ui-revamp`
+* **Admin UI revamp + homepage events**
+* **Status:** In progress on `feature/admin-ui-revamp`
+* **Previous phase:** Public UI/UX revamp (merged via PR #15 and #16)
+* **Current branch:** `feature/admin-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Staff login/forgot/reset polish; hero bleed under transparent nav; Framer Motion across public UI.
+* **Current objective:** Polish staff login and admin shell/pages; add second homepage events placeholder from approved site-copy narrative.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Validate and push motion/auth/nav-sync updates to PR #15 (`feature/public-ui-revamp`).
+Complete admin UI revamp Phases A–E, validate, push, and open PR.
 
 ---
 
@@ -1018,6 +1018,13 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
+## Admin UI revamp (this session)
+
+* Branch: `feature/admin-ui-revamp`.
+* Phase A: split staff login, grouped sidebar with visible Log out, topbar notifications + mobile drawer, `AdminPageHeader`, `/api/admin/attention` from real new submissions / recent donations (no fake badges).
+* Phases B–D: Dashboard with real counts; Content/Media/Submissions/Donations/Subscribers/Users/Settings/Audits polish.
+* Validation: lint PASS, type-check PASS, Playwright PASS (28 with retries), build PASS.
+
 ## Admin login + nav sync + Framer Motion (this session)
 
 * Staff auth shell revamp: `/admin/login`, `/admin/forgot-password`, `/admin/reset-password`.
@@ -1026,6 +1033,7 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 * What we do uses flat cream hero (`ambient="flat"`) so nav zone matches the section colour; other cream heroes extend the left pink wash into the header zone.
 * `framer-motion` via shared `Reveal` / `Stagger` on homepage sections, page heroes, and `ContentSection`.
 * Validation: migrate PASS, lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
+* Merged via PR #16.
 
 ## Public UI/UX revamp (this session)
 

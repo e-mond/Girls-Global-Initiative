@@ -79,6 +79,19 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     imageSrc: "/home/community-3.jpg",
     isPlaceholder: true,
   },
+  {
+    id: "placeholder-event-2",
+    title: "School tours and girls' empowerment conversations",
+    slug: "school-tours-outreach",
+    summary:
+      "GGI conducts educational school tours to engage young girls, promote the organisation's mission and provide resources that support wellbeing and development. Publish a dated event from Admin to replace this placeholder.",
+    body: "",
+    location: null,
+    startsOn: null,
+    endsOn: null,
+    imageSrc: "/home/community-1.jpg",
+    isPlaceholder: true,
+  },
 ];
 
 export async function getPublicGalleryItems(): Promise<PublicGalleryItem[]> {

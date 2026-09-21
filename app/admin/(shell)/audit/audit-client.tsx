@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 
 type Item = {
@@ -43,15 +44,11 @@ export default function AdminAuditPageClient() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Audit log
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Immutable record of significant back-office and public submission
-          actions. Administrator-only.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Administration"
+        title="Audits"
+        description="Immutable record of significant back-office and public submission actions. Historical and read-only."
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
@@ -75,25 +72,31 @@ export default function AdminAuditPageClient() {
       {loading ? (
         <p className="text-sm text-text-muted">Loading audit log…</p>
       ) : items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
+        <p className="rounded-2xl border border-dashed border-border-default bg-bg-surface p-8 text-sm text-text-muted">
           No audit entries yet.
         </p>
       ) : (
-        <ul className="space-y-3">
+        <ol className="relative space-y-3 border-l border-border-default pl-4">
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-xl border border-border-default bg-bg-surface p-4"
+              className="relative rounded-2xl border border-border-default bg-bg-surface p-4"
             >
+              <span
+                aria-hidden
+                className="absolute -left-[1.4rem] top-5 h-2.5 w-2.5 rounded-full bg-brand-magenta"
+              />
               <p className="font-medium text-brand-navy">{item.summary}</p>
-              <p className="mt-1 text-xs text-text-muted">
+              <p className="mt-2 text-xs text-text-muted">
                 {item.action} · {item.entityType}
-                {item.entityId ? ` · ${item.entityId}` : ""} ·{" "}
+                {item.entityId ? ` · ${item.entityId}` : null}
+              </p>
+              <p className="mt-1 text-xs text-text-muted">
                 {new Date(item.createdAt).toLocaleString()}
               </p>
             </li>
           ))}
-        </ul>
+        </ol>
       )}
     </section>
   );

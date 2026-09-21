@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import {
   STATUS_LABELS,
   type SubmissionKind,
   type SubmissionStatus,
 } from "@/features/submissions/schemas";
+import { cn } from "@/lib/utils";
 
 type Item = {
   id: string;
@@ -82,15 +84,19 @@ export default function AdminSubmissionsPage() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-brand-navy">
-          Submissions
-        </h2>
-        <p className="mt-2 text-sm text-text-muted">
-          Review volunteer applications, partnership requests and contact
-          messages. Status flow: New → In review → Accepted / Declined.
-        </p>
-      </div>
+      <AdminPageHeader
+        eyebrow="Manage"
+        title="Submissions"
+        description="Review volunteer applications, partnership requests and contact messages."
+        actions={
+          <a
+            href={`/api/admin/submissions/${kind}?format=csv`}
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
+          >
+            Export CSV
+          </a>
+        }
+      />
 
       <div className="flex flex-wrap gap-2">
         {KINDS.map((item) => (
@@ -130,12 +136,6 @@ export default function AdminSubmissionsPage() {
         <Button type="button" variant="outline" onClick={() => void load()}>
           Refresh
         </Button>
-        <a
-          href={`/api/admin/submissions/${kind}?format=csv`}
-          className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
-        >
-          Export CSV
-        </a>
       </div>
 
       {error ? (
@@ -147,26 +147,95 @@ export default function AdminSubmissionsPage() {
       {loading ? (
         <p className="text-sm text-text-muted">Loading submissions…</p>
       ) : items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
+        <p className="rounded-2xl border border-dashed border-border-default bg-bg-surface p-8 text-sm text-text-muted">
           No submissions in this view yet.
         </p>
       ) : (
-        <ul className="space-y-3">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className="rounded-xl border border-border-default bg-bg-surface p-4"
-            >
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <p className="font-medium text-brand-navy">{item.summary}</p>
-                  <p className="mt-1 text-sm text-text-muted">{item.email}</p>
-                  <p className="mt-1 text-xs text-text-muted">
-                    {STATUS_LABELS[item.status]} ·{" "}
-                    {new Date(item.createdAt).toLocaleString()}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
+        <>
+          <div className="hidden overflow-x-auto rounded-2xl border border-border-default md:block">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-bg-base text-xs uppercase tracking-wide text-text-muted">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">Submission</th>
+                  <th className="px-4 py-3 font-semibold">Status</th>
+                  <th className="px-4 py-3 font-semibold">Date</th>
+                  <th className="px-4 py-3 font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="border-t border-border-default bg-bg-surface"
+                  >
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-brand-navy">
+                        {item.summary}
+                      </p>
+                      <p className="text-text-muted">{item.email}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={cn(
+                          "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+                          item.status === "new" &&
+                            "bg-blob-pink/60 text-brand-magenta",
+                          item.status === "in_review" &&
+                            "bg-blob-sky/60 text-brand-navy",
+                          item.status === "accepted" &&
+                            "bg-brand-navy/10 text-brand-navy",
+                          item.status === "declined" &&
+                            "bg-bg-base text-text-muted",
+                        )}
+                      >
+                        {STATUS_LABELS[item.status]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-text-muted">
+                      {new Date(item.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        {STATUSES.map((value) => (
+                          <Button
+                            key={value}
+                            type="button"
+                            size="sm"
+                            variant={
+                              item.status === value ? "secondary" : "outline"
+                            }
+                            disabled={item.status === value}
+                            onClick={() => void setItemStatus(item.id, value)}
+                          >
+                            {STATUS_LABELS[value]}
+                          </Button>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <ul className="space-y-3 md:hidden">
+            {items.map((item) => (
+              <li
+                key={item.id}
+                className="rounded-2xl border border-border-default bg-bg-surface p-4"
+              >
+                <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+                  {KINDS.find((entry) => entry.id === kind)?.label}
+                </p>
+                <p className="mt-1 font-display text-lg font-bold text-brand-navy">
+                  {item.summary}
+                </p>
+                <p className="mt-1 text-sm text-text-muted">{item.email}</p>
+                <p className="mt-2 text-xs text-text-muted">
+                  {STATUS_LABELS[item.status]} ·{" "}
+                  {new Date(item.createdAt).toLocaleString()}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
                   {STATUSES.map((value) => (
                     <Button
                       key={value}
@@ -180,10 +249,10 @@ export default function AdminSubmissionsPage() {
                     </Button>
                   ))}
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </section>
   );
