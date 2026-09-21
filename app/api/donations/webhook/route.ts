@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
+import { donationThanksEmail } from "@/features/email/branded";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import {
   findDonationByReference,
@@ -61,10 +62,17 @@ export async function POST(request: Request) {
   });
 
   if (updated?.donorEmail) {
+    const amountLabel = `GHS ${(updated.amountMinor / 100).toFixed(2)}`;
+    const mail = donationThanksEmail({
+      donorName: updated.donorName,
+      amountLabel,
+      reference: updated.reference,
+    });
     await sendAcknowledgementEmail({
       to: updated.donorEmail,
-      subject: "Thank you for your donation from Girls Global Initiative",
-      text: `Hello${updated.donorName ? ` ${updated.donorName}` : ""},\n\nThank you for supporting Girls Global Initiative with GHS ${(updated.amountMinor / 100).toFixed(2)}. Your gift helps girls in rural and underserved communities.\n\nReference: ${updated.reference}\n\nWith gratitude,\nGirls Global Initiative`,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
   }
 

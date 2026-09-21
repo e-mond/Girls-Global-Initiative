@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
+import { monthlyIntentEmail } from "@/features/email/branded";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { initializeDonationSchema } from "@/features/donations/schemas";
@@ -77,10 +78,16 @@ export async function POST(request: Request) {
     });
 
     if (parsed.data.donorEmail) {
+      const amountLabel = `GHS ${(amountMinor / 100).toFixed(2)}`;
+      const mail = monthlyIntentEmail({
+        donorName,
+        amountLabel,
+      });
       await sendAcknowledgementEmail({
         to: parsed.data.donorEmail,
-        subject: "We received your monthly giving interest (GGI)",
-        text: `Hello${donorName ? ` ${donorName}` : ""},\n\nThank you for sharing interest in monthly giving of GHS ${(amountMinor / 100).toFixed(2)}. Recurring billing launches in a later phase. Our team will follow up.\n\nGirls Global Initiative`,
+        subject: mail.subject,
+        text: mail.text,
+        html: mail.html,
       });
     }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
+import { submissionAckEmail } from "@/features/email/branded";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import {
@@ -15,27 +16,6 @@ import {
 } from "@/features/submissions/service";
 
 type RouteContext = { params: Promise<{ kind: string }> };
-
-const ACK: Record<
-  SubmissionKind,
-  { subject: string; text: (name: string) => string }
-> = {
-  volunteer: {
-    subject: "We received your volunteer application from Girls Global Initiative",
-    text: (name) =>
-      `Hello ${name},\n\nThank you for offering your time to Girls Global Initiative. Our team will review your application and follow up soon.\n\nWith appreciation,\nGirls Global Initiative`,
-  },
-  partnership: {
-    subject: "We received your partnership request from Girls Global Initiative",
-    text: (name) =>
-      `Hello ${name},\n\nThank you for reaching out about partnering with Girls Global Initiative. We will review your request and respond shortly.\n\nWith appreciation,\nGirls Global Initiative`,
-  },
-  contact: {
-    subject: "We received your message from Girls Global Initiative",
-    text: (name) =>
-      `Hello ${name},\n\nThank you for contacting Girls Global Initiative. We have received your message and will reply as soon as we can.\n\nWith appreciation,\nGirls Global Initiative`,
-  },
-};
 
 export async function POST(request: Request, context: RouteContext) {
   const { kind: raw } = await context.params;
@@ -107,10 +87,12 @@ export async function POST(request: Request, context: RouteContext) {
     recipientName = parsed.data.fullName;
   }
 
+  const mail = submissionAckEmail({ kind, name: recipientName });
   const emailResult = await sendAcknowledgementEmail({
     to: created.email,
-    subject: ACK[kind].subject,
-    text: ACK[kind].text(recipientName),
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
   });
 
   await writeAuditLog({
