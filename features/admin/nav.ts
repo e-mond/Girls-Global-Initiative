@@ -1,20 +1,18 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  FileText,
-  HandCoins,
-  History,
-  Images,
-  Inbox,
-  LayoutDashboard,
-  Mail,
-  Settings,
-  Users,
-} from "lucide-react";
+export type AdminNavIconName =
+  | "layout-dashboard"
+  | "file-text"
+  | "images"
+  | "inbox"
+  | "hand-coins"
+  | "mail"
+  | "users"
+  | "settings"
+  | "history";
 
 export type AdminNavItem = {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: AdminNavIconName;
 };
 
 export type AdminNavGroup = {
@@ -23,13 +21,14 @@ export type AdminNavGroup = {
   items: AdminNavItem[];
 };
 
-/** Shared admin IA — Administration group filtered by role at render time. */
+/** Shared admin IA — Administration group filtered by role at render time.
+ * Icons are string keys so groups stay serialisable Server → Client. */
 export const ADMIN_NAV_MANAGE: AdminNavItem[] = [
-  { href: "/admin/content", label: "Content", icon: FileText },
-  { href: "/admin/content/media", label: "Media", icon: Images },
-  { href: "/admin/submissions", label: "Submissions", icon: Inbox },
-  { href: "/admin/donations", label: "Donations", icon: HandCoins },
-  { href: "/admin/subscribers", label: "Subscribers", icon: Mail },
+  { href: "/admin/content", label: "Content", icon: "file-text" },
+  { href: "/admin/content/media", label: "Media", icon: "images" },
+  { href: "/admin/submissions", label: "Submissions", icon: "inbox" },
+  { href: "/admin/donations", label: "Donations", icon: "hand-coins" },
+  { href: "/admin/subscribers", label: "Subscribers", icon: "mail" },
 ];
 
 export function buildAdminNavGroups(options: {
@@ -41,7 +40,7 @@ export function buildAdminNavGroups(options: {
       id: "overview",
       label: "Overview",
       items: [
-        { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/admin", label: "Dashboard", icon: "layout-dashboard" },
       ],
     },
     {
@@ -53,12 +52,16 @@ export function buildAdminNavGroups(options: {
 
   const adminItems: AdminNavItem[] = [];
   if (options.canManageUsers) {
-    adminItems.push({ href: "/admin/users", label: "Users", icon: Users });
+    adminItems.push({
+      href: "/admin/users",
+      label: "Users",
+      icon: "users",
+    });
   }
   if (options.canManageSettings) {
     adminItems.push(
-      { href: "/admin/settings", label: "Settings", icon: Settings },
-      { href: "/admin/audit", label: "Audits", icon: History },
+      { href: "/admin/settings", label: "Settings", icon: "settings" },
+      { href: "/admin/audit", label: "Audits", icon: "history" },
     );
   }
   if (adminItems.length) {

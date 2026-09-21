@@ -10,6 +10,7 @@ import {
   adminLinkIsActive,
   type AdminNavGroup,
 } from "@/features/admin/nav";
+import { ADMIN_NAV_ICONS } from "@/features/admin/nav-icons";
 import { cn } from "@/lib/utils";
 
 export function AdminNavBody({
@@ -100,7 +101,7 @@ export function AdminNavBody({
             <ul className="space-y-0.5">
               {group.items.map((item) => {
                 const active = adminLinkIsActive(pathname, item.href);
-                const Icon = item.icon;
+                const Icon = ADMIN_NAV_ICONS[item.icon];
                 return (
                   <li key={item.href}>
                     <Link
