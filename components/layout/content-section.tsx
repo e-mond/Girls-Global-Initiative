@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 export type ContentTone =
@@ -41,7 +42,7 @@ export function ContentSection({
 
   return (
     <section className={cn("px-4 py-14 lg:px-6 lg:py-20", toneClass)}>
-      <div className={cn("mx-auto", narrow ? "max-w-3xl" : "max-w-6xl")}>
+      <Reveal className="mx-auto max-w-6xl">
         {eyebrow ? (
           <p
             className={cn(
@@ -56,6 +57,7 @@ export function ContentSection({
           <h2
             className={cn(
               "mt-3 font-display text-2xl font-bold sm:text-4xl",
+              narrow && "max-w-3xl",
               tone === "navy" ? "text-text-on-inverse" : "text-brand-navy",
             )}
           >
@@ -73,9 +75,16 @@ export function ContentSection({
           </p>
         ) : null}
         {children ? (
-          <div className={cn(title || description ? "mt-8" : "")}>{children}</div>
+          <div
+            className={cn(
+              title || description ? "mt-8" : "",
+              narrow && "max-w-3xl",
+            )}
+          >
+            {children}
+          </div>
         ) : null}
-      </div>
+      </Reveal>
     </section>
   );
 }

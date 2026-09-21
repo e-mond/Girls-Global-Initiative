@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   if (updated?.donorEmail) {
     await sendAcknowledgementEmail({
       to: updated.donorEmail,
-      subject: "Thank you for your donation — Girls Global Initiative",
+      subject: "Thank you for your donation from Girls Global Initiative",
       text: `Hello${updated.donorName ? ` ${updated.donorName}` : ""},\n\nThank you for supporting Girls Global Initiative with GHS ${(updated.amountMinor / 100).toFixed(2)}. Your gift helps girls in rural and underserved communities.\n\nReference: ${updated.reference}\n\nWith gratitude,\nGirls Global Initiative`,
     });
   }

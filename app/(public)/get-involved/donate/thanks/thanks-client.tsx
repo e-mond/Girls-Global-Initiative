@@ -49,7 +49,7 @@ export default function DonateThanksClient() {
         } else {
           setStatus("pending");
           setMessage(
-            "We’re still confirming this payment. If you completed checkout, it may take a moment — refresh shortly or check your email.",
+            "We’re still confirming this payment. If you completed checkout, it may take a . Refresh shortly or check your email.",
           );
         }
       } catch (err) {
@@ -70,7 +70,7 @@ export default function DonateThanksClient() {
     <PageHeroCompact
       eyebrow="Donate"
       title="Donation status"
-      description="We confirm outcomes from Paystack securely — never from the browser alone."
+      description="We confirm outcomes from Paystack securely. Never from the browser alone."
     >
       <div
         className="space-y-4 rounded-3xl border border-border-default bg-bg-surface p-6"

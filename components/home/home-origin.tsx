@@ -10,6 +10,7 @@ import {
   MessageCircleHeart,
   Target,
 } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
 import { challengeTags, originCopy } from "@/features/content/mock-home";
 
 const tagIcons = {
@@ -21,12 +22,12 @@ const tagIcons = {
   briefcase: Briefcase,
 } as const;
 
-/** Origin section — pixel-faithful to the approved Our Origin screenshot. */
+/** Origin section , pixel-faithful to the approved Our Origin screenshot. */
 export function HomeOrigin() {
   return (
     <section className="bg-bg-base px-4 py-16 lg:px-6 lg:py-24">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
-        <div className="relative pb-12 sm:pb-10">
+        <Reveal className="relative pb-12 sm:pb-10">
           <div className="relative aspect-[5/4] overflow-hidden rounded-[1.5rem] bg-[#f3e6d8]">
             <Image
               src="/home/origin.jpg"
@@ -57,9 +58,9 @@ export function HomeOrigin() {
               {originCopy.howItStarted}
             </p>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="space-y-6 lg:pt-2">
+        <Reveal delay={0.1} className="space-y-6 lg:pt-2">
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-magenta">
             {originCopy.eyebrow}
           </p>
@@ -114,7 +115,7 @@ export function HomeOrigin() {
               </p>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

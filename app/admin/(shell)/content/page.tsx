@@ -4,7 +4,7 @@ const CONTENT_SECTIONS = [
   {
     href: "/admin/content/pillars",
     title: "Pillars",
-    body: "Four programme pillars — titles, descriptions, detail copy, order.",
+    body: "Four programme pillars: titles, descriptions, detail copy, order.",
   },
   {
     href: "/admin/content/team",
@@ -19,7 +19,17 @@ const CONTENT_SECTIONS = [
   {
     href: "/admin/content/gallery",
     title: "Gallery",
-    body: "Where we work community/gallery items.",
+    body: "Where we work community/gallery items with image URLs.",
+  },
+  {
+    href: "/admin/content/news",
+    title: "News",
+    body: "News posts for the public News page and homepage strip.",
+  },
+  {
+    href: "/admin/content/events",
+    title: "Events",
+    body: "Events for the public Events page and homepage strip.",
   },
   {
     href: "/admin/content/testimonials",

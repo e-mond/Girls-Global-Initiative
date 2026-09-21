@@ -10,7 +10,7 @@ export default function PartnerPage() {
       <PageHeroEditorial
         eyebrow="Partner"
         title="Invite GGI to your community"
-        description="Schools, families and local leaders can request a conversation about bringing GGI support — school tours, mentorship, health education and rural girl empowerment — to girls who need it most."
+        description="Schools, families and local leaders can request a conversation about bringing GGI support (school tours, mentorship, health education and rural girl empowerment) to girls who need it most."
         tone="sky"
         ctas={[
           { href: "/programmes", label: "Browse programmes", variant: "secondary" },

@@ -13,6 +13,8 @@ export const contentEntitySchema = z.enum([
   "gallery_items",
   "testimonials",
   "advocacy_content",
+  "news_posts",
+  "events",
 ]);
 export type ContentEntity = z.infer<typeof contentEntitySchema>;
 

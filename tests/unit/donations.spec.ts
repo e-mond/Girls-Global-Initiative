@@ -25,7 +25,7 @@ test.describe("donate page", () => {
   test("renders amount and transfer sections", async ({ page }) => {
     await page.goto("/get-involved/donate");
     await expect(
-      page.getByRole("heading", { name: /Donate & support/i }),
+      page.getByRole("heading", { name: /Donate and support a girl/i }),
     ).toBeVisible();
     await expect(page.getByText(/Prefer a direct transfer/i)).toBeVisible();
   });

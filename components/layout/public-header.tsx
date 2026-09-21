@@ -18,6 +18,7 @@ const ABOUT_LINKS = [
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },
+  { href: "/gallery", label: "Gallery" },
 ] as const;
 
 function linkIsActive(pathname: string, href: string) {
@@ -28,7 +29,7 @@ function linkIsActive(pathname: string, href: string) {
 }
 
 /**
- * Public header — floating sticky nav with compact primary links and About dropdown.
+ * Public header: floating sticky nav with compact primary links and About dropdown.
  */
 export function PublicHeader() {
   const pathname = usePathname();
@@ -90,8 +91,8 @@ export function PublicHeader() {
   }, [aboutOpen]);
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-4 sm:pt-4 lg:px-6">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-2xl border border-border-default/80 bg-bg-surface/95 px-3 py-2.5 shadow-sm backdrop-blur-md sm:gap-4 sm:px-4 sm:py-3">
+    <header className="pointer-events-none sticky top-0 z-40 bg-transparent px-3 pt-3 sm:px-4 sm:pt-4 lg:px-6">
+      <div className="pointer-events-auto mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-2xl border border-border-default/70 bg-bg-surface/80 px-3 py-2.5 shadow-sm backdrop-blur-md sm:gap-4 sm:px-4 sm:py-3">
         <Link
           href="/"
           className="relative z-10 flex min-w-0 items-center gap-2.5 sm:gap-3"
@@ -239,7 +240,7 @@ export function PublicHeader() {
       {open ? (
         <div
           id={menuId}
-          className="mt-2 rounded-2xl border border-border-default bg-bg-surface shadow-md md:hidden"
+          className="pointer-events-auto mt-2 rounded-2xl border border-border-default bg-bg-surface shadow-md md:hidden"
         >
           <nav aria-label="Primary mobile" className="px-3 py-3">
             <ul className="flex flex-col gap-1">

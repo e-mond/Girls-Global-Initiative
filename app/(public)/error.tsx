@@ -1,6 +1,6 @@
 "use client";
 
-/** Segment error UI — keeps the rest of the tree usable. */
+/** Segment error UI. Keeps the rest of the tree usable. */
 export default function Error({
   reset,
 }: {

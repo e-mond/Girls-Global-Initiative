@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { communitiesCopy, communityStories } from "@/features/content/mock-home";
 
-/** Where we work — matches the approved centered gallery screenshot. */
+/** Where we work , matches the approved centered gallery screenshot. */
 export function HomeCommunities({
   showIntro = true,
 }: {
@@ -13,7 +14,7 @@ export function HomeCommunities({
     <section className="bg-bg-base px-4 py-16 lg:px-6 lg:py-24">
       <div className="mx-auto max-w-6xl">
         {showIntro ? (
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-sky">
               {communitiesCopy.eyebrow}
             </p>
@@ -23,10 +24,10 @@ export function HomeCommunities({
             <p className="mt-4 text-base leading-relaxed text-text-muted">
               {communitiesCopy.body}
             </p>
-          </div>
+          </Reveal>
         ) : null}
 
-        <div
+        <Stagger
           className={
             showIntro
               ? "mt-12 grid gap-5 md:grid-cols-3"
@@ -34,37 +35,39 @@ export function HomeCommunities({
           }
         >
           {communityStories.map((story) => (
-            <article
-              key={story.id}
-              className="group relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-brand-navy"
-            >
-              <Image
-                src={story.imageSrc}
-                alt={story.title}
-                fill
-                className="object-cover object-top transition duration-300 group-hover:scale-[1.03]"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent"
-              />
-              {story.badge ? (
-                <span className="absolute right-3 top-3 rounded-full bg-[#ffb347] px-3 py-1 text-[11px] font-semibold text-brand-navy">
-                  {story.badge}
-                </span>
-              ) : null}
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <h3 className="font-display text-lg font-bold text-white">
-                  {story.title}
-                </h3>
-                <p className="mt-1 text-sm text-white/85">{story.caption}</p>
-              </div>
-            </article>
+            <StaggerItem key={story.id}>
+              <article className="group relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-brand-navy">
+                <Image
+                  src={story.imageSrc}
+                  alt={story.title}
+                  fill
+                  className="object-cover object-top transition duration-300 group-hover:scale-[1.03]"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/20 to-transparent"
+                />
+                {story.badge ? (
+                  <span className="absolute right-3 top-3 rounded-full bg-[#ffb347] px-3 py-1 text-[11px] font-semibold text-brand-navy">
+                    {story.badge}
+                  </span>
+                ) : null}
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <h3 className="font-display text-lg font-bold text-white">
+                    {story.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-white/85">{story.caption}</p>
+                </div>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
-          <div className="mt-10 flex flex-col gap-5 rounded-[1.5rem] bg-[#edf2f7] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8 sm:py-6">
+        <Reveal
+          delay={0.08}
+          className="mt-10 flex flex-col gap-5 rounded-[1.5rem] bg-[#edf2f7] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8 sm:py-6"
+        >
           <div className="flex items-start gap-4">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-navy text-white">
               <MapPin className="h-5 w-5" aria-hidden />
@@ -92,7 +95,7 @@ export function HomeCommunities({
               Partner with us
             </Link>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

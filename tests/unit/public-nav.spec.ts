@@ -23,6 +23,7 @@ test.describe("public navigation IA", () => {
     await expect(
       aboutMenu.getByRole("menuitem", { name: "Communities" }),
     ).toBeVisible();
+    await expect(aboutMenu.getByRole("menuitem", { name: "Gallery" })).toBeVisible();
   });
 
   test("header stays sticky while scrolling", async ({ page }) => {
@@ -35,10 +36,14 @@ test.describe("public navigation IA", () => {
     expect(position).toBe("sticky");
   });
 
-  test("footer still exposes programmes and impact", async ({ page }) => {
+  test("footer still exposes programmes, impact, news and gallery", async ({
+    page,
+  }) => {
     await page.goto("/");
     const explore = page.getByRole("navigation", { name: "Explore" });
     await expect(explore.getByRole("link", { name: "Programmes" })).toBeVisible();
     await expect(explore.getByRole("link", { name: "Impact" })).toBeVisible();
+    await expect(explore.getByRole("link", { name: "News" })).toBeVisible();
+    await expect(explore.getByRole("link", { name: "Gallery" })).toBeVisible();
   });
 });

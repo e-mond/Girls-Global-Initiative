@@ -46,7 +46,7 @@ export const pillars: Pillar[] = [
     description:
       "Opening space for menstrual health, reproductive knowledge and emotional wellbeing without shame.",
     detail:
-      "We promote health information, menstrual health education, personal hygiene awareness and practical support that helps girls understand and care for their bodies and general wellbeing — with conversations that are practical, respectful and grounded in community trust.",
+      "We promote health information, menstrual health education, personal hygiene awareness and practical support that helps girls understand and care for their bodies and general wellbeing, with conversations that are practical, respectful and grounded in community trust.",
     tone: "magenta",
   },
   {
@@ -66,7 +66,7 @@ export const pillars: Pillar[] = [
     description:
       "Connecting girls with mentors and pathways toward education and opportunity.",
     detail:
-      "We connect girls with mentors, professionals and positive role models who can provide guidance, encouragement, career awareness, decision-making support and practical life skills — while strengthening educational pathways that keep opportunity within reach.",
+      "We connect girls with mentors, professionals and positive role models who can provide guidance, encouragement, career awareness, decision-making support and practical life skills while strengthening educational pathways that keep opportunity within reach.",
     tone: "cream",
   },
 ];
@@ -76,7 +76,7 @@ export const founderSpotlight = {
   role: "Founder & Executive Director",
   badge: "Leadership with lived understanding",
   quote: "We started GGI so no girl has to figure it all out alone.",
-  body: "Philomena leads Girls Global Initiative as a youth-led movement rooted in community. Under her direction, GGI centres girls' voices — pairing rights education and health support with the mentorship, guidance and encouragement every girl deserves.",
+  body: "Philomena leads Girls Global Initiative as a youth-led movement rooted in community. Under her direction, GGI centres girls' voices, pairing rights education and health support with the mentorship, guidance and encouragement every girl deserves.",
   imageSrc: "/home/founder.jpg",
   callouts: [
     {
@@ -99,7 +99,7 @@ export const founderSpotlight = {
 
 /**
  * Public team roster from owner-supplied assets (names/roles as provided).
- * Eugenia photo pending — placeholder used until the real image arrives.
+ * Eugenia photo pending. Placeholder used until the real image arrives.
  * Display spellings follow BRD/PRD (Philomena) even where filenames differ.
  */
 export const teamMembers = [
@@ -180,19 +180,19 @@ export const communityStories = [
 export const originCopy = {
   eyebrow: "Our origin",
   title: "Born from listening. Built around girls.",
-  body: "GGI was born from a conversation between two young women who recognised the challenges affecting girls in their communities — and decided to act. The initiative was created around girls' empowerment, education and advocacy.",
+  body: "GGI was born from a conversation between two young women who recognised the challenges affecting girls in their communities and decided to act. The initiative was created around girls' empowerment, education and advocacy.",
   facingLabel: "What girls told us they were facing:",
   howItStarted:
     "A conversation between two young women who saw girls in their communities being left behind.",
   vision:
-    "A world where every girl — regardless of location or background — has the rights, knowledge, health, support and opportunities to reach her full potential.",
+    "A world where every girl, regardless of location or background, has the rights, knowledge, health, support and opportunities to reach her full potential.",
   mission:
-    "To educate, empower and support girls in rural, remote and underserved communities — and connect them to mentorship, guidance and opportunities.",
+    "To educate, empower and support girls in rural, remote and underserved communities and connect them to mentorship, guidance and opportunities.",
 };
 
 export const communitiesCopy = {
   eyebrow: "Where we work",
-  title: "Rural, remote & underserved — first, not last.",
+  title: "Rural, remote & underserved: first, not last.",
   body: "We go where guidance is thinnest and potential is greatest: the villages, towns and neighbourhoods where a mentor, a health lesson or a listening ear can change a girl's trajectory.",
   ctaTitle: "Is your community next?",
   ctaBody:

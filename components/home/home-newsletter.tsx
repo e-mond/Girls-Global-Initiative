@@ -1,10 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 /**
- * Homepage newsletter band — Letters for her future (double opt-in).
+ * Homepage newsletter band , Letters for her future (double opt-in).
  */
 export function HomeNewsletter() {
   const [email, setEmail] = useState("");
@@ -56,10 +57,10 @@ export function HomeNewsletter() {
       id="newsletter"
       className="bg-brand-navy px-4 py-10 text-text-on-inverse lg:px-6"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <Reveal className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
-            Letters for her future — monthly
+            Letters for her future, monthly
           </h2>
           <p className="mt-2 text-sm text-white/75">
             Subscribe for updates from Girls Global Initiative. We’ll email a
@@ -117,7 +118,7 @@ export function HomeNewsletter() {
             {status === "loading" ? "Sending…" : "Subscribe"}
           </Button>
         </form>
-      </div>
+      </Reveal>
     </section>
   );
 }

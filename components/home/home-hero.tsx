@@ -1,18 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Play, Quote, Star } from "lucide-react";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 /**
  * Homepage hero matching the approved design reference screenshot:
  * cream atmosphere, split Youth-led badge, magenta emphasis in the
  * headline, dual CTAs, avatar proof row, arch collage, and navy pillar bar.
+ * Bleeds under the sticky nav so the left pink wash reaches the header zone.
  */
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden bg-bg-base">
+    <section className="relative -mt-[var(--public-header-offset)] overflow-hidden bg-bg-base pt-[var(--public-header-offset)]">
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 -top-28 h-80 w-80 rounded-full bg-blob-pink/80 blur-2xl"
+        className="pointer-events-none absolute -left-32 -top-24 h-[32rem] w-[32rem] rounded-full bg-blob-pink/90 blur-2xl"
       />
       <div
         aria-hidden
@@ -20,7 +22,7 @@ export function HomeHero() {
       />
 
       <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-6 md:grid-cols-2 md:items-center md:gap-10 md:pb-20 md:pt-8 lg:gap-12 lg:px-6 lg:pt-10">
-        <div className="space-y-6">
+        <Reveal className="space-y-6">
           <div className="inline-flex max-w-full items-stretch overflow-hidden rounded-full border border-border-default bg-bg-surface shadow-sm">
             <span className="bg-brand-navy px-3 py-1.5 text-xs font-semibold text-text-on-inverse sm:px-4 sm:text-sm">
               Youth-led
@@ -38,7 +40,7 @@ export function HomeHero() {
 
           <p className="max-w-lg text-base leading-relaxed text-text-muted sm:text-lg">
             Girls Global Initiative advances the rights, dignity, health,
-            wellbeing and potential of girls — starting where support is needed
+            wellbeing and potential of girls, starting where support is needed
             most.
           </p>
 
@@ -55,7 +57,10 @@ export function HomeHero() {
               className="inline-flex h-11 min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border-default bg-bg-surface px-5 text-sm font-semibold text-brand-navy hover:border-brand-navy/30 sm:w-auto"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full border border-brand-navy/20">
-                <Play className="h-3 w-3 fill-brand-navy text-brand-navy" aria-hidden />
+                <Play
+                  className="h-3 w-3 fill-brand-navy text-brand-navy"
+                  aria-hidden
+                />
               </span>
               Our story in 2 min
             </Link>
@@ -98,9 +103,9 @@ export function HomeHero() {
               Born from a conversation between two young women.
             </p>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="relative mx-auto w-full max-w-md md:max-w-none">
+        <Reveal delay={0.12} className="relative mx-auto w-full max-w-md md:max-w-none">
           <div className="relative grid grid-cols-[1.2fr_0.9fr] gap-3 sm:gap-4">
             <div className="relative min-h-[280px] sm:min-h-[340px]">
               <div className="absolute inset-0 overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky shadow-lg">
@@ -160,29 +165,28 @@ export function HomeHero() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
 
       <div className="bg-brand-navy text-text-on-inverse">
-        <ul className="mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6 lg:px-6 lg:py-5">
+        <Stagger className="mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6 lg:px-6 lg:py-5">
           {[
             "Advancing rights & dignity",
             "Health & wellbeing",
             "Education & confidence",
             "Mentorship & opportunities",
           ].map((label) => (
-            <li
-              key={label}
-              className="flex items-center gap-2 text-sm font-medium"
-            >
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-magenta"
-              />
-              {label}
-            </li>
+            <StaggerItem key={label}>
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-magenta"
+                />
+                {label}
+              </div>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </div>
     </section>
   );

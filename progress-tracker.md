@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Public UI/UX revamp**
-* **Status:** Validation complete on `feature/public-ui-revamp` — ready to push/PR
+* **Public UI/UX revamp + content surfaces**
+* **Status:** Admin auth UI + hero/nav sync + Framer Motion on `feature/public-ui-revamp`
 * **Previous phase:** Content public pages (complete, PR #14)
 * **Current branch:** `feature/public-ui-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Sticky floating primary nav + footer IA; distinct inner-page heroes/section rhythm. Homepage body untouched.
+* **Current objective:** Staff login/forgot/reset polish; hero bleed under transparent nav; Framer Motion across public UI.
 * **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
 
 ---
 
 ## Current Goal
 
-Open and merge PR for `feature/public-ui-revamp`.
+Validate and push motion/auth/nav-sync updates to PR #15 (`feature/public-ui-revamp`).
 
 ---
 
@@ -481,12 +481,59 @@ pages use `content/site-copy.ts`.
 ## Public navbar IA — compact primary + About dropdown
 
 Owner-approved UI revamp (2026-09-21): primary public nav exposes only
-Our Story, What we do, About (Founder / Team / Communities), Get involved,
-and Contact, plus the Support a girl CTA. Programmes, Impact and pillar
-detail routes stay discoverable via footer and contextual in-page links.
-Navbar is a floating sticky surface; homepage body sections remain unchanged.
+Our Story, What we do, About (Founder / Team / Communities / Gallery),
+Get involved, and Contact, plus the Support a girl CTA. Programmes,
+Impact, News and Events stay discoverable via footer and contextual
+in-page links. Navbar is a floating sticky surface.
 
 **Source:** Public UI/UX revamp directive; `feature/public-ui-revamp`.
+
+---
+
+## Hero bleed under transparent sticky nav
+
+Heroes use negative top margin equal to `--public-header-offset` so page
+background and left pink / sky washes continue into the sticky header
+zone. The floating nav pill stays translucent white; What we do uses a
+flat cream hero (`ambient="flat"`) so the nav surround matches without
+pink blobs.
+
+**Source:** Owner screenshots (What we do / Get involved); `feature/public-ui-revamp`.
+
+---
+
+## Staff password reset (FR-33)
+
+Hashed one-hour reset tokens on `users` (`0007_staff_password_reset`),
+request/confirm API routes with IP rate limits, generic success copy
+(no email enumeration), and SMTP via the existing acknowledgement mailer
+when configured. Public Auth.js paths: `/admin/forgot-password`,
+`/admin/reset-password`, `/api/admin/password-reset/*`.
+
+**Source:** PRD FR-33; owner admin-login revamp request.
+
+---
+
+## Framer Motion public UI
+
+Shared `components/motion/reveal.tsx` (`Reveal`, `Stagger`, `StaggerItem`)
+honours `prefers-reduced-motion`. Applied across homepage sections, page
+heroes, and `ContentSection` bands.
+
+**Source:** Owner UI motion request; `feature/public-ui-revamp`.
+
+---
+
+## News and Events CMS entities (owner-directed)
+
+Owner request (2026-09-21): add News and Events public pages plus
+homepage sections, backed by CMS entities `news_posts` and `events`
+(migration `0006_news_events_gallery_url`). Gallery gains `image_url`
+for CMS posting via Media library URLs. Placeholders are clearly labelled
+until staff publish. Not in original PRD Release 1.0 list; added by
+explicit owner instruction.
+
+**Source:** Owner request in public UI follow-up.
 
 ---
 
@@ -971,14 +1018,23 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
+## Admin login + nav sync + Framer Motion (this session)
+
+* Staff auth shell revamp: `/admin/login`, `/admin/forgot-password`, `/admin/reset-password`.
+* Password reset API (`/api/admin/password-reset/request|confirm`) with hashed tokens, rate limits, no email enumeration; migration `0007_staff_password_reset`.
+* Transparent sticky header; heroes bleed under `--public-header-offset` so colours sync behind the floating nav.
+* What we do uses flat cream hero (`ambient="flat"`) so nav zone matches the section colour; other cream heroes extend the left pink wash into the header zone.
+* `framer-motion` via shared `Reveal` / `Stagger` on homepage sections, page heroes, and `ContentSection`.
+* Validation: migrate PASS, lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
+
 ## Public UI/UX revamp (this session)
 
-* Branch: `feature/public-ui-revamp` (logical commits: nav/footer → primitives → pages).
-* Primary navbar trimmed to Our Story, What we do, About ▾ (Founder/Team/Communities), Get involved, Contact + Support CTA.
-* Floating sticky surface nav; Programmes/Impact remain in footer + contextual links.
-* Inner pages redesigned with editorial / split / photo / compact heroes and sky/blush/navy section rhythm.
-* Homepage body sections untouched (shared chrome only).
-* No invented impact numbers or addresses.
+* Branch: `feature/public-ui-revamp` (nav → primitives → pages → alignment → content surfaces).
+* Em dashes removed from public UI copy.
+* Contact and Donate pages revamped with photography-led layouts.
+* Public `/gallery`, `/news`, `/events` plus homepage News/Events strips; CMS entities + migration `0006`.
+* Gallery About-dropdown + footer discovery for News/Events/Gallery.
+* Soft-fail settings/content reads when Neon is unreachable during build.
 * Validation: lint PASS, type-check PASS, Playwright PASS (25 with retries), build PASS.
 
 ## Content follow-up — Public pages revamp (this session)

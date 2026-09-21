@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import {
   ContentSection,
   CtaBand,
@@ -13,10 +13,12 @@ export default function ProgrammesPage() {
 
   return (
     <>
-      <PageHeroEditorial
+      <PageHeroSplit
         eyebrow="Programmes"
         title="Programmes, initiatives and projects."
-        description="GGI delivers its mission through focused initiatives and community projects — from school tours and mentorship to rural girl empowerment."
+        description="GGI delivers its mission through focused initiatives and community projects: from school tours and mentorship to rural girl empowerment."
+        imageSrc="/home/community-2.jpg"
+        imageAlt="Girls participating in a GGI community programme"
         ctas={[
           { href: "/what-we-do", label: "See pillars" },
           { href: "/partner", label: "Invite GGI", variant: "secondary" },

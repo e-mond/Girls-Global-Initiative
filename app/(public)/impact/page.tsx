@@ -12,7 +12,7 @@ export default function ImpactPage() {
     <>
       <PageHeroEditorial
         eyebrow="Impact"
-        title="What we have begun — and what we are building next."
+        title="What we have begun, and what we are building next."
         description="GGI documents real achievements from school tours, hygiene support, safe spaces and rural-focused initiatives. Numeric counters appear only when GGI publishes verified figures."
         tone="cream"
         ctas={[
@@ -58,7 +58,7 @@ export default function ImpactPage() {
                 {label}
               </p>
               <p className="mt-2 text-xs text-text-muted">
-                Photography &amp; narrative — figures pending
+                Photography &amp; narrative. Figures pending
               </p>
             </li>
           ))}

@@ -8,7 +8,7 @@ export default function VolunteerPage() {
       <PageHeroCompact
         eyebrow="Volunteer"
         title="Volunteer & mentor"
-        description="Share your time and skills with girls who need a steady guide. Tell us a little about yourself — we’ll follow up."
+        description="Share your time and skills with girls who need a steady guide. Tell us a little about yourself. We’ll follow up."
       />
 
       <ContentSection tone="sky" narrow>
