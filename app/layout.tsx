@@ -77,7 +77,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${redHatDisplay.variable} ${redHatText.variable} ${jetbrainsMono.variable} min-h-screen antialiased`}
+        className={`${redHatDisplay.variable} ${redHatText.variable} ${jetbrainsMono.variable} min-h-screen overflow-x-hidden antialiased`}
       >
         <AuthSessionProvider>
           <MswProvider>{children}</MswProvider>

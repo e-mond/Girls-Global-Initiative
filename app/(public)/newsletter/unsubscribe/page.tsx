@@ -1,15 +1,10 @@
 import { Suspense } from "react";
+import { PageSkeleton } from "@/components/layout/page-skeleton";
 import NewsletterUnsubscribeClient from "./unsubscribe-client";
 
 export default function NewsletterUnsubscribePage() {
   return (
-    <Suspense
-      fallback={
-        <p className="mx-auto max-w-3xl px-4 py-16 text-sm text-text-muted">
-          Loading unsubscribe…
-        </p>
-      }
-    >
+    <Suspense fallback={<PageSkeleton variant="public" />}>
       <NewsletterUnsubscribeClient />
     </Suspense>
   );
