@@ -1018,7 +1018,15 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Public UI polish (this session)
+## Skeleton + mobile hardening (this session)
+
+* Larger public/admin page skeletons (`PageSkeleton`) with hero + card blocks.
+* Admin shell `loading.tsx`; newsletter/donate Suspense fallbacks use the same skeleton.
+* Footer Explore/Support stack cleanly on small screens; touch targets min-h-11.
+* Root `overflow-x-hidden`; mobile Playwright smoke for overflow + phone viewport.
+* Remaining product gaps still listed under Open Questions (credentials, CMS seed, videos, domain).
+
+## Public UI polish (prior)
 
 * Homepage Our Story / origin image → woman dancing photo.
 * Footer Explore links laid out in two columns.

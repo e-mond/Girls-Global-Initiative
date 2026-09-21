@@ -54,15 +54,15 @@ export async function PublicFooter() {
           <SocialLinks variant="onDark" />
         </div>
 
-        <div className="grid grid-cols-2 gap-6 text-sm">
+        <div className="grid gap-8 text-sm sm:grid-cols-2">
           <nav aria-label="Explore">
             <p className="mb-3 font-semibold">Explore</p>
-            <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-flex min-h-10 items-center text-white/80 hover:text-brand-sky"
+                    className="inline-flex min-h-11 items-center text-white/80 hover:text-brand-sky"
                   >
                     {link.label}
                   </Link>
@@ -85,7 +85,7 @@ export async function PublicFooter() {
                             ? settings.ctaPartnerUrl || link.href
                             : link.href
                     }
-                    className="inline-flex min-h-10 items-center text-white/80 hover:text-brand-sky"
+                    className="inline-flex min-h-11 items-center text-white/80 hover:text-brand-sky"
                   >
                     {link.label}
                   </Link>

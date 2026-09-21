@@ -1,6 +1,6 @@
 import { PageSkeleton } from "@/components/layout/page-skeleton";
 
-/** Public segment loading skeleton. */
+/** Admin shell loading skeleton. */
 export default function Loading() {
-  return <PageSkeleton variant="public" />;
+  return <PageSkeleton variant="admin" />;
 }
