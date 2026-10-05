@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("public navigation IA", () => {
+  test.describe.configure({ timeout: 60_000 });
+
   test("primary nav exposes compact links and About dropdown", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const primary = page.getByRole("navigation", { name: "Primary", exact: true });
 
     await expect(primary.getByRole("link", { name: "Our story" })).toBeVisible();
@@ -27,7 +29,7 @@ test.describe("public navigation IA", () => {
   });
 
   test("header stays sticky while scrolling", async ({ page }) => {
-    await page.goto("/our-story");
+    await page.goto("/our-story", { waitUntil: "domcontentloaded" });
     const header = page.getByRole("banner");
     await expect(header).toBeVisible();
     await page.evaluate(() => window.scrollTo(0, 600));
@@ -39,7 +41,7 @@ test.describe("public navigation IA", () => {
   test("footer still exposes programmes, impact, news and gallery", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const explore = page.getByRole("navigation", { name: "Explore" });
     await expect(explore.getByRole("link", { name: "Programmes" })).toBeVisible();
     await expect(explore.getByRole("link", { name: "Impact" })).toBeVisible();

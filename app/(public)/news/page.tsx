@@ -9,6 +9,7 @@ import {
   CtaBand,
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { ShareButtons } from "@/components/news/share-buttons";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { getPublicNews } from "@/features/content/public-content";
 
@@ -59,7 +60,10 @@ export default async function NewsPage() {
         <Stagger className="grid gap-6 lg:grid-cols-2">
           {items.map((item) => (
             <StaggerItem key={item.id}>
-              <article className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base">
+              <article
+                id={item.isPlaceholder ? undefined : item.slug}
+                className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base scroll-mt-24"
+              >
                 {item.imageSrc ? (
                   <div className="relative h-48">
                     <Image
@@ -87,6 +91,14 @@ export default async function NewsPage() {
                   <p className="mt-3 text-sm leading-relaxed text-text-muted">
                     {item.summary}
                   </p>
+                  {!item.isPlaceholder ? (
+                    <ShareButtons
+                      className="mt-5"
+                      title={item.title}
+                      summary={item.summary}
+                      url={`/news#${item.slug}`}
+                    />
+                  ) : null}
                 </div>
               </article>
             </StaggerItem>

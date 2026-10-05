@@ -30,22 +30,59 @@ npm run deploy
 
 ## Required Worker secrets / vars
 
-Set these in Cloudflare (Workers → Settings → Variables and Secrets), never in git:
+Set these on the **live Worker** that serves `girlsglobalinitiative.org`
+(Workers & Pages → **girls-global-initiative** → Settings → Variables and Secrets),
+then click **Deploy**. Build-time env vars alone are not enough.
 
-| Name | Notes |
-| --- | --- |
-| `DATABASE_URL` | Neon pooled connection string |
-| `AUTH_SECRET` | Long random secret |
-| `AUTH_URL` | `https://girlsglobalinitiative.org` |
-| `NEXT_PUBLIC_SITE_URL` | `https://girlsglobalinitiative.org` |
-| `NEXT_PUBLIC_ENABLE_MSW` | `false` |
-| `NEXT_PUBLIC_MOCK_API` | `false` |
-| SMTP / Paystack / Cloudinary | As available from GGI |
+Verify after deploy: `https://girlsglobalinitiative.org/api/ready`
+must show `"authSecret":"ok"` and `"database":"ok"`. Until then, login will 500.
+
+| Name | Type | Notes |
+| --- | --- | --- |
+| `DATABASE_URL` | Secret | Neon pooled URL (same as `.env.local`) |
+| `AUTH_SECRET` | Secret | Same long secret as `.env.local` |
+| `AUTH_URL` | Text | `https://girlsglobalinitiative.org` (also in `wrangler.jsonc` vars) |
+| `NEXT_PUBLIC_SITE_URL` | Text | `https://girlsglobalinitiative.org` |
+| `NEXT_PUBLIC_ENABLE_MSW` | Text | `false` |
+| `NEXT_PUBLIC_MOCK_API` | Text | `false` |
+| `SMTP_HOST` | Text | e.g. `smtp.gmail.com` (not `gmail.com`) |
+| `SMTP_PORT` | Text | `587` |
+| `SMTP_USER` | Secret | Full mailbox email, e.g. `you@gmail.com` |
+| `SMTP_PASS` | Secret | App password / SMTP password |
+| `SMTP_FROM` | Text | Full From email, e.g. `Girls Global Initiative <you@gmail.com>` |
+
+Do **not** put secrets only in `.env.local` — that file never reaches Cloudflare.
+If you have multiple Cloudflare accounts, set secrets on the account that owns
+the production Worker (check the Worker overview URL / account id).
 
 After secrets are set, verify:
 
 * `GET https://girlsglobalinitiative.org/api/health`
 * `GET https://girlsglobalinitiative.org/api/ready`
+
+## Staff invites and subscriber blast
+
+* **Staff invitations** use SMTP on the Worker (`SMTP_*` secrets above). After
+  inviting a user from Admin → Users, the invitee receives a branded email with
+  a 72-hour link to `/admin/reset-password?token=…&invite=1`.
+* **One-time “site live” newsletter blast** must **not** run inside the Worker
+  (avoids CPU Error 1102 from unbounded fan-out). Run locally against production
+  Neon + SMTP:
+
+```bash
+# Publish the news post (idempotent on slug ggi-website-is-live)
+npm run db:publish-site-live-news
+
+# Optional: dry-run recipients
+ANNOUNCE_DRY_RUN=1 npm run announce:site-live
+
+# Send to all confirmed subscribers
+npm run announce:site-live
+```
+
+Use the same `DATABASE_URL` and `SMTP_*` values as production `.env.local`.
+If Worker SMTP is still incomplete, the announce script can use local SMTP while
+the news post is published to production Neon.
 
 ## DNS
 

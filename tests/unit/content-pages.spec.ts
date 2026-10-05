@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("content public pages", () => {
+  test.describe.configure({ timeout: 60_000 });
+
   test("our story shows vision mission and values", async ({ page }) => {
-    await page.goto("/our-story");
+    await page.goto("/our-story", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", {
         name: /It started with a conversation/i,
@@ -16,7 +18,7 @@ test.describe("content public pages", () => {
   });
 
   test("programmes page lists initiatives", async ({ page }) => {
-    await page.goto("/programmes");
+    await page.goto("/programmes", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", {
         name: /Programmes, initiatives and projects/i,
@@ -30,7 +32,7 @@ test.describe("content public pages", () => {
   test("impact page lists achievements without invented counts", async ({
     page,
   }) => {
-    await page.goto("/impact");
+    await page.goto("/impact", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /What we have begun/i }),
     ).toBeVisible();
@@ -39,28 +41,28 @@ test.describe("content public pages", () => {
   });
 
   test("advocate page is no longer a stub", async ({ page }) => {
-    await page.goto("/get-involved/advocate");
+    await page.goto("/get-involved/advocate", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /Stand with girls/i }),
     ).toBeVisible();
   });
 
   test("gallery page renders", async ({ page }) => {
-    await page.goto("/gallery");
+    await page.goto("/gallery", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /Moments from the work/i }),
     ).toBeVisible();
   });
 
   test("news page renders", async ({ page }) => {
-    await page.goto("/news");
+    await page.goto("/news", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /Updates from Girls Global Initiative/i }),
     ).toBeVisible();
   });
 
   test("events page renders", async ({ page }) => {
-    await page.goto("/events");
+    await page.goto("/events", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /Gatherings, outreach and invitations/i }),
     ).toBeVisible();

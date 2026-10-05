@@ -6,8 +6,9 @@ import {
   updateStaffUserSchema,
 } from "@/features/settings/schemas";
 import {
-  createStaffUser,
+  inviteStaffUser,
   listStaffUsers,
+  resendStaffInvite,
   updateStaffUser,
 } from "@/features/users/service";
 
@@ -48,15 +49,14 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: {
-          message:
-            "Provide name, email, role, and a password of at least 8 characters.",
+          message: "Provide name, email, and a staff role.",
         },
       },
       { status: 400 },
     );
   }
 
-  const result = await createStaffUser(parsed.data);
+  const result = await inviteStaffUser(parsed.data);
   if ("error" in result) {
     return NextResponse.json(
       { error: { message: result.error } },
@@ -66,10 +66,10 @@ export async function POST(request: Request) {
 
   await writeAuditLog({
     actorUserId: access.user.id,
-    action: "user.create",
+    action: "user.invited",
     entityType: "user",
     entityId: result.id,
-    summary: `Created staff user ${result.email} (${result.role})`,
+    summary: `Invited staff user ${result.email} (${result.role})`,
   });
 
   return NextResponse.json({ data: { item: result } }, { status: 201 });
@@ -102,7 +102,35 @@ export async function PATCH(request: Request) {
     );
   }
 
-  const result = await updateStaffUser(parsed.data);
+  if (parsed.data.resendInvite) {
+    const result = await resendStaffInvite(parsed.data.id);
+    if ("error" in result) {
+      return NextResponse.json(
+        { error: { message: result.error } },
+        { status: 400 },
+      );
+    }
+    await writeAuditLog({
+      actorUserId: access.user.id,
+      action: "user.invite_resent",
+      entityType: "user",
+      entityId: result.id,
+      summary: `Resent staff invitation to ${result.email}`,
+    });
+    return NextResponse.json({ data: { item: result } });
+  }
+
+  const { resendInvite: _resend, ...update } = parsed.data;
+  void _resend;
+
+  const previousStatus = (
+    await listStaffUsers()
+  ).find((item) => item.id === update.id)?.status;
+
+  const result = await updateStaffUser({
+    ...update,
+    actorUserId: access.user.id,
+  });
   if ("error" in result) {
     return NextResponse.json(
       { error: { message: result.error } },
@@ -110,12 +138,22 @@ export async function PATCH(request: Request) {
     );
   }
 
+  let action = "user.update";
+  let summary = `Updated staff user ${result.email}`;
+  if (update.status === "disabled") {
+    action = "user.disabled";
+    summary = `Disabled staff user ${result.email}`;
+  } else if (update.status === "active" && previousStatus === "disabled") {
+    action = "user.reenabled";
+    summary = `Re-enabled staff user ${result.email}`;
+  }
+
   await writeAuditLog({
     actorUserId: access.user.id,
-    action: "user.update",
+    action,
     entityType: "user",
     entityId: result.id,
-    summary: `Updated staff user ${result.email}`,
+    summary,
   });
 
   return NextResponse.json({ data: { item: result } });

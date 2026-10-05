@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { ShareButtons } from "@/components/news/share-buttons";
 import { getPublicNews } from "@/features/content/public-content";
 
 /** Homepage news strip. Uses CMS when published; otherwise clear placeholders. */
@@ -50,7 +51,14 @@ export async function HomeNews() {
                   </p>
                   {item.isPlaceholder ? (
                     <p className="mt-3 text-xs text-text-muted">Placeholder</p>
-                  ) : null}
+                  ) : (
+                    <ShareButtons
+                      className="mt-4"
+                      title={item.title}
+                      summary={item.summary}
+                      url={`/news#${item.slug}`}
+                    />
+                  )}
                 </div>
               </article>
             </StaggerItem>

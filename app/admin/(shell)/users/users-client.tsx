@@ -10,18 +10,23 @@ type Item = {
   email: string;
   name: string;
   role: "administrator" | "editor";
+  status: "active" | "invited" | "disabled";
   createdAt: string;
   lastLoginAt: string | null;
 };
 
-export default function AdminUsersPageClient() {
+export default function AdminUsersPageClient({
+  currentUserId,
+}: {
+  currentUserId: string;
+}) {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"administrator" | "editor">("editor");
-  const [password, setPassword] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -47,20 +52,21 @@ export default function AdminUsersPageClient() {
   async function onCreate(event: FormEvent) {
     event.preventDefault();
     setError(null);
+    setSuccess(null);
     const response = await fetch("/api/admin/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, role, password }),
+      body: JSON.stringify({ name, email, role }),
     });
     const json = await response.json();
     if (!response.ok) {
-      setError(json?.error?.message ?? "Could not create user.");
+      setError(json?.error?.message ?? "Could not invite user.");
       return;
     }
     setName("");
     setEmail("");
-    setPassword("");
     setRole("editor");
+    setSuccess(`Invitation sent to ${json.data.item.email}.`);
     await load();
   }
 
@@ -73,6 +79,7 @@ export default function AdminUsersPageClient() {
       return;
     }
     setError(null);
+    setSuccess(null);
     const response = await fetch("/api/admin/users", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -86,12 +93,54 @@ export default function AdminUsersPageClient() {
     await load();
   }
 
+  async function setUserStatus(id: string, status: "active" | "disabled") {
+    const label = status === "disabled" ? "disable" : "re-enable";
+    if (!window.confirm(`Are you sure you want to ${label} this staff account?`)) {
+      return;
+    }
+    setError(null);
+    setSuccess(null);
+    const response = await fetch("/api/admin/users", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    const json = await response.json();
+    if (!response.ok) {
+      setError(json?.error?.message ?? "Could not update access.");
+      return;
+    }
+    setSuccess(
+      status === "disabled"
+        ? "Staff access disabled."
+        : "Staff access re-enabled.",
+    );
+    await load();
+  }
+
+  async function resendInvite(id: string) {
+    setError(null);
+    setSuccess(null);
+    const response = await fetch("/api/admin/users", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, resendInvite: true }),
+    });
+    const json = await response.json();
+    if (!response.ok) {
+      setError(json?.error?.message ?? "Could not resend invitation.");
+      return;
+    }
+    setSuccess("Invitation email resent.");
+    await load();
+  }
+
   return (
     <section className="space-y-6">
       <AdminPageHeader
         eyebrow="Administration"
         title="Users"
-        description="Invite and manage staff accounts. Roles are Administrator or Editor only."
+        description="Invite staff by email. They choose their own password from the invitation link."
       />
 
       <form
@@ -120,24 +169,14 @@ export default function AdminUsersPageClient() {
           onChange={(event) =>
             setRole(event.target.value as "administrator" | "editor")
           }
-          className="h-11 rounded-xl border border-border-default px-3 text-sm"
+          className="h-11 rounded-xl border border-border-default px-3 text-sm sm:col-span-2"
           aria-label="Role"
         >
           <option value="editor">Editor</option>
           <option value="administrator">Administrator</option>
         </select>
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          type="password"
-          required
-          minLength={8}
-          placeholder="Temporary password (min 8)"
-          className="h-11 rounded-xl border border-border-default px-3 text-sm"
-          aria-label="Temporary password"
-        />
         <div className="sm:col-span-2">
-          <Button type="submit">Add staff user</Button>
+          <Button type="submit">Send invitation</Button>
         </div>
       </form>
 
@@ -146,13 +185,18 @@ export default function AdminUsersPageClient() {
           {error}
         </p>
       ) : null}
+      {success ? (
+        <p className="text-sm text-state-success" role="status">
+          {success}
+        </p>
+      ) : null}
 
       {loading ? (
         <p className="text-sm text-text-muted">Loading users…</p>
       ) : items.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border-default bg-bg-surface p-8 text-sm text-text-muted">
-          No staff users in the database yet. Seed an administrator or add one
-          above.
+          No staff users in the database yet. Seed an administrator or invite
+          one above.
         </p>
       ) : (
         <ul className="space-y-3">
@@ -176,15 +220,38 @@ export default function AdminUsersPageClient() {
                     >
                       {item.role}
                     </span>
+                    <span
+                      className={cn(
+                        "mr-2 inline-flex rounded-full px-2 py-0.5 font-semibold capitalize",
+                        item.status === "active" &&
+                          "bg-state-success/15 text-state-success",
+                        item.status === "invited" &&
+                          "bg-state-warning/20 text-brand-navy",
+                        item.status === "disabled" &&
+                          "bg-state-error/15 text-state-error",
+                      )}
+                    >
+                      {item.status}
+                    </span>
                     created {new Date(item.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  {item.status === "invited" ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void resendInvite(item.id)}
+                    >
+                      Resend invite
+                    </Button>
+                  ) : null}
                   <Button
                     type="button"
                     size="sm"
                     variant={item.role === "editor" ? "secondary" : "outline"}
-                    disabled={item.role === "editor"}
+                    disabled={item.role === "editor" || item.status === "disabled"}
                     onClick={() => void setUserRole(item.id, "editor")}
                   >
                     Editor
@@ -195,11 +262,33 @@ export default function AdminUsersPageClient() {
                     variant={
                       item.role === "administrator" ? "secondary" : "outline"
                     }
-                    disabled={item.role === "administrator"}
+                    disabled={
+                      item.role === "administrator" || item.status === "disabled"
+                    }
                     onClick={() => void setUserRole(item.id, "administrator")}
                   >
                     Administrator
                   </Button>
+                  {item.status === "disabled" ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void setUserStatus(item.id, "active")}
+                    >
+                      Re-enable
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      disabled={item.id === currentUserId}
+                      onClick={() => void setUserStatus(item.id, "disabled")}
+                    >
+                      Disable
+                    </Button>
+                  )}
                 </div>
               </div>
             </li>

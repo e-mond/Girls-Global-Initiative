@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 
@@ -16,14 +16,16 @@ type Item = {
 export default function AdminAuditPageClient() {
   const [items, setItems] = useState<Item[]>([]);
   const [q, setQ] = useState("");
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (search: string) => {
     setLoading(true);
     setError(null);
     const params = new URLSearchParams();
-    if (q.trim()) params.set("q", q.trim());
+    if (search.trim()) params.set("q", search.trim());
     try {
       const response = await fetch(`/api/admin/audit?${params}`);
       const json = await response.json();
@@ -36,29 +38,37 @@ export default function AdminAuditPageClient() {
     } finally {
       setLoading(false);
     }
-  }, [q]);
+  }, []);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    void load(query);
+  }, [load, query]);
+
+  function onSearchChange(value: string) {
+    setQ(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setQuery(value);
+    }, 400);
+  }
 
   return (
     <section className="space-y-6">
       <AdminPageHeader
         eyebrow="Administration"
         title="Audits"
-        description="Immutable record of significant back-office and public submission actions. Historical and read-only."
+        description="Immutable record of significant back-office and public submission actions."
       />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
           value={q}
-          onChange={(event) => setQ(event.target.value)}
+          onChange={(event) => onSearchChange(event.target.value)}
           placeholder="Search action, entity or summary"
           className="h-11 flex-1 rounded-xl border border-border-default bg-bg-surface px-3 text-sm outline-none focus:border-brand-sky"
           aria-label="Search audit log"
         />
-        <Button type="button" variant="outline" onClick={() => void load()}>
+        <Button type="button" variant="outline" onClick={() => void load(query)}>
           Refresh
         </Button>
       </div>
