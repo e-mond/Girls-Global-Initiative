@@ -201,6 +201,47 @@ export function passwordResetEmail(input: {
   });
 }
 
+export function staffInviteEmail(input: {
+  name: string;
+  inviteUrl: string;
+}): BrandedEmailContent {
+  return brandedMessage({
+    subject: "You're invited to the GGI staff back-office",
+    title: "Set up your staff account",
+    greeting: `Hello ${input.name},`,
+    paragraphs: [
+      "You have been invited to the Girls Global Initiative staff back-office.",
+      "Use the button below to choose your password and activate your account. This invitation link expires in 72 hours.",
+    ],
+    cta: { href: input.inviteUrl, label: "Accept invitation" },
+    secondaryLinks: [
+      { href: `${emailSiteOrigin()}/admin/login`, label: "Staff sign in" },
+    ],
+    preheader: "Accept your GGI staff invitation and choose a password.",
+  });
+}
+
+export function siteLiveAnnouncementEmail(input: {
+  newsUrl: string;
+  unsubscribeUrl: string;
+}): BrandedEmailContent {
+  return brandedMessage({
+    subject: "Girls Global Initiative's website is live",
+    title: "Our website is live",
+    greeting: "Hello,",
+    paragraphs: [
+      "Girls Global Initiative's public website is now live at girlsglobalinitiative.org.",
+      "You can read our first update, explore our story, and find ways to support girls in rural and underserved communities.",
+    ],
+    cta: { href: input.newsUrl, label: "Read the update" },
+    secondaryLinks: [
+      { href: `${emailSiteOrigin()}/`, label: "Visit the website" },
+      { href: input.unsubscribeUrl, label: "Unsubscribe" },
+    ],
+    preheader: "GGI's website is live — read the first update.",
+  });
+}
+
 export function submissionAckEmail(input: {
   kind: "volunteer" | "partnership" | "contact";
   name: string;

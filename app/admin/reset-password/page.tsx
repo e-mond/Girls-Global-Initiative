@@ -10,6 +10,7 @@ function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
+  const isInvite = searchParams.get("invite") === "1";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [pending, setPending] = useState(false);
@@ -33,13 +34,13 @@ function ResetPasswordForm() {
       });
       const json = await response.json();
       if (!response.ok) {
-        throw new Error(json?.error?.message ?? "Could not reset password.");
+        throw new Error(json?.error?.message ?? "Could not set password.");
       }
       router.replace("/admin/login");
       router.refresh();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Could not reset password.",
+        err instanceof Error ? err.message : "Could not set password.",
       );
     } finally {
       setPending(false);
@@ -50,7 +51,8 @@ function ResetPasswordForm() {
     <form onSubmit={onSubmit} className="space-y-4">
       {!token ? (
         <p className="text-sm text-brand-magenta" role="alert">
-          This reset link is missing a token. Request a new password reset.
+          This link is missing a token. Request a new invitation or password
+          reset.
         </p>
       ) : null}
       <div className="space-y-2">
@@ -58,7 +60,7 @@ function ResetPasswordForm() {
           htmlFor="password"
           className="text-sm font-medium text-brand-navy"
         >
-          New password
+          {isInvite ? "Choose a password" : "New password"}
         </label>
         <input
           id="password"
@@ -101,7 +103,11 @@ function ResetPasswordForm() {
         className="w-full rounded-xl"
         disabled={pending || !token}
       >
-        {pending ? "Updating…" : "Update password"}
+        {pending
+          ? "Saving…"
+          : isInvite
+            ? "Activate account"
+            : "Update password"}
       </Button>
       <p className="text-center text-xs text-text-muted">
         <Link
@@ -117,13 +123,32 @@ function ResetPasswordForm() {
 
 export default function AdminResetPasswordPage() {
   return (
-    <AdminAuthShell
-      title="Choose a new password"
-      description="Enter a new password for your staff account. The link expires after one hour."
+    <Suspense
+      fallback={
+        <AdminAuthShell title="Set your password" description="Loading…">
+          <p className="text-sm text-text-muted">Loading…</p>
+        </AdminAuthShell>
+      }
     >
-      <Suspense fallback={<p className="text-sm text-text-muted">Loading…</p>}>
-        <ResetPasswordForm />
-      </Suspense>
+      <ResetPasswordPageInner />
+    </Suspense>
+  );
+}
+
+function ResetPasswordPageInner() {
+  const searchParams = useSearchParams();
+  const isInvite = searchParams.get("invite") === "1";
+
+  return (
+    <AdminAuthShell
+      title={isInvite ? "Accept your invitation" : "Choose a new password"}
+      description={
+        isInvite
+          ? "Create a password to activate your GGI staff account. Invitation links expire after 72 hours."
+          : "Enter a new password for your staff account. The link expires after one hour."
+      }
+    >
+      <ResetPasswordForm />
     </AdminAuthShell>
   );
 }

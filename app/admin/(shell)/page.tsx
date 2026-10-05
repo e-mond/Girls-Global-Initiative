@@ -11,8 +11,8 @@ import { listAttentionItems } from "@/features/admin/attention";
 import { listDonations } from "@/features/donations/service";
 import { listSubscribers } from "@/features/newsletter/service";
 import { listSubmissions } from "@/features/submissions/service";
-import { auth } from "@/auth";
 import type { LucideIcon } from "lucide-react";
+import { getStaffSession } from "@/features/governance/session";
 
 async function safeCount(loader: () => Promise<number>) {
   try {
@@ -23,7 +23,7 @@ async function safeCount(loader: () => Promise<number>) {
 }
 
 export default async function AdminDashboardPage() {
-  const session = await auth();
+  const session = await getStaffSession();
   const name = session?.user?.name?.split(" ")[0] ?? "there";
 
   const [newVolunteer, newPartnership, newContact, donations, subscribers, attention] =

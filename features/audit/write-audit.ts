@@ -43,14 +43,22 @@ export async function writeAuditLog(entry: AuditEntry): Promise<void> {
   }
 }
 
-export async function listAuditLogs(limit = 100): Promise<AuditLogRecord[]> {
+export async function listAuditLogs(limit = 50): Promise<AuditLogRecord[]> {
   const db = getDb();
   if (!db) {
     return memoryAudit.slice(0, limit);
   }
 
   const rows = await db
-    .select()
+    .select({
+      id: auditLogs.id,
+      actorUserId: auditLogs.actorUserId,
+      action: auditLogs.action,
+      entityType: auditLogs.entityType,
+      entityId: auditLogs.entityId,
+      summary: auditLogs.summary,
+      createdAt: auditLogs.createdAt,
+    })
     .from(auditLogs)
     .orderBy(desc(auditLogs.createdAt))
     .limit(limit);
@@ -62,9 +70,6 @@ export async function listAuditLogs(limit = 100): Promise<AuditLogRecord[]> {
     entityType: row.entityType,
     entityId: row.entityId,
     summary: row.summary,
-    metadata: row.metadata
-      ? (JSON.parse(row.metadata) as Record<string, unknown>)
-      : undefined,
     createdAt: row.createdAt.toISOString(),
   }));
 }

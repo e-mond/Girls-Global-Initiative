@@ -4,6 +4,8 @@ import {
   newsletterConfirmEmail,
   passwordResetEmail,
   renderBrandedEmail,
+  siteLiveAnnouncementEmail,
+  staffInviteEmail,
   submissionAckEmail,
 } from "../../features/email/branded";
 
@@ -60,5 +62,23 @@ test.describe("branded transactional email", () => {
     expect(thanks.html).toContain("Thank you for your gift");
     expect(thanks.html).toContain("ggi_test_1");
     expect(thanks.text).toContain("GHS 50.00");
+  });
+
+  test("staff invite and site-live announcement include CTAs", () => {
+    const invite = staffInviteEmail({
+      name: "Ama",
+      inviteUrl: "https://example.com/admin/reset-password?token=tok&invite=1",
+    });
+    expect(invite.subject.toLowerCase()).toContain("invited");
+    expect(invite.html).toContain("Accept invitation");
+    expect(invite.html).toContain("invite=1");
+
+    const live = siteLiveAnnouncementEmail({
+      newsUrl: "https://example.com/news#ggi-website-is-live",
+      unsubscribeUrl: "https://example.com/newsletter/unsubscribe?token=xyz",
+    });
+    expect(live.subject.toLowerCase()).toContain("live");
+    expect(live.html).toContain("Read the update");
+    expect(live.html).toContain("Unsubscribe");
   });
 });

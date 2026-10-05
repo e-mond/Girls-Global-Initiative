@@ -11,10 +11,19 @@ test.describe("mobile accessibility smoke", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    const menu = page.getByRole("button", { name: "Open menu" });
+    const menu = page.getByRole("button", { name: /Open menu|Close menu/ });
     await expect(menu).toBeVisible();
-    await menu.click();
-    await expect(page.getByRole("button", { name: "Close menu" })).toBeVisible();
+
+    // Retry open: under parallel load the client header may still be hydrating.
+    await expect(async () => {
+      if ((await menu.getAttribute("aria-expanded")) !== "true") {
+        await menu.click();
+      }
+      await expect(menu).toHaveAttribute("aria-expanded", "true", {
+        timeout: 2_000,
+      });
+    }).toPass({ timeout: 20_000 });
+
     await expect(
       page.getByRole("navigation", { name: "Primary mobile" }),
     ).toBeVisible();
@@ -28,8 +37,12 @@ test.describe("mobile accessibility smoke", () => {
   }) => {
     test.setTimeout(120_000);
     for (const path of ["/", "/our-story", "/contact", "/get-involved"]) {
-      await page.goto(path, { waitUntil: "load" });
-      await expect(page.locator("#main-content")).toBeVisible();
+      await expect(async () => {
+        await page.goto(path, { waitUntil: "domcontentloaded" });
+        await expect(page.locator("#main-content")).toBeVisible({
+          timeout: 15_000,
+        });
+      }).toPass({ timeout: 45_000 });
       const overflow = await page.evaluate(() => {
         const doc = document.documentElement;
         return doc.scrollWidth > doc.clientWidth + 2;

@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema";
@@ -15,6 +14,7 @@ export type StaffUser = {
  * Verifies staff credentials against Neon when configured.
  * Without DATABASE_URL (local/MSW), falls back to AUTH_DEV_* env only
  * outside production — documented bootstrap for Unit 3 offline work.
+ * bcrypt is loaded dynamically so admin SSR/API paths avoid the Worker CPU hit.
  */
 export async function verifyStaffCredentials(
   email: string,
@@ -34,6 +34,11 @@ export async function verifyStaffCredentials(
       return null;
     }
 
+    if (row.status !== "active") {
+      return null;
+    }
+
+    const bcrypt = await import("bcryptjs");
     const ok = await bcrypt.compare(password, row.passwordHash);
     if (!ok) {
       return null;
@@ -78,5 +83,6 @@ export async function verifyStaffCredentials(
 }
 
 export async function hashPassword(password: string): Promise<string> {
+  const bcrypt = await import("bcryptjs");
   return bcrypt.hash(password, 12);
 }

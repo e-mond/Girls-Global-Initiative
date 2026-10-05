@@ -14,6 +14,11 @@ import {
  */
 
 export const staffRoleEnum = pgEnum("staff_role", ["administrator", "editor"]);
+export const staffStatusEnum = pgEnum("staff_status", [
+  "active",
+  "invited",
+  "disabled",
+]);
 export const contentStatusEnum = pgEnum("content_status", [
   "draft",
   "published",
@@ -25,6 +30,7 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   passwordHash: text("password_hash").notNull(),
   role: staffRoleEnum("role").notNull().default("editor"),
+  status: staffStatusEnum("status").notNull().default("active"),
   passwordResetToken: text("password_reset_token"),
   passwordResetExpires: timestamp("password_reset_expires", {
     withTimezone: true,

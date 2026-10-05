@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getStaffSession } from "@/features/governance/session";
 import {
   canAccessAdmin,
   type StaffRole,
@@ -15,7 +15,7 @@ export async function requireAdminSession(): Promise<
   | { ok: true; user: AdminSessionUser }
   | { ok: false; status: 401 | 403; message: string }
 > {
-  const session = await auth();
+  const session = await getStaffSession();
   const user = session?.user;
 
   if (!user?.id || !user.email || !user.role) {

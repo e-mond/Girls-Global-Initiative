@@ -17,7 +17,9 @@
     "test:e2e": "cypress run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed-admin": "tsx --env-file=.env.local scripts/seed-admin.ts"
+    "db:seed-admin": "tsx --env-file=.env.local scripts/seed-admin.ts",
+    "db:publish-site-live-news": "tsx --env-file=.env.local scripts/publish-site-live-news.ts",
+    "announce:site-live": "tsx --env-file=.env.local scripts/announce-site-live.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

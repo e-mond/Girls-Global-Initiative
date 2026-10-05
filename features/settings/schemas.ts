@@ -7,14 +7,14 @@ export const createStaffUserSchema = z.object({
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().email().max(200),
   role: staffRoleSchema,
-  password: z.string().min(8).max(200),
 });
 
 export const updateStaffUserSchema = z.object({
   id: z.string().uuid(),
   name: z.string().trim().min(2).max(120).optional(),
   role: staffRoleSchema.optional(),
-  password: z.string().min(8).max(200).optional(),
+  status: z.enum(["active", "disabled"]).optional(),
+  resendInvite: z.boolean().optional(),
 });
 
 export const siteSettingsSchema = z.object({

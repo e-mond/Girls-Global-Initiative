@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **Admin UI icons, logout polish & repository documentation**
-* **Status:** In progress on `feature/admin-ui-revamp`
-* **Previous phase:** Admin UI revamp foundation (shell + pages)
-* **Current branch:** `feature/admin-ui-revamp`
+* **Staff invite, revoke access, Worker 1102, live news blast**
+* **Status:** Validated on `feature/staff-invite-prod-hardening` — ready for PR / merge / redeploy
+* **Previous phase:** Public pages story structure / Cloudflare deploy hardening
+* **Current branch:** `feature/staff-invite-prod-hardening`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Lucide icons on dashboard/sidebar, account-menu logout, collapsible sidebar, GitHub About + README rewrite.
-* **Owner notes:** Neon configured; Paystack/Cloudinary/SMTP credentials still pending from GGI.
+* **Current objective:** Staff invite email (no temp password), disable/re-enable, Worker 1102 fixes for settings/audit, news share buttons + site-live post/announce scripts.
+* **Owner notes:** After merge: run migration `0008`, redeploy OpenNext Worker with `AUTH_SECRET`/`DATABASE_URL`/`SMTP_*` on the correct Cloudflare account, then `npm run db:publish-site-live-news` and `npm run announce:site-live` once SMTP is confirmed. Verify `/admin/settings` and `/admin/audit` no longer return Worker 1102.
 
 ---
 
@@ -1180,9 +1180,23 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 complete. PR #19 merged (branded email + Our Story).
-In progress on `feature/public-pages-story-structure`: remaining public
-pages adapted to the Our Story editorial system.
+Roadmap Units 1–8 complete. On `feature/staff-invite-prod-hardening`:
+staff invite/disable, Worker 1102 hardening (session helper, getDb cache,
+audit debounce/slim query), news share buttons, and operator scripts for
+site-live news + subscriber blast.
+
+### Session Notes — Staff invite / prod hardening
+
+* Staff create flow no longer accepts temporary passwords; invites use
+  `password_reset_token` with 72h TTL and branded `staffInviteEmail`.
+* `users.status`: `active` | `invited` | `disabled` (migration `0008`).
+* Login blocked when status ≠ `active`; last-admin and self-disable guards.
+* Settings/audit SSR uses `getStaffSession` (bcrypt-free); bcrypt only loads
+  dynamically inside credentials authorize / hashPassword.
+* `getDb()` cached; audit search debounced; list limit 50 + `created_at` index.
+* Share buttons on news page + homepage news strip.
+* Scripts: `db:publish-site-live-news`, `announce:site-live` (documented in
+  `docs/CLOUDFLARE.md`). Do not fan-out the blast from the Worker.
 
 ---
 

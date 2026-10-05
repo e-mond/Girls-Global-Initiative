@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim().toLowerCase();
-  const items = await listAuditLogs(200);
+  const items = await listAuditLogs(50);
   const filtered = q
     ? items.filter(
         (item) =>

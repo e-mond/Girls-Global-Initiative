@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { getStaffSession } from "@/features/governance/session";
 import { AdminMobileNav } from "@/components/admin/admin-mobile-nav";
 import { AdminShellProvider } from "@/components/admin/admin-shell-provider";
 import { AdminSidebar } from "@/components/layout/admin-sidebar";
@@ -15,7 +15,7 @@ export default async function AdminShellLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const session = await getStaffSession();
   const role = session?.user?.role;
   const groups = buildAdminNavGroups({
     canManageUsers: canManageUsers(role),

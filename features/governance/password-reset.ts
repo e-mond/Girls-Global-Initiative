@@ -3,7 +3,10 @@ import { and, eq, gt, isNotNull } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema";
 import { hashPassword } from "@/features/governance/credentials";
-import { passwordResetEmail } from "@/features/email/branded";
+import {
+  passwordResetEmail,
+  staffInviteEmail,
+} from "@/features/email/branded";
 import { emailSiteOrigin } from "@/features/email/site-origin";
 import { sendAcknowledgementEmail } from "@/features/submissions/email";
 
@@ -14,6 +17,7 @@ function hashToken(token: string) {
 /**
  * Starts a staff password reset. Always resolves successfully to the caller
  * (no email enumeration). Sends SMTP mail when configured and a user exists.
+ * Disabled accounts cannot receive resets.
  */
 export async function requestStaffPasswordReset(
   email: string,
@@ -26,12 +30,17 @@ export async function requestStaffPasswordReset(
 
   try {
     const [row] = await db
-      .select({ id: users.id, email: users.email, name: users.name })
+      .select({
+        id: users.id,
+        email: users.email,
+        name: users.name,
+        status: users.status,
+      })
       .from(users)
       .where(eq(users.email, normalised))
       .limit(1);
 
-    if (!row) {
+    if (!row || row.status === "disabled") {
       return { accepted: true };
     }
 
@@ -49,7 +58,10 @@ export async function requestStaffPasswordReset(
       .where(eq(users.id, row.id));
 
     const resetUrl = `${emailSiteOrigin()}/admin/reset-password?token=${rawToken}`;
-    const mail = passwordResetEmail({ name: row.name, resetUrl });
+    const mail =
+      row.status === "invited"
+        ? staffInviteEmail({ name: row.name, inviteUrl: `${resetUrl}&invite=1` })
+        : passwordResetEmail({ name: row.name, resetUrl });
     await sendAcknowledgementEmail({
       to: row.email,
       subject: mail.subject,
@@ -88,7 +100,7 @@ export async function resetStaffPasswordWithToken(input: {
 
   try {
     const [row] = await db
-      .select({ id: users.id })
+      .select({ id: users.id, status: users.status })
       .from(users)
       .where(
         and(
@@ -106,6 +118,13 @@ export async function resetStaffPasswordWithToken(input: {
       };
     }
 
+    if (row.status === "disabled") {
+      return {
+        ok: false,
+        message: "This staff account is disabled. Contact an administrator.",
+      };
+    }
+
     const passwordHash = await hashPassword(input.password);
     await db
       .update(users)
@@ -113,6 +132,7 @@ export async function resetStaffPasswordWithToken(input: {
         passwordHash,
         passwordResetToken: null,
         passwordResetExpires: null,
+        status: "active",
         updatedAt: now,
       })
       .where(eq(users.id, row.id));

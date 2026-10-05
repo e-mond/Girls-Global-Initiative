@@ -18,6 +18,14 @@
   "images": {
     "binding": "IMAGES"
   },
+  // Non-secret runtime config. Secrets (AUTH_SECRET, DATABASE_URL, SMTP_*, …)
+  // must be set in Cloudflare Worker Settings → Variables and Secrets.
+  "vars": {
+    "AUTH_URL": "https://girlsglobalinitiative.org",
+    "NEXT_PUBLIC_SITE_URL": "https://girlsglobalinitiative.org",
+    "NEXT_PUBLIC_ENABLE_MSW": "false",
+    "NEXT_PUBLIC_MOCK_API": "false"
+  },
   // Required when Cloudflare dashboard runs `wrangler preview`.
   // Production deploy must still be: npx opennextjs-cloudflare deploy
   "previews": {
