@@ -23,7 +23,7 @@ export default async function GalleryPage() {
         badge="Gallery"
         meta="Field moments · Dignity first"
         title="Moments from the work with girls."
-        description="Photography from school engagement, community visits and safe spaces. Staff can publish gallery items from the CMS media library."
+        description="Field moments from school engagement, community visits, and safe spaces."
         imageSrc="/home/community-1.jpg"
         imageAlt="Girls Global Initiative community photography"
         ctas={[

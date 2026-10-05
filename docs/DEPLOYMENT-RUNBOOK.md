@@ -44,8 +44,24 @@ docker compose up --build
 
 The app service healthcheck probes `/api/health`. Postgres has its own `pg_isready` check.
 
+## Cloudflare Workers (production host)
+
+Canonical URL: **https://girlsglobalinitiative.org**
+
+See `docs/CLOUDFLARE.md` for the required dashboard build/deploy commands.
+Do **not** use `npx wrangler preview` as the production deploy command.
+
+Required production vars include:
+
+```env
+AUTH_URL=https://girlsglobalinitiative.org
+NEXT_PUBLIC_SITE_URL=https://girlsglobalinitiative.org
+NEXT_PUBLIC_ENABLE_MSW=false
+NEXT_PUBLIC_MOCK_API=false
+```
+
 ## Rollback
 
-1. Redeploy the previous container/image tag.
+1. Redeploy the previous Worker version (Cloudflare) or container/image tag (Docker).
 2. Do not roll back applied Neon migrations without an explicit DBA plan.
 3. Disable Paystack checkout by removing `PAYSTACK_SECRET_KEY` if payment processing must stop immediately (transfer details remain).

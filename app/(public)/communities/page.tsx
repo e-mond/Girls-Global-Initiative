@@ -27,7 +27,7 @@ export default function CommunitiesPage() {
         badge="Communities"
         meta="Rural · Remote · Underserved"
         title="Rural, remote & underserved: first, not last."
-        description={COMMUNITIES_COPY.lead}
+        description="We prioritise rural, remote, and underserved communities — where girls are too often reached last."
         imageSrc="/home/community-1.jpg"
         imageAlt="Girls and community members in a learning setting"
         ctas={[

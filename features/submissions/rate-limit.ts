@@ -4,6 +4,9 @@ const globalStore = globalThis as typeof globalThis & {
   __ggiRateLimit?: Map<string, Bucket>;
 };
 
+/** Cap map size so a burst of unique keys cannot grow memory without bound. */
+const MAX_BUCKETS = 8_000;
+
 function buckets() {
   if (!globalStore.__ggiRateLimit) {
     globalStore.__ggiRateLimit = new Map();
@@ -11,7 +14,28 @@ function buckets() {
   return globalStore.__ggiRateLimit;
 }
 
-/** Simple sliding-window rate limit for public form endpoints. */
+function pruneExpired(map: Map<string, Bucket>, now: number) {
+  if (map.size < MAX_BUCKETS) return;
+  for (const [key, bucket] of map) {
+    if (bucket.resetAt <= now) map.delete(key);
+  }
+  // Under sustained unique-IP floods, drop oldest entries rather than OOM.
+  if (map.size >= MAX_BUCKETS) {
+    const overflow = map.size - Math.floor(MAX_BUCKETS * 0.75);
+    let removed = 0;
+    for (const key of map.keys()) {
+      if (removed >= overflow) break;
+      map.delete(key);
+      removed += 1;
+    }
+  }
+}
+
+/**
+ * Sliding-window rate limit for public form endpoints.
+ * Best-effort per isolate on Cloudflare Workers — pair with WAF rate rules
+ * for production traffic; never remove this check for deploy convenience.
+ */
 export function checkRateLimit(
   key: string,
   limit = 8,
@@ -19,6 +43,7 @@ export function checkRateLimit(
 ): { ok: true } | { ok: false; retryAfterSec: number } {
   const now = Date.now();
   const map = buckets();
+  pruneExpired(map, now);
   const current = map.get(key);
 
   if (!current || current.resetAt <= now) {

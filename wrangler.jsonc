@@ -11,11 +11,19 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
+      // Must match "name" above — never package.json "ggi".
       "service": "girls-global-initiative"
     }
   ],
   "images": {
     "binding": "IMAGES"
+  },
+  // Required when Cloudflare dashboard runs `wrangler preview`.
+  // Production deploy must still be: npx opennextjs-cloudflare deploy
+  "previews": {
+    "images": {
+      "binding": "IMAGES"
+    }
   },
   "observability": {
     "enabled": true

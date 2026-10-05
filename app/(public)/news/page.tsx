@@ -23,7 +23,7 @@ export default async function NewsPage() {
         badge="News"
         meta="Updates · Letters · Moments"
         title="Updates from Girls Global Initiative."
-        description="Stories and updates from school outreach, community work and partnership moments. Publish news posts from the admin CMS to replace placeholders."
+        description="School outreach, community work, and partnership updates."
         tone="sky"
         ctas={[
           { href: "/events", label: "See events", variant: "secondary" },

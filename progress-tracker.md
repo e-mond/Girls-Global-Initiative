@@ -489,10 +489,13 @@ pages use `content/site-copy.ts`.
 Production on Cloudflare Workers uses `@opennextjs/cloudflare` with committed
 `wrangler.jsonc` / `open-next.config.ts`. Worker name and
 `WORKER_SELF_REFERENCE.service` must both be `girls-global-initiative`.
+Canonical public URL: `https://girlsglobalinitiative.org` (`AUTH_URL`).
 Docker images keep `output: "standalone"` via `DOCKER_BUILD=1`.
-CI must not rely on interactive `wrangler deploy` migrate.
+CI must use OpenNext build + `opennextjs-cloudflare deploy` (not bare
+`wrangler preview` / `wrangler deploy` on `.next` alone).
+Pair app rate limits with Cloudflare WAF for high traffic.
 
-**Source:** Cloudflare deploy failure (API 10143); OpenNext get-started docs.
+**Source:** Cloudflare deploy failures (API 10143; missing previews block); OpenNext docs.
 
 ---
 
@@ -1036,7 +1039,18 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Cloudflare Workers deploy fix (this session)
+## Cloudflare prod hardening (this session)
+
+* Production host: `girlsglobalinitiative.org`.
+* Fixed missing `previews.images` binding required by `wrangler preview`.
+* Documented required Cloudflare build/deploy commands in `docs/CLOUDFLARE.md`
+  (`npm run build:cloudflare` + `npx opennextjs-cloudflare deploy`).
+* Added GitHub Actions CI (lint, type-check, Playwright unit, Next + OpenNext build).
+* Shortened long public hero subheaders; skeleton bones use semantic muted token.
+* Rate-limit store pruned under flood to avoid unbounded memory on Workers isolates.
+* Security rule reiterated: do not weaken auth/webhooks/rate limits for deploy polish.
+
+## Cloudflare Workers deploy fix (prior)
 
 * Root cause: CI ran `npx wrangler deploy` without committed OpenNext config;
   migrate set `WORKER_SELF_REFERENCE` → Worker `ggi` (from package.json name)

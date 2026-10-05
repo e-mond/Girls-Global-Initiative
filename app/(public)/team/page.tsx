@@ -11,7 +11,6 @@ import {
 } from "@/components/layout/content-section";
 import { PageHeroPhoto } from "@/components/layout/public-page-intro";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
-import { TAGLINE } from "@/content/site-copy";
 import { teamMembers } from "@/features/content/mock-home";
 
 export default function TeamPage() {
@@ -22,7 +21,7 @@ export default function TeamPage() {
         badge="Team"
         meta="Youth-led · Community-rooted"
         title="Meet the people building GGI."
-        description={`A small leadership circle advancing rights, health and opportunity for girls. ${TAGLINE}`}
+        description="A small leadership circle advancing rights, health, and opportunity for girls."
         imageSrc="/home/community-1.jpg"
         imageAlt="Girls Global Initiative team and community"
         ctas={[
