@@ -432,6 +432,12 @@ Exact:
 * DNS handoff
 * Production domain
 
+remain open.
+
+Cloudflare Workers deploy is in progress (`girls-global-initiative`); confirm
+whether production DNS points at Workers vs another host (Docker/Neon app).
+
+---
 details have not yet been supplied.
 
 Do not hardcode or assume the production domain.
@@ -477,6 +483,18 @@ pages use `content/site-copy.ts`.
 ---
 
 # Architecture Decisions
+
+## Cloudflare Workers via OpenNext
+
+Production on Cloudflare Workers uses `@opennextjs/cloudflare` with committed
+`wrangler.jsonc` / `open-next.config.ts`. Worker name and
+`WORKER_SELF_REFERENCE.service` must both be `girls-global-initiative`.
+Docker images keep `output: "standalone"` via `DOCKER_BUILD=1`.
+CI must not rely on interactive `wrangler deploy` migrate.
+
+**Source:** Cloudflare deploy failure (API 10143); OpenNext get-started docs.
+
+---
 
 ## Public navbar IA — compact primary + About dropdown
 
@@ -1018,7 +1036,18 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Skeleton + mobile hardening (this session)
+## Cloudflare Workers deploy fix (this session)
+
+* Root cause: CI ran `npx wrangler deploy` without committed OpenNext config;
+  migrate set `WORKER_SELF_REFERENCE` → Worker `ggi` (from package.json name)
+  while the Worker name was `girls-global-initiative` → API error 10143.
+* Added committed `wrangler.jsonc` (service binding matches worker name),
+  `open-next.config.ts`, `public/_headers`, OpenNext/Wrangler deps, deploy scripts.
+* `next.config.ts`: standalone only when `DOCKER_BUILD=1`; OpenNext dev init.
+* Cloudflare build/deploy should use `npm run build:cloudflare` then
+  `npx opennextjs-cloudflare deploy` (not bare `wrangler deploy` on `.next`).
+
+## Skeleton + mobile hardening (prior)
 
 * Larger public/admin page skeletons (`PageSkeleton`) with hero + card blocks.
 * Admin shell `loading.tsx`; newsletter/donate Suspense fallbacks use the same skeleton.

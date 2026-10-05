@@ -50,6 +50,11 @@ public/mockServiceWorker.js
 .turbo/
 .vercel/
 
+# OpenNext / Cloudflare Workers
+.open-next/
+.wrangler/
+.dev.vars
+
 # Local media binaries (Unit 3 offline storage fallback)
 storage/
 
