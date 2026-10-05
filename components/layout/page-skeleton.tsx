@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 function Bone({ className }: { className?: string }) {
   return (
     <div
-      className={cn("rounded-2xl bg-border-default/80", className)}
+      className={cn("rounded-2xl bg-text-muted/15", className)}
       aria-hidden
     />
   );

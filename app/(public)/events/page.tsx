@@ -24,7 +24,7 @@ export default async function EventsPage() {
         badge="Events"
         meta="Outreach · Gatherings · Invitations"
         title="Gatherings, outreach and invitations."
-        description="Upcoming and recent GGI activities. Publish events from the admin CMS with dates and locations when available. Do not invent schedules."
+        description="Outreach, gatherings, and invitations — published only when confirmed."
         tone="blush"
         ctas={[
           { href: "/partner", label: "Invite GGI" },

@@ -7,8 +7,6 @@ import {
 import { ContentSection, CtaBand } from "@/components/layout/content-section";
 import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import { DonationForm } from "@/components/donations/donation-form";
-import { TAGLINE } from "@/content/site-copy";
-
 export default function DonatePage() {
   return (
     <>
@@ -17,7 +15,7 @@ export default function DonatePage() {
         badge="Donate"
         meta="One-time · Monthly interest"
         title="Donate and support a girl."
-        description={`${TAGLINE} Your gift helps Girls Global Initiative advance the rights, dignity, health and opportunity of girls in rural and underserved communities.`}
+        description="Your gift advances rights, health, and opportunity for girls in rural and underserved communities."
         imageSrc="/home/hero-main.jpg"
         imageAlt="Girls supported through Girls Global Initiative programmes"
         imageShape="rounded"

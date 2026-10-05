@@ -9,7 +9,6 @@ import {
   CtaBand,
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
-import { TAGLINE } from "@/content/site-copy";
 import { getInvolvedCards } from "@/features/content/mock-home";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +48,7 @@ export default function GetInvolvedPage() {
         badge="Get involved"
         meta="Give · Serve · Speak · Partner"
         title="There's a place for you in her story."
-        description={`${TAGLINE} Choose how you want to support girls: donate, volunteer, raise your voice, or partner with GGI.`}
+        description="Donate, volunteer, advocate, or partner — pick the path that fits you."
         tone="cream"
         ctas={[
           { href: "/get-involved/donate", label: "Donate" },

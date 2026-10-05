@@ -11,7 +11,10 @@ test.describe("mobile accessibility smoke", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    await page.getByRole("button", { name: "Open menu" }).click();
+    const menu = page.getByRole("button", { name: "Open menu" });
+    await expect(menu).toBeVisible();
+    await menu.click();
+    await expect(page.getByRole("button", { name: "Close menu" })).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Primary mobile" }),
     ).toBeVisible();
@@ -25,8 +28,8 @@ test.describe("mobile accessibility smoke", () => {
   }) => {
     test.setTimeout(120_000);
     for (const path of ["/", "/our-story", "/contact", "/get-involved"]) {
-      await page.goto(path, { waitUntil: "domcontentloaded" });
-      await expect(page.locator("main, body").first()).toBeVisible();
+      await page.goto(path, { waitUntil: "load" });
+      await expect(page.locator("#main-content")).toBeVisible();
       const overflow = await page.evaluate(() => {
         const doc = document.documentElement;
         return doc.scrollWidth > doc.clientWidth + 2;

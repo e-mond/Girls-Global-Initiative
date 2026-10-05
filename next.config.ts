@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-
-initOpenNextCloudflareForDev();
+// Bindings for local `next dev` only — never during Docker/CI production builds.
+if (
+  process.env.NODE_ENV !== "production" &&
+  process.env.DOCKER_BUILD !== "1" &&
+  process.env.CI !== "true"
+) {
+  void import("@opennextjs/cloudflare").then(({ initOpenNextCloudflareForDev }) => {
+    initOpenNextCloudflareForDev();
+  });
+}
