@@ -8,5 +8,16 @@ export function getSiteOrigin(): string {
     process.env.AUTH_URL ||
     process.env.NEXTAUTH_URL ||
     "http://localhost:3000";
-  return raw.replace(/\/$/, "");
+  const origin = raw.replace(/\/$/, "");
+
+  if (
+    process.env.NODE_ENV === "production" &&
+    /localhost|127\.0\.0\.1/i.test(origin)
+  ) {
+    // Fail closed to the known production host rather than publishing localhost
+    // URLs in sitemap/robots/canonicals when env vars were omitted at build.
+    return "https://girlsglobalinitiative.org";
+  }
+
+  return origin;
 }

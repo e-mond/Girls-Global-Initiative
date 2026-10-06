@@ -8,12 +8,12 @@
 ## Current Phase
 
 * **SEO, Security, Accessibility, Privacy & Legal Hardening**
-* **Status:** In Progress
-* **Previous phase:** Staff invite / Worker 1102 / news blast (merged to `main`)
-* **Current branch:** `feature/seo-security-a11y-legal`
+* **Status:** Favicon + sitemap fix in progress on `feature/favicon-sitemap-fix`
+* **Previous phase:** SEO / security / a11y / legal (merged PRs #28–#29)
+* **Current branch:** `feature/favicon-sitemap-fix`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Sitemap/robots/metadata/structured data; Auth.js cookie hardening + security headers; WCAG 2.2 AA fixes; Privacy/Terms/Accessibility placeholder pages; no cookie banner (essential Auth.js cookies only).
-* **Owner notes:** Legal policy body text remains “Awaiting official GGI confirmation” until GGI supplies approved copy. Optional `GOOGLE_SITE_VERIFICATION` for Search Console.
+* **Current objective:** Regenerate favicons from brand logo; harden sitemap lastmod and production origin.
+* **Owner notes:** Redeploy after merge so browsers/Search Console pick up new favicon and sitemap.
 
 ---
 

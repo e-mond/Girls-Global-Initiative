@@ -18,6 +18,14 @@ Production should set `NEXT_PUBLIC_SITE_URL` to the canonical public domain (for
 - Route: `/sitemap.xml` (`app/sitemap.ts`)
 - Includes static public marketing and policy pages, plus `/what-we-do/[pillar]` entries
 - Excludes `/admin/*`, API routes, donation thank-you, and newsletter confirm/unsubscribe flows
+- Uses a stable `lastmod` date and canonical `https://girlsglobalinitiative.org/…` URLs
+- Production builds refuse to publish `localhost` origins (falls back to the public domain if env is missing)
+
+Regenerate favicons from the brand logo with:
+
+```bash
+npm run generate:favicons
+```
 
 ## Robots
 
