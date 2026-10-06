@@ -1,13 +1,18 @@
 import type { ReactNode } from "react";
+import { POLICY_LAST_UPDATED_ISO, POLICY_LAST_UPDATED_LABEL } from "@/content/policy-meta";
 
 /** Shared prose shell for public policy / legal pages. */
 export function PolicyPage({
   title,
   intro,
+  lastUpdated = POLICY_LAST_UPDATED_LABEL,
+  lastUpdatedIso = POLICY_LAST_UPDATED_ISO,
   children,
 }: {
   title: string;
   intro: string;
+  lastUpdated?: string;
+  lastUpdatedIso?: string;
   children: ReactNode;
 }) {
   return (
@@ -19,6 +24,10 @@ export function PolicyPage({
         <h1 className="font-display text-3xl font-bold text-brand-navy sm:text-4xl">
           {title}
         </h1>
+        <p className="text-sm text-text-muted">
+          <span className="font-semibold text-brand-navy">Last updated:</span>{" "}
+          <time dateTime={lastUpdatedIso}>{lastUpdated}</time>
+        </p>
         <p className="text-base leading-relaxed text-text-muted sm:text-lg">
           {intro}
         </p>
@@ -28,9 +37,9 @@ export function PolicyPage({
           <span className="font-semibold">
             awaiting official GGI confirmation
           </span>
-          . This page describes how the website works today and what still
-          needs organisational approval. It is not a claim of legal advice or
-          verified regulatory compliance.
+          . Sections marked below still need organisational or legal approval.
+          This page is not legal advice and does not claim verified regulatory
+          compliance.
         </p>
       </header>
       <div className="prose-policy mt-10 space-y-8 text-sm leading-relaxed text-text-muted sm:text-base">

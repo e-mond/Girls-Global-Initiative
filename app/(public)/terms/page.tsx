@@ -17,8 +17,23 @@ export default function TermsPage() {
   return (
     <PolicyPage
       title="Terms of Use"
-      intro="These terms outline how visitors may use the Girls Global Initiative website. Official legal terms are not fully approved yet; sections that need confirmation are marked clearly."
+      intro="These terms outline how visitors may use the Girls Global Initiative website. Several sections still need official organisational or legal confirmation and are marked clearly."
     >
+      <PolicySection title="Acceptance of these terms" awaiting>
+        <p>
+          By accessing or using this website, you agree to these Terms of Use
+          and to our{" "}
+          <Link
+            href="/privacy"
+            className="font-medium text-brand-sky underline-offset-2 hover:underline"
+          >
+            Privacy Policy
+          </Link>
+          . If you do not agree, please do not use the site. Final acceptance
+          wording is awaiting official GGI confirmation.
+        </p>
+      </PolicySection>
+
       <PolicySection title="Website use">
         <p>
           You may browse public pages for information about Girls Global
@@ -30,7 +45,9 @@ export default function TermsPage() {
 
       <PolicySection title="Acceptable use" awaiting>
         <p>
-          Detailed acceptable-use rules are awaiting official GGI confirmation.
+          Detailed acceptable-use rules — including prohibited content, scraping,
+          automated abuse and safeguarding expectations — are awaiting official
+          GGI confirmation.
         </p>
       </PolicySection>
 
@@ -61,8 +78,8 @@ export default function TermsPage() {
         <p>
           Online card and mobile-money payments are processed by Paystack.
           Direct bank transfers use organisation account details when published.
-          Donation acknowledgements are transactional; tax or gift-aid treatment
-          is awaiting official GGI confirmation where applicable.
+          Donation acknowledgements are transactional; tax treatment and related
+          donation terms are awaiting official GGI confirmation where applicable.
         </p>
       </PolicySection>
 
@@ -81,16 +98,41 @@ export default function TermsPage() {
         </p>
       </PolicySection>
 
-      <PolicySection title="Limitation of liability" awaiting>
+      <PolicySection title="Disclaimer" awaiting>
         <p>
-          Limitation of liability wording is awaiting official GGI confirmation.
+          Website content is provided for general information about GGI’s work.
+          It is not professional advice (including legal, medical or financial
+          advice). Full disclaimer wording is awaiting official GGI confirmation.
         </p>
       </PolicySection>
 
-      <PolicySection title="Governing law" awaiting>
+      <PolicySection title="Limitation of liability" awaiting>
         <p>
-          Governing law and jurisdiction are awaiting official GGI confirmation.
-          Do not treat any placeholder as a chosen jurisdiction.
+          To the fullest extent permitted by applicable law, detailed limits on
+          GGI’s liability for use of this website — including indirect or
+          consequential loss — are awaiting official GGI confirmation.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Changes to these terms" awaiting>
+        <p>
+          GGI may update these Terms of Use from time to time. The “Last
+          updated” date at the top of this page will change when revisions are
+          published. How material changes are communicated is awaiting official
+          GGI confirmation.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Governing law">
+        <p>
+          These Terms of Use are intended to be governed by the laws of{" "}
+          <strong className="text-brand-navy">Ghana</strong>, as confirmed for
+          this website.
+        </p>
+        <p className="rounded-lg bg-bg-sky/40 px-3 py-2 text-sm text-brand-navy">
+          Awaiting official GGI confirmation — venue, dispute-resolution process
+          and any additional jurisdictional wording still need organisational or
+          legal approval.
         </p>
       </PolicySection>
 

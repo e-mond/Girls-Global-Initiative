@@ -50,11 +50,20 @@ export default function AccessibilityPage() {
         </ul>
       </PolicySection>
 
-      <PolicySection title="Known limitations">
+      <PolicySection title="Known limitations" awaiting>
         <p>
-          Some content images, complex admin tables, and third-party
-          checkout pages (Paystack) may present residual barriers. Policy
-          wording on this page itself may change after official GGI review.
+          Some content images, complex admin tables, and third-party checkout
+          pages (Paystack) may present residual barriers. A published list of
+          known limitations and remediation timelines is awaiting official GGI
+          confirmation.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Updates to this statement" awaiting>
+        <p>
+          This accessibility statement may be updated as the website improves.
+          The “Last updated” date at the top will change when revisions are
+          published. Formal review cadence is awaiting official GGI confirmation.
         </p>
       </PolicySection>
 

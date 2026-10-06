@@ -134,9 +134,9 @@ A local `.env.local` is present and remains gitignored.
 
 | Item | Status |
 | --- | --- |
-| `/privacy` | Implemented — body **Awaiting GGI approval** where marked |
-| `/terms` | Implemented — body **Awaiting GGI approval** where marked |
-| `/accessibility` | Implemented — commitment language only |
+| `/privacy` | Implemented — Last updated header; information sharing / data security / policy updates; body **Awaiting GGI approval** where marked |
+| `/terms` | Implemented — Last updated header; acceptance, disclaimer, liability, changes, governing law (Ghana); remaining wording **Awaiting GGI approval** where marked |
+| `/accessibility` | Implemented — Last updated header; commitment language only |
 | No unapproved legal claims | Implemented |
 
 ### Verification
