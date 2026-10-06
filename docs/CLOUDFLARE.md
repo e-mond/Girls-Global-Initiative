@@ -41,15 +41,16 @@ must show `"authSecret":"ok"` and `"database":"ok"`. Until then, login will 500.
 | --- | --- | --- |
 | `DATABASE_URL` | Secret | Neon pooled URL (same as `.env.local`) |
 | `AUTH_SECRET` | Secret | Same long secret as `.env.local` |
-| `AUTH_URL` | Text | `https://girlsglobalinitiative.org` (also in `wrangler.jsonc` vars) |
-| `NEXT_PUBLIC_SITE_URL` | Text | `https://girlsglobalinitiative.org` |
-| `NEXT_PUBLIC_ENABLE_MSW` | Text | `false` |
-| `NEXT_PUBLIC_MOCK_API` | Text | `false` |
-| `SMTP_HOST` | Text | e.g. `smtp.gmail.com` (not `gmail.com`) |
-| `SMTP_PORT` | Text | `587` |
-| `SMTP_USER` | Secret | Full mailbox email, e.g. `you@gmail.com` |
-| `SMTP_PASS` | Secret | App password / SMTP password |
-| `SMTP_FROM` | Text | Full From email, e.g. `Girls Global Initiative <you@gmail.com>` |
+| `AUTH_URL` | Text / `wrangler.jsonc` vars | `https://girlsglobalinitiative.org` |
+| `NEXT_PUBLIC_SITE_URL` | Text / vars | `https://girlsglobalinitiative.org` |
+| `NEXT_PUBLIC_ENABLE_MSW` | Text / vars | `false` |
+| `NEXT_PUBLIC_MOCK_API` | Text / vars | `false` |
+| `SMTP_HOST` | Text / vars | e.g. `smtp.gmail.com` (interim) or ESP host |
+| `SMTP_PORT` | Text / vars | `587` |
+| `SMTP_USER` | Text / vars | Full mailbox, must match From |
+| `SMTP_FROM` | Text / vars | `Girls Global Initiative <mailbox@…>` |
+| `SMTP_REPLY_TO` | Text / vars | Optional; defaults to From mailbox |
+| `SMTP_PASS` | **Secret only** | App password / ESP SMTP password — never in git |
 
 Do **not** put secrets only in `.env.local` — that file never reaches Cloudflare.
 If you have multiple Cloudflare accounts, set secrets on the account that owns
@@ -60,9 +61,51 @@ After secrets are set, verify:
 * `GET https://girlsglobalinitiative.org/api/health`
 * `GET https://girlsglobalinitiative.org/api/ready`
 
+## Email deliverability (inbox vs spam)
+
+`/api/ready` showing `"smtp":"ok"` only means credentials are present enough to
+**send**. Recipient filters decide inbox vs spam afterward.
+
+### Why `@gmail.com` SMTP often hits spam
+
+Sending as `girlsglobalinitiative@gmail.com` while the site brand is
+`girlsglobalinitiative.org` creates a domain mismatch. Filters treat that as
+weaker trust than mail authenticated as `@girlsglobalinitiative.org`.
+
+### Interim (current Worker vars)
+
+* Keep `SMTP_FROM` / `SMTP_USER` identical mailboxes.
+* Recipients: mark **Not spam** once.
+* Prefer short transactional subjects (staff invite / password reset).
+* **Do not** run a full subscriber blast (`npm run announce:site-live`) on
+  consumer Gmail until domain authentication is live.
+
+### Proper fix — domain-authenticated sending
+
+1. Choose a transactional ESP (Resend, Postmark, SendGrid, Amazon SES) **or**
+   Google Workspace mailbox on `girlsglobalinitiative.org`.
+2. In DNS for `girlsglobalinitiative.org`, add the provider’s records:
+   * **SPF** — TXT authorizing the ESP / Google
+   * **DKIM** — provider CNAME/TXT keys
+   * **DMARC** — start with `v=DMARC1; p=none; rua=mailto:…` then tighten
+3. Point app SMTP at the ESP (or Workspace SMTP):
+   * Update `wrangler.jsonc` `vars` (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
+     `SMTP_FROM`, `SMTP_REPLY_TO`) to the `@girlsglobalinitiative.org` identity
+   * Set `SMTP_PASS` as a Cloudflare **Secret**
+   * Mirror the same values in `.env.local` for operator scripts
+4. Redeploy: `npm run deploy`
+5. Send a test (`npx tsx scripts/send-test-email.ts`), open the message in
+   Gmail → **Show original**, confirm SPF/DKIM/DMARC **PASS**.
+
+### App headers
+
+Transactional sends set `Reply-To` from `SMTP_REPLY_TO` (or the From mailbox).
+Newsletter confirm and the site-live announce script also set
+`List-Unsubscribe` / `List-Unsubscribe-Post` when an unsubscribe URL is known.
+
 ## Staff invites and subscriber blast
 
-* **Staff invitations** use SMTP on the Worker (`SMTP_*` secrets above). After
+* **Staff invitations** use SMTP on the Worker (`SMTP_*` above). After
   inviting a user from Admin → Users, the invitee receives a branded email with
   a 72-hour link to `/admin/reset-password?token=…&invite=1`.
 * **One-time “site live” newsletter blast** must **not** run inside the Worker
@@ -76,7 +119,7 @@ npm run db:publish-site-live-news
 # Optional: dry-run recipients
 ANNOUNCE_DRY_RUN=1 npm run announce:site-live
 
-# Send to all confirmed subscribers
+# Send to all confirmed subscribers (only after domain mail auth)
 npm run announce:site-live
 ```
 
@@ -84,10 +127,12 @@ Use the same `DATABASE_URL` and `SMTP_*` values as production `.env.local`.
 If Worker SMTP is still incomplete, the announce script can use local SMTP while
 the news post is published to production Neon.
 
-## DNS
+## DNS (site)
 
 Point `girlsglobalinitiative.org` (and `www` if used) at this Worker via
 Cloudflare DNS / custom domain on the Worker. Keep TLS on Cloudflare.
+Email SPF/DKIM/DMARC records are separate from the Worker hostname records —
+add both.
 
 ## Scalability notes
 

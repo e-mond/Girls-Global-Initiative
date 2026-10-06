@@ -9,6 +9,9 @@
  *
  * Set ANNOUNCE_DRY_RUN=1 to list recipients without sending.
  * Set ANNOUNCE_LIMIT=N to cap sends (useful for smoke tests).
+ *
+ * Deliverability: do not blast from consumer @gmail.com SMTP. Prefer a
+ * domain-authenticated ESP (SPF/DKIM/DMARC for girlsglobalinitiative.org).
  */
 import { config } from "dotenv";
 import { and, eq, isNull } from "drizzle-orm";
@@ -69,6 +72,13 @@ async function main() {
     return;
   }
 
+  const from = process.env.SMTP_FROM ?? "";
+  if (/@gmail\.com>/i.test(from) || /@gmail\.com$/i.test(from.trim())) {
+    console.warn(
+      "WARNING: SMTP_FROM is a @gmail.com address. Bulk sends from consumer Gmail often land in spam. Prefer domain-authenticated mail (@girlsglobalinitiative.org) with SPF/DKIM/DMARC before a full blast.",
+    );
+  }
+
   const origin = emailSiteOrigin();
   const newsUrl = `${origin}/news#ggi-website-is-live`;
 
@@ -92,6 +102,7 @@ async function main() {
           subject: mail.subject,
           text: mail.text,
           html: mail.html,
+          listUnsubscribeUrl: unsubscribeUrl,
         });
 
         if (result.sent) {

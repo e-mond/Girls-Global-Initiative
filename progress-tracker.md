@@ -1180,10 +1180,10 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-Roadmap Units 1–8 complete. On `feature/staff-invite-prod-hardening`:
-staff invite/disable, Worker 1102 hardening (session helper, getDb cache,
-audit debounce/slim query), news share buttons, and operator scripts for
-site-live news + subscriber blast.
+On `feature/email-deliverability`: SMTP From alignment, Reply-To /
+List-Unsubscribe headers, wrangler SMTP vars, and deliverability runbook
+(SPF/DKIM/DMARC + ESP cutover). Consumer Gmail remains interim until domain
+mail is provisioned.
 
 ### Session Notes — Staff invite / prod hardening
 
@@ -1197,6 +1197,16 @@ site-live news + subscriber blast.
 * Share buttons on news page + homepage news strip.
 * Scripts: `db:publish-site-live-news`, `announce:site-live` (documented in
   `docs/CLOUDFLARE.md`). Do not fan-out the blast from the Worker.
+
+### Session Notes — Email deliverability
+
+* Root cause of spam: `@gmail.com` SMTP vs `girlsglobalinitiative.org` brand
+  mismatch (not missing Worker SMTP — `/api/ready` smtp ok).
+* `SMTP_FROM` / `SMTP_USER` aligned; `SMTP_REPLY_TO` added.
+* Send helper sets Reply-To; newsletter + announce set List-Unsubscribe headers.
+* `wrangler.jsonc` vars include non-secret SMTP_*; `SMTP_PASS` stays a Secret.
+* Full domain ESP/Workspace cutover checklist in `docs/CLOUDFLARE.md`.
+* Announce script warns when blasting from `@gmail.com`.
 
 ---
 
