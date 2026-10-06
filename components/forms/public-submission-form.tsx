@@ -35,9 +35,29 @@ export function PublicSubmissionForm({
     [fields, step],
   );
 
+  function validateStep(): string | null {
+    for (const field of stepFields) {
+      if (!field.required) continue;
+      const value = (values[field.name] ?? "").trim();
+      if (!value) {
+        return `Please enter your ${field.label.toLowerCase()}.`;
+      }
+      if (field.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        return "Enter a valid email address, for example name@example.com.";
+      }
+    }
+    return null;
+  }
+
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setError(null);
+
+    const stepError = validateStep();
+    if (stepError) {
+      setError(stepError);
+      return;
+    }
 
     if (step < steps) {
       setStep((current) => current + 1);
@@ -53,7 +73,9 @@ export function PublicSubmissionForm({
       });
       const json = await response.json();
       if (!response.ok) {
-        throw new Error(json?.error?.message ?? "Could not send. Please try again.");
+        throw new Error(
+          json?.error?.message ?? "Could not send. Please try again.",
+        );
       }
       setDone(true);
     } catch (err) {
@@ -90,6 +112,12 @@ export function PublicSubmissionForm({
           Step {step} of {steps}
         </p>
       ) : null}
+      <p className="text-xs text-text-muted">
+        <span className="text-brand-magenta" aria-hidden>
+          *
+        </span>{" "}
+        Required field
+      </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {stepFields.map((field) => (
@@ -97,11 +125,24 @@ export function PublicSubmissionForm({
             key={field.name}
             className={`space-y-1.5 text-sm ${field.type === "textarea" ? "sm:col-span-2" : ""}`}
           >
-            <span className="font-medium text-brand-navy">{field.label}</span>
+            <span className="font-medium text-brand-navy">
+              {field.label}
+              {field.required ? (
+                <>
+                  {" "}
+                  <span className="text-brand-magenta" aria-hidden>
+                    *
+                  </span>
+                </>
+              ) : (
+                " (optional)"
+              )}
+            </span>
             {field.type === "textarea" ? (
               <textarea
                 name={field.name}
                 required={field.required}
+                aria-required={field.required || undefined}
                 value={values[field.name] ?? ""}
                 onChange={(event) =>
                   setValues((current) => ({
@@ -116,6 +157,7 @@ export function PublicSubmissionForm({
                 name={field.name}
                 type={field.type ?? "text"}
                 required={field.required}
+                aria-required={field.required || undefined}
                 value={values[field.name] ?? ""}
                 onChange={(event) =>
                   setValues((current) => ({
@@ -147,11 +189,7 @@ export function PublicSubmissionForm({
           </Button>
         ) : null}
         <Button type="submit" disabled={pending}>
-          {pending
-            ? "Sending…"
-            : step < steps
-              ? "Continue"
-              : "Submit"}
+          {pending ? "Sending…" : step < steps ? "Continue" : "Submit"}
         </Button>
       </div>
     </form>

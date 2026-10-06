@@ -181,6 +181,52 @@ export function newsletterConfirmEmail(input: {
   });
 }
 
+export function newsletterWelcomeEmail(input: {
+  unsubscribeUrl: string;
+}): BrandedEmailContent {
+  return brandedMessage({
+    subject: "You're subscribed to Girls Global Initiative",
+    title: "You're subscribed",
+    greeting: "Hello,",
+    paragraphs: [
+      "You're now subscribed to updates from Girls Global Initiative.",
+      "We'll share occasional news from our work with girls in rural and underserved communities — no barrage of marketing.",
+    ],
+    cta: { href: `${emailSiteOrigin()}/news`, label: "Read our news" },
+    secondaryLinks: [
+      { href: input.unsubscribeUrl, label: "Unsubscribe" },
+      { href: `${emailSiteOrigin()}/`, label: "Visit GGI" },
+    ],
+    preheader: "You're subscribed to Letters for her future.",
+  });
+}
+
+export function manualDonationNotifyEmail(input: {
+  donorName: string | null;
+  amountLabel: string;
+  reference: string;
+}): BrandedEmailContent {
+  const greeting = input.donorName ? `Hello ${input.donorName},` : "Hello,";
+  return brandedMessage({
+    subject: "We received your GGI transfer notification",
+    title: "Transfer notification received",
+    greeting,
+    paragraphs: [
+      `Thank you for telling us about your ${input.amountLabel} transfer to Girls Global Initiative.`,
+      `Your notification reference is ${input.reference}. Our team will verify the payment before it is marked as received.`,
+      "Please keep your bank or mobile-money receipt until verification is complete.",
+    ],
+    cta: {
+      href: `${emailSiteOrigin()}/get-involved/donate`,
+      label: "Back to donate",
+    },
+    secondaryLinks: [
+      { href: `${emailSiteOrigin()}/contact`, label: "Contact GGI" },
+    ],
+    preheader: "Your transfer notification is pending verification.",
+  });
+}
+
 export function passwordResetEmail(input: {
   name: string;
   resetUrl: string;

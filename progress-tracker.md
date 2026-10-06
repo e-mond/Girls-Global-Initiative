@@ -1180,13 +1180,49 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-On `feature/email-deliverability`: SMTP From alignment, Reply-To /
-List-Unsubscribe headers, wrangler SMTP vars, and deliverability runbook
-(SPF/DKIM/DMARC + ESP cutover). Consumer Gmail remains interim until domain
-mail is provisioned.
+On `feature/donations-dual-method`: dual donation methods, manual transfer
+notify + admin verify, newsletter welcome email, form required markers,
+Eugenia + Patience team assets, authenticity CTA pass.
 
-### Session Notes — Staff invite / prod hardening
+### Session Notes — Payments / email / authenticity / team (audit pass)
 
+#### Implemented
+* Equal-weight Paystack vs Direct payment choice on donate page.
+* Direct transfer shows `ORG_*` details or “Awaiting official GGI account…”
+* Manual transfer notification → `pending_verification`; admin Verify/Reject.
+* Donation `emailSentAt` / `emailLastError`; thank-you on webhook + soft-verify;
+  admin Resend confirmation. Email failure does not reverse payment.
+* Newsletter welcome email after confirm; unsubscribe remains page-only.
+* Required `*` + `aria-required` on public submission / newsletter / donate forms.
+* Eugenia photo wired; Patience Siebe Asamoah added as Chief Programmes Coordinator.
+* Vague “Learn more” CTAs replaced on home pillars / what-we-do.
+
+#### Requires configuration
+* `PAYSTACK_SECRET_KEY` / public / webhook for live checkout.
+* `ORG_BANK_*` / `ORG_MOBILE_MONEY` / `ORG_TRANSFER_NOTES` for published account details.
+* SMTP for receipts and newsletter welcome (Worker secrets).
+* Migration `0009_donation_method_email`.
+
+#### Requires owner information
+* Official bank/MoMo numbers if not yet supplied.
+* Team biographies (intentionally omitted — not invented).
+* CMS team photo upload UI (follow-up; public roster still mock-sourced).
+
+#### Email matrix (code-verified)
+| Email | Status |
+| --- | --- |
+| Newsletter confirmation | Implemented |
+| Newsletter welcome | Implemented |
+| Newsletter unsubscribe email | Not required (page succeeds without email) |
+| Contact / volunteer / partnership ack | Implemented |
+| Donation thank-you (Paystack) | Implemented (webhook + soft-verify + resend) |
+| Manual transfer notification ack | Implemented |
+| Admin email on new submission | Not implemented (in-app attention only) |
+| Staff invite / password reset | Implemented |
+
+---
+
+# Update Rules
 * Staff create flow no longer accepts temporary passwords; invites use
   `password_reset_token` with 72h TTL and branded `staffInviteEmail`.
 * `users.status`: `active` | `invited` | `disabled` (migration `0008`).

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
+import { newsletterWelcomeEmail } from "@/features/email/branded";
+import { emailSiteOrigin } from "@/features/email/site-origin";
+import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { confirmSubscribe } from "@/features/newsletter/service";
 
@@ -43,6 +46,16 @@ export async function POST(request: Request) {
       { status: 404 },
     );
   }
+
+  const unsubscribeUrl = `${emailSiteOrigin()}/newsletter/unsubscribe?token=${record.unsubscribeToken}`;
+  const mail = newsletterWelcomeEmail({ unsubscribeUrl });
+  await sendAcknowledgementEmail({
+    to: record.email,
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
+    listUnsubscribeUrl: unsubscribeUrl,
+  });
 
   await writeAuditLog({
     actorUserId: null,

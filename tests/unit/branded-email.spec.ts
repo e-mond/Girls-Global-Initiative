@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 import {
   donationThanksEmail,
+  manualDonationNotifyEmail,
   newsletterConfirmEmail,
+  newsletterWelcomeEmail,
   passwordResetEmail,
   renderBrandedEmail,
   siteLiveAnnouncementEmail,
@@ -80,5 +82,21 @@ test.describe("branded transactional email", () => {
     expect(live.subject.toLowerCase()).toContain("live");
     expect(live.html).toContain("Read the update");
     expect(live.html).toContain("Unsubscribe");
+  });
+
+  test("newsletter welcome and manual donation notify helpers", () => {
+    const welcome = newsletterWelcomeEmail({
+      unsubscribeUrl: "https://example.com/newsletter/unsubscribe?token=xyz",
+    });
+    expect(welcome.subject.toLowerCase()).toContain("subscribed");
+    expect(welcome.html).toContain("Unsubscribe");
+
+    const notify = manualDonationNotifyEmail({
+      donorName: "Ama",
+      amountLabel: "GHS 50.00",
+      reference: "ggi_direct_test",
+    });
+    expect(notify.html).toContain("pending verification");
+    expect(notify.text).toContain("ggi_direct_test");
   });
 });

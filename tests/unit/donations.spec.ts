@@ -22,11 +22,13 @@ test.describe("donation schemas", () => {
 });
 
 test.describe("donate page", () => {
-  test("renders amount and transfer sections", async ({ page }) => {
-    await page.goto("/get-involved/donate");
+  test("renders dual payment method choice", async ({ page }) => {
+    await page.goto("/get-involved/donate", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", { name: /Donate and support a girl/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Prefer a direct transfer/i)).toBeVisible();
+    await expect(page.getByText(/Support GGI/i).first()).toBeVisible();
+    await expect(page.getByText(/Pay with Paystack/i).first()).toBeVisible();
+    await expect(page.getByText(/Direct payment/i).first()).toBeVisible();
   });
 });

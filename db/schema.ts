@@ -288,9 +288,16 @@ export const donationFrequencyEnum = pgEnum("donation_frequency", [
 
 export const donationStatusEnum = pgEnum("donation_status", [
   "pending",
+  "pending_verification",
   "success",
   "failed",
   "abandoned",
+  "rejected",
+]);
+
+export const donationMethodEnum = pgEnum("donation_method", [
+  "paystack",
+  "direct",
 ]);
 
 export const donations = pgTable("donations", {
@@ -301,10 +308,15 @@ export const donations = pgTable("donations", {
   currency: text("currency").notNull().default("GHS"),
   frequency: donationFrequencyEnum("frequency").notNull().default("one_time"),
   status: donationStatusEnum("status").notNull().default("pending"),
+  method: donationMethodEnum("method").notNull().default("paystack"),
   donorName: text("donor_name"),
   donorEmail: text("donor_email"),
   isAnonymous: boolean("is_anonymous").notNull().default(false),
   channel: text("channel"),
+  transferReference: text("transfer_reference"),
+  donorNote: text("donor_note"),
+  emailSentAt: timestamp("email_sent_at", { withTimezone: true }),
+  emailLastError: text("email_last_error"),
   paidAt: timestamp("paid_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()

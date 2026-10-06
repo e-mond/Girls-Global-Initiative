@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
-import { donationThanksEmail } from "@/features/email/branded";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
 import {
   findDonationByReference,
   markDonationSuccess,
+  sendDonationThankYou,
   verifyPaystackSignature,
 } from "@/features/donations/service";
 
@@ -51,6 +50,9 @@ export async function POST(request: Request) {
   }
 
   if (existing.status === "success") {
+    if (existing.donorEmail && !existing.emailSentAt) {
+      await sendDonationThankYou(existing);
+    }
     return NextResponse.json({ received: true, duplicate: true });
   }
 
@@ -61,19 +63,8 @@ export async function POST(request: Request) {
     paidAt: event.data.paid_at ? new Date(event.data.paid_at) : new Date(),
   });
 
-  if (updated?.donorEmail) {
-    const amountLabel = `GHS ${(updated.amountMinor / 100).toFixed(2)}`;
-    const mail = donationThanksEmail({
-      donorName: updated.donorName,
-      amountLabel,
-      reference: updated.reference,
-    });
-    await sendAcknowledgementEmail({
-      to: updated.donorEmail,
-      subject: mail.subject,
-      text: mail.text,
-      html: mail.html,
-    });
+  if (updated) {
+    await sendDonationThankYou(updated);
   }
 
   await writeAuditLog({

@@ -32,8 +32,8 @@ export default function DonatePage() {
 
       <ContentSection
         tone="navy"
-        title="Give toward education, health, mentorship and rural girl empowerment."
-        description="One-time gifts process through Paystack when configured. You can also use organisation transfer details on this page. Monthly giving is captured as interest until recurring billing launches."
+        title="Give toward education, health, mentorship and rural girl support."
+        description="Choose Paystack checkout or a direct bank transfer — both are supported. Monthly giving is captured as interest until recurring billing launches."
       />
 
       <ContentSection

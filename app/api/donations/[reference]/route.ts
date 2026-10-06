@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   findDonationByReference,
   markDonationSuccess,
+  sendDonationThankYou,
   verifyPaystackTransaction,
 } from "@/features/donations/service";
 
@@ -25,7 +26,11 @@ export async function GET(_request: Request, context: RouteContext) {
     );
   }
 
-  if (record.status !== "success" && record.frequency === "one_time") {
+  if (
+    record.status !== "success" &&
+    record.frequency === "one_time" &&
+    record.method === "paystack"
+  ) {
     const verified = await verifyPaystackTransaction(reference);
     if (verified.success) {
       record =
@@ -34,6 +39,10 @@ export async function GET(_request: Request, context: RouteContext) {
           channel: verified.channel ?? null,
           paidAt: verified.paidAt ? new Date(verified.paidAt) : new Date(),
         })) ?? record;
+      if (record.status === "success" && !record.emailSentAt) {
+        await sendDonationThankYou(record);
+        record = (await findDonationByReference(reference)) ?? record;
+      }
     }
   }
 
@@ -44,8 +53,10 @@ export async function GET(_request: Request, context: RouteContext) {
       amountMinor: record.amountMinor,
       currency: record.currency,
       frequency: record.frequency,
+      method: record.method,
       isAnonymous: record.isAnonymous,
       donorName: record.isAnonymous ? null : record.donorName,
+      emailSent: Boolean(record.emailSentAt),
     },
   });
 }

@@ -99,8 +99,8 @@ export const founderSpotlight = {
 
 /**
  * Public team roster from owner-supplied assets (names/roles as provided).
- * Eugenia photo pending. Placeholder used until the real image arrives.
  * Display spellings follow BRD/PRD (Philomena) even where filenames differ.
+ * Bios are omitted until owner-approved copy exists.
  */
 export const teamMembers = [
   {
@@ -116,6 +116,14 @@ export const teamMembers = [
     name: "Godwin Ntaah",
     role: "Vice President",
     imageSrc: "/team/godwin-ntaah.jpg",
+    isFounder: false,
+    photoPending: false,
+  },
+  {
+    id: "patience-siebe-asamoah",
+    name: "Patience Siebe Asamoah",
+    role: "Chief Programmes Coordinator",
+    imageSrc: "/team/patience-siebe-asamoah.jpg",
     isFounder: false,
     photoPending: false,
   },
@@ -147,9 +155,9 @@ export const teamMembers = [
     id: "eugenia-yaa-nkebuare",
     name: "Eugenia Yaa Nkebuare",
     role: "Executive Secretary",
-    imageSrc: "/team/eugenia-yaa-nkebuare-placeholder.jpg",
+    imageSrc: "/team/eugenia-yaa-nkebuare.jpg",
     isFounder: false,
-    photoPending: true,
+    photoPending: false,
   },
 ] as const;
 

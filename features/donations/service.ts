@@ -4,8 +4,11 @@ import { getDb } from "@/db/client";
 import { donations } from "@/db/schema";
 import type {
   DonationFrequency,
+  DonationMethod,
   DonationStatus,
 } from "@/features/donations/schemas";
+import { donationThanksEmail } from "@/features/email/branded";
+import { sendAcknowledgementEmail } from "@/features/submissions/email";
 
 export type DonationRecord = {
   id: string;
@@ -15,10 +18,15 @@ export type DonationRecord = {
   currency: string;
   frequency: DonationFrequency;
   status: DonationStatus;
+  method: DonationMethod;
   donorName: string | null;
   donorEmail: string | null;
   isAnonymous: boolean;
   channel: string | null;
+  transferReference: string | null;
+  donorNote: string | null;
+  emailSentAt: string | null;
+  emailLastError: string | null;
   paidAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -45,10 +53,15 @@ function serialize(row: {
   currency: string;
   frequency: DonationFrequency;
   status: DonationStatus;
+  method: DonationMethod;
   donorName: string | null;
   donorEmail: string | null;
   isAnonymous: boolean;
   channel: string | null;
+  transferReference: string | null;
+  donorNote: string | null;
+  emailSentAt: Date | null;
+  emailLastError: string | null;
   paidAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -61,10 +74,15 @@ function serialize(row: {
     currency: row.currency,
     frequency: row.frequency,
     status: row.status,
+    method: row.method,
     donorName: row.donorName,
     donorEmail: row.donorEmail,
     isAnonymous: row.isAnonymous,
     channel: row.channel,
+    transferReference: row.transferReference,
+    donorNote: row.donorNote,
+    emailSentAt: row.emailSentAt ? row.emailSentAt.toISOString() : null,
+    emailLastError: row.emailLastError,
     paidAt: row.paidAt ? row.paidAt.toISOString() : null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
@@ -83,8 +101,8 @@ export function siteOrigin(): string {
   ).replace(/\/$/, "");
 }
 
-export function createReference(): string {
-  return `ggi_${Date.now().toString(36)}_${randomUUID().slice(0, 8)}`;
+export function createReference(prefix = "ggi"): string {
+  return `${prefix}_${Date.now().toString(36)}_${randomUUID().slice(0, 8)}`;
 }
 
 export function organisationTransferDetails(): {
@@ -118,10 +136,15 @@ export async function createDonation(input: {
   donorEmail: string | null;
   isAnonymous: boolean;
   status?: DonationStatus;
+  method?: DonationMethod;
+  channel?: string | null;
+  transferReference?: string | null;
+  donorNote?: string | null;
 }): Promise<DonationRecord> {
   const db = getDb();
   const now = new Date();
   const status = input.status ?? "pending";
+  const method = input.method ?? "paystack";
 
   if (!db) {
     const record: DonationRecord = {
@@ -132,10 +155,15 @@ export async function createDonation(input: {
       currency: "GHS",
       frequency: input.frequency,
       status,
+      method,
       donorName: input.donorName,
       donorEmail: input.donorEmail,
       isAnonymous: input.isAnonymous,
-      channel: null,
+      channel: input.channel ?? null,
+      transferReference: input.transferReference ?? null,
+      donorNote: input.donorNote ?? null,
+      emailSentAt: null,
+      emailLastError: null,
       paidAt: status === "success" ? now.toISOString() : null,
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
@@ -154,6 +182,10 @@ export async function createDonation(input: {
       donorEmail: input.donorEmail,
       isAnonymous: input.isAnonymous,
       status,
+      method,
+      channel: input.channel ?? null,
+      transferReference: input.transferReference ?? null,
+      donorNote: input.donorNote ?? null,
       paidAt: status === "success" ? now : null,
     })
     .returning();
@@ -172,6 +204,21 @@ export async function findDonationByReference(
     .select()
     .from(donations)
     .where(eq(donations.reference, reference))
+    .limit(1);
+  return row ? serialize(row as never) : null;
+}
+
+export async function findDonationById(
+  id: string,
+): Promise<DonationRecord | null> {
+  const db = getDb();
+  if (!db) {
+    return store().items.find((item) => item.id === id) ?? null;
+  }
+  const [row] = await db
+    .select()
+    .from(donations)
+    .where(eq(donations.id, id))
     .limit(1);
   return row ? serialize(row as never) : null;
 }
@@ -213,6 +260,111 @@ export async function markDonationSuccess(input: {
       updatedAt: now,
     })
     .where(eq(donations.reference, input.reference))
+    .returning();
+
+  return serialize(row as never);
+}
+
+export async function markDonationEmailResult(input: {
+  id: string;
+  sent: boolean;
+  error?: string | null;
+}): Promise<DonationRecord | null> {
+  const db = getDb();
+  const now = new Date();
+
+  if (!db) {
+    const found = store().items.find((item) => item.id === input.id);
+    if (!found) return null;
+    found.emailSentAt = input.sent ? now.toISOString() : found.emailSentAt;
+    found.emailLastError = input.sent ? null : (input.error ?? "Email could not be sent.");
+    found.updatedAt = now.toISOString();
+    return found;
+  }
+
+  const [row] = await db
+    .update(donations)
+    .set({
+      emailSentAt: input.sent ? now : null,
+      emailLastError: input.sent
+        ? null
+        : (input.error ?? "Email could not be sent."),
+      updatedAt: now,
+    })
+    .where(eq(donations.id, input.id))
+    .returning();
+
+  return row ? serialize(row as never) : null;
+}
+
+/** Soft-fail thank-you email — never rolls back payment status. */
+export async function sendDonationThankYou(
+  record: DonationRecord,
+  options?: { force?: boolean },
+): Promise<{ sent: boolean; reason?: string }> {
+  if (!record.donorEmail) {
+    return { sent: false, reason: "No donor email." };
+  }
+  if (record.emailSentAt && !options?.force) {
+    return { sent: true };
+  }
+
+  const amountLabel = `${record.currency} ${(record.amountMinor / 100).toFixed(2)}`;
+  const mail = donationThanksEmail({
+    donorName: record.isAnonymous ? null : record.donorName,
+    amountLabel,
+    reference: record.reference,
+  });
+  const result = await sendAcknowledgementEmail({
+    to: record.donorEmail,
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
+  });
+
+  await markDonationEmailResult({
+    id: record.id,
+    sent: result.sent,
+    error: result.reason,
+  });
+
+  return result;
+}
+
+export async function setDonationVerification(input: {
+  id: string;
+  status: "success" | "rejected";
+}): Promise<DonationRecord | { error: string }> {
+  const existing = await findDonationById(input.id);
+  if (!existing) return { error: "Donation not found." };
+  if (existing.method !== "direct") {
+    return { error: "Only direct-transfer notifications can be verified here." };
+  }
+  if (existing.status !== "pending_verification") {
+    return { error: "This notification is not awaiting verification." };
+  }
+
+  const db = getDb();
+  const now = new Date();
+
+  if (!db) {
+    existing.status = input.status;
+    existing.paidAt =
+      input.status === "success" ? now.toISOString() : existing.paidAt;
+    existing.channel = existing.channel ?? "direct_transfer";
+    existing.updatedAt = now.toISOString();
+    return existing;
+  }
+
+  const [row] = await db
+    .update(donations)
+    .set({
+      status: input.status,
+      paidAt: input.status === "success" ? now : null,
+      channel: "direct_transfer",
+      updatedAt: now,
+    })
+    .where(eq(donations.id, input.id))
     .returning();
 
   return serialize(row as never);

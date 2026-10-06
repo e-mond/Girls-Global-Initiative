@@ -114,7 +114,7 @@ export default function WhatWeDoPage() {
                         : "text-text-on-inverse",
                     )}
                   >
-                    Learn more
+                    View this programme
                     <ArrowRight className="h-4 w-4" aria-hidden />
                   </Link>
                 </article>
