@@ -17,7 +17,7 @@ export default function PrivacyPage() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro="This page explains how personal information may be handled when you use the Girls Global Initiative (GGI) website. Where organisational details are not yet confirmed, sections are clearly marked."
+      intro="This page explains how personal information may be handled when you use the Girls Global Initiative (GGI) website. Where organisational or legal details are not yet confirmed, sections are clearly marked."
     >
       <PolicySection title="Who we are">
         <p>
@@ -65,7 +65,39 @@ export default function PrivacyPage() {
         </ul>
       </PolicySection>
 
-      <PolicySection title="Cookies" awaiting={false}>
+      <PolicySection title="How we use information" awaiting>
+        <p>
+          Submitted information is used to respond to your enquiry, process
+          applications, send confirmed newsletter messages, acknowledge
+          donations, or operate the staff back-office. Additional purposes and
+          legal bases are awaiting official GGI confirmation.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Information sharing" awaiting>
+        <p>
+          GGI does not sell personal information collected through this website.
+          Information may be shared with service providers who help operate the
+          platform (for example hosting, email delivery, payment processing or
+          media storage) only as needed to provide those services.
+        </p>
+        <p>
+          Broader sharing rules — including partners, regulators, safeguarding
+          disclosures and any international transfers — are awaiting official
+          GGI confirmation.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Third-party services">
+        <p>
+          Depending on configuration, the platform may use Neon (database),
+          SMTP email delivery, Paystack (donations), Cloudinary (media) and
+          Cloudflare hosting. Those providers process data under their own
+          terms when used.
+        </p>
+      </PolicySection>
+
+      <PolicySection title="Cookies">
         <p>
           This website uses essential Auth.js cookies for staff sign-in (session,
           CSRF protection and post-login redirect). There is no marketing or
@@ -79,36 +111,31 @@ export default function PrivacyPage() {
         </ul>
       </PolicySection>
 
-      <PolicySection title="How we use information" awaiting>
+      <PolicySection title="Data security">
         <p>
-          Submitted information is used to respond to your enquiry, process
-          applications, send confirmed newsletter messages, acknowledge
-          donations, or operate the staff back-office. Additional purposes,
-          legal bases and sharing rules require official GGI confirmation.
+          Technical measures on this website include staff authentication, role
+          checks, input validation, signed Paystack webhooks and security
+          headers. Access to staff tools is limited to authorised accounts.
         </p>
-      </PolicySection>
-
-      <PolicySection title="Third-party services">
         <p>
-          Depending on configuration, the platform may use Neon (database),
-          SMTP email delivery, Paystack (donations), Cloudinary (media) and
-          Cloudflare hosting. Those providers process data under their own
-          terms when used.
+          No website or transmission method can guarantee absolute security.
+          Organisational security policies, breach-notification procedures and
+          staff handling rules are awaiting official GGI confirmation.
         </p>
       </PolicySection>
 
       <PolicySection title="Retention" awaiting>
         <p>
-          Retention periods for submissions, donations records, newsletter
-          lists and audit logs are awaiting official GGI confirmation.
+          Retention periods for submissions, donation records, newsletter lists
+          and audit logs are awaiting official GGI confirmation.
         </p>
       </PolicySection>
 
       <PolicySection title="Your rights" awaiting>
         <p>
           How to access, correct or delete personal information held by GGI —
-          including response times and any applicable law — is awaiting
-          official GGI confirmation. You may contact{" "}
+          including response times and any rights under applicable Ghanaian or
+          other law — is awaiting official GGI confirmation. You may contact{" "}
           <a
             className="font-medium text-brand-sky underline-offset-2 hover:underline"
             href={`mailto:${CONTACT_EMAIL}`}
@@ -119,11 +146,12 @@ export default function PrivacyPage() {
         </p>
       </PolicySection>
 
-      <PolicySection title="Security">
+      <PolicySection title="Updates to this Privacy Policy" awaiting>
         <p>
-          Technical measures include staff authentication, role checks, input
-          validation, signed Paystack webhooks and security headers. No website
-          can guarantee absolute security.
+          GGI may update this Privacy Policy from time to time. When changes are
+          published on this page, the “Last updated” date at the top will change.
+          Material changes and how visitors will be notified are awaiting
+          official GGI confirmation.
         </p>
       </PolicySection>
 

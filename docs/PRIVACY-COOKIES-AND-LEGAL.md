@@ -38,9 +38,9 @@ If non-essential analytics or marketing technologies are introduced later, imple
 
 | Page | Route | Status |
 | --- | --- | --- |
-| Privacy Policy | `/privacy` | Route implemented; body marked **Awaiting official GGI confirmation** where legal/organisational facts are required |
-| Terms of Use | `/terms` | Route implemented; section outline only — **Awaiting official GGI confirmation** |
-| Accessibility Statement | `/accessibility` | Route implemented; commitment language only — no “fully accessible” claim |
+| Privacy Policy | `/privacy` | Route implemented; **Last updated** header present; Information sharing, Data security, Updates to policy included; sections marked **Awaiting official GGI confirmation** where required |
+| Terms of Use | `/terms` | Route implemented; **Last updated** header; Acceptance, Disclaimer, Limitation of liability, Changes to terms, Governing law (Ghana) included; remaining legal wording marked awaiting confirmation |
+| Accessibility Statement | `/accessibility` | Route implemented; **Last updated** header; commitment language only — no “fully accessible” claim |
 | Cookie Policy | — | Not created (see above) |
 
 Do not mark legal content **Verified** until GGI supplies approved wording.
