@@ -75,6 +75,7 @@ export async function POST(request: Request) {
       donorEmail: parsed.data.isAnonymous ? null : donorEmail,
       isAnonymous: Boolean(parsed.data.isAnonymous),
       status: "success",
+      method: "paystack",
     });
 
     if (parsed.data.donorEmail) {
@@ -127,6 +128,7 @@ export async function POST(request: Request) {
     donorName,
     donorEmail: parsed.data.isAnonymous ? null : donorEmail,
     isAnonymous: Boolean(parsed.data.isAnonymous),
+    method: "paystack",
   });
 
   const paystack = await initializePaystackTransaction({

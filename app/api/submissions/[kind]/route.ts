@@ -58,8 +58,17 @@ export async function POST(request: Request, context: RouteContext) {
   if (kind === "volunteer") {
     const parsed = volunteerSchema.safeParse(body);
     if (!parsed.success) {
+      const first = parsed.error.issues[0];
       return NextResponse.json(
-        { error: { message: "Please check the form and try again." } },
+        {
+          error: {
+            message:
+              first?.message === "Required" || first?.code === "too_small"
+                ? "Please complete the required fields and try again."
+                : first?.message ??
+                  "Please check the form and try again.",
+          },
+        },
         { status: 400 },
       );
     }
@@ -68,8 +77,14 @@ export async function POST(request: Request, context: RouteContext) {
   } else if (kind === "partnership") {
     const parsed = partnershipSchema.safeParse(body);
     if (!parsed.success) {
+      const first = parsed.error.issues[0];
       return NextResponse.json(
-        { error: { message: "Please check the form and try again." } },
+        {
+          error: {
+            message:
+              first?.message ?? "Please check the form and try again.",
+          },
+        },
         { status: 400 },
       );
     }
@@ -78,8 +93,17 @@ export async function POST(request: Request, context: RouteContext) {
   } else {
     const parsed = contactSchema.safeParse(body);
     if (!parsed.success) {
+      const first = parsed.error.issues[0];
       return NextResponse.json(
-        { error: { message: "Please check the form and try again." } },
+        {
+          error: {
+            message:
+              first?.path?.[0] === "email"
+                ? "Enter a valid email address, for example name@example.com."
+                : first?.message ??
+                  "Please check the form and try again.",
+          },
+        },
         { status: 400 },
       );
     }

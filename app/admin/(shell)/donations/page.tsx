@@ -7,13 +7,19 @@ import { Button } from "@/components/ui/button";
 type Item = {
   id: string;
   reference: string;
+  status: string;
   statusLabel: string;
+  method: string;
+  methodLabel: string;
   frequencyLabel: string;
   amountMinor: number;
   currency: string;
   donorName: string | null;
   donorEmail: string | null;
   isAnonymous: boolean;
+  transferReference: string | null;
+  emailSentAt: string | null;
+  emailLastError: string | null;
   paidAt: string | null;
   createdAt: string;
 };
@@ -23,6 +29,7 @@ export default function AdminDonationsPage() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionPending, setActionPending] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -47,12 +54,36 @@ export default function AdminDonationsPage() {
     void load();
   }, [load]);
 
+  async function runAction(
+    id: string,
+    action: "verify" | "reject" | "resend_email",
+  ) {
+    setActionPending(id + action);
+    setError(null);
+    try {
+      const response = await fetch("/api/admin/donations", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action }),
+      });
+      const json = await response.json();
+      if (!response.ok) {
+        throw new Error(json?.error?.message ?? "Action failed.");
+      }
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Action failed.");
+    } finally {
+      setActionPending(null);
+    }
+  }
+
   return (
     <section className="space-y-6">
       <AdminPageHeader
         eyebrow="Manage"
         title="Donations"
-        description="Read-only records synced from Paystack (and monthly intents). No card data is stored."
+        description="Paystack records and direct-transfer notifications. No card data is stored. Email failure never reverses a successful payment."
         actions={
           <a
             href="/api/admin/donations?format=csv"
@@ -95,13 +126,14 @@ export default function AdminDonationsPage() {
               key={item.id}
               className="rounded-2xl border border-border-default bg-bg-surface p-4"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="font-display text-lg font-bold text-brand-navy">
                     {item.currency} {(item.amountMinor / 100).toFixed(2)}
                   </p>
                   <p className="mt-1 text-sm text-text-muted">
-                    {item.statusLabel} · {item.frequencyLabel}
+                    {item.statusLabel} · {item.methodLabel} ·{" "}
+                    {item.frequencyLabel}
                   </p>
                   <p className="mt-1 text-sm text-text-muted">
                     {item.isAnonymous
@@ -110,12 +142,61 @@ export default function AdminDonationsPage() {
                         ? `${item.donorName ?? ""}${item.donorName && item.donorEmail ? " · " : ""}${item.donorEmail ?? ""}`
                         : "Donor details not provided"}
                   </p>
+                  <p className="mt-1 text-xs text-text-muted">
+                    Email:{" "}
+                    {item.emailSentAt
+                      ? `Sent ${new Date(item.emailSentAt).toLocaleString()}`
+                      : item.emailLastError
+                        ? `Failed — ${item.emailLastError}`
+                        : "Not sent"}
+                  </p>
+                  {item.transferReference ? (
+                    <p className="mt-1 text-xs text-text-muted">
+                      Transfer ref: {item.transferReference}
+                    </p>
+                  ) : null}
                 </div>
-                <p className="text-xs text-text-muted">
-                  {item.reference}
-                  <br />
-                  {new Date(item.paidAt ?? item.createdAt).toLocaleString()}
-                </p>
+                <div className="space-y-2 text-right">
+                  <p className="text-xs text-text-muted">
+                    {item.reference}
+                    <br />
+                    {new Date(item.paidAt ?? item.createdAt).toLocaleString()}
+                  </p>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    {item.status === "pending_verification" ? (
+                      <>
+                        <Button
+                          type="button"
+                          size="sm"
+                          disabled={Boolean(actionPending)}
+                          onClick={() => void runAction(item.id, "verify")}
+                        >
+                          Verify
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={Boolean(actionPending)}
+                          onClick={() => void runAction(item.id, "reject")}
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    ) : null}
+                    {item.status === "success" && item.donorEmail ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        disabled={Boolean(actionPending)}
+                        onClick={() => void runAction(item.id, "resend_email")}
+                      >
+                        Resend confirmation
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
               </div>
             </li>
           ))}

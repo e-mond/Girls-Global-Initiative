@@ -73,14 +73,19 @@ export function HomeNewsletter() {
           noValidate
         >
           <div className="flex-1">
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
+            <label htmlFor="newsletter-email" className="mb-1 block text-xs text-white/70 sm:sr-only">
+              Email address{" "}
+              <span className="text-blob-pink" aria-hidden>
+                *
+              </span>
             </label>
             <input
               id="newsletter-email"
               name="email"
               type="email"
               autoComplete="email"
+              required
+              aria-required="true"
               value={email}
               onChange={(event) => {
                 setEmail(event.target.value);

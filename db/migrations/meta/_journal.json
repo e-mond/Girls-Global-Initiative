@@ -64,6 +64,13 @@
       "when": 1791208000000,
       "tag": "0008_staff_status_audit_index",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791300000000,
+      "tag": "0009_donation_method_email",
+      "breakpoints": true
     }
   ]
 }
