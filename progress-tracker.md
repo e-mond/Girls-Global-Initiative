@@ -1207,6 +1207,12 @@ mail is provisioned.
 * `wrangler.jsonc` vars include non-secret SMTP_*; `SMTP_PASS` stays a Secret.
 * Full domain ESP/Workspace cutover checklist in `docs/CLOUDFLARE.md`.
 * Announce script warns when blasting from `@gmail.com`.
+* PR #26 merged. Local `npm run deploy` built OpenNext successfully but
+  Wrangler is authenticated to Cloudflare account `43a998ca…` (no
+  workers.dev / wrong account). Production redeploy must use the dashboard
+  account that owns `girls-global-initiative` / girlsglobalinitiative.org
+  (`npm run build:cloudflare` + `npx opennextjs-cloudflare deploy` there,
+  or Cloudflare Git deploy). Confirm `SMTP_PASS` remains a Secret after vars sync.
 
 ---
 
