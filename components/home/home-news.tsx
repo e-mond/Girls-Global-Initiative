@@ -35,7 +35,7 @@ export async function HomeNews() {
                   <div className="relative h-44">
                     <Image
                       src={item.imageSrc}
-                      alt=""
+                      alt={item.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"

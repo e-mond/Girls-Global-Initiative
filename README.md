@@ -150,15 +150,30 @@ Approved narrative for the public site is maintained in `content/site-copy.ts` (
 
 ---
 
+## SEO and Google Search
+
+- Sitemap: `/sitemap.xml` (`app/sitemap.ts`)
+- Robots: `/robots.txt` (`app/robots.ts`) — disallows `/admin/` and `/api/`
+- Per-page metadata, canonicals, Open Graph and Twitter cards via `lib/seo/page-metadata.ts`
+- Optional CMS default title/description from Admin → Settings
+- Homepage Organization / WebSite JSON-LD
+- Optional `GOOGLE_SITE_VERIFICATION` for Search Console HTML-tag verification
+
+Details: [docs/SEO-AND-SEARCH.md](docs/SEO-AND-SEARCH.md). Search Console verification remains an operator step.
+
+---
+
 ## Security
 
 Principles enforced in the current implementation:
 
 - Server-side authentication and authorisation for admin routes and APIs
-- Role checks (Administrator vs Editor) on privileged operations
+- Explicit Auth.js cookie flags (httpOnly, SameSite=Lax, Secure on HTTPS) and 24-hour staff session TTL
+- Role checks (Administrator vs Editor) on privileged operations — unknown JWT roles are not elevated to administrator
 - Zod validation on public and admin inputs
 - Rate limiting on sensitive public and password-reset endpoints
 - Signed Paystack webhook verification (no raw card data stored)
+- Security headers via `next.config.ts` (CSP, HSTS, frame denial, nosniff, referrer, permissions)
 - Safe, non-technical error messages to end users
 - Audit logging for significant state changes
 - Secrets via environment variables only (never committed)
@@ -172,11 +187,23 @@ Do not commit `.env.local`, API keys, passwords, or production credentials.
 The project aims for **WCAG 2.2 AA**-aligned behaviour:
 
 - Keyboard navigation and visible focus
-- Semantic headings and landmarks
+- Semantic headings and landmarks (public + admin skip links)
 - Labelled controls and icon-only buttons with accessible names
-- Accessible dialogs and navigation drawers
+- Focus-managed menus and admin drawers
 - Colour contrast within the brand system (status is not colour-only)
 - `prefers-reduced-motion` support for Framer Motion reveals
+- Public accessibility statement at `/accessibility`
+
+Details: [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md). Do not claim a full formal audit until one is completed.
+
+---
+
+## Privacy, cookies and legal pages
+
+- Essential Auth.js cookies only — **no cookie consent banner** while no non-essential trackers exist
+- No standalone Cookie Policy route; inventory lives in `/privacy` and [docs/PRIVACY-COOKIES-AND-LEGAL.md](docs/PRIVACY-COOKIES-AND-LEGAL.md)
+- Public routes: `/privacy`, `/terms`, `/accessibility` (footer Legal nav)
+- Policy body text that needs organisational approval is marked **Awaiting official GGI confirmation**
 
 ---
 
@@ -218,6 +245,8 @@ See `.env.example` for the full list. High-level groups:
 | --- | --- |
 | `DATABASE_URL` | Neon Postgres connection |
 | `AUTH_SECRET` / `AUTH_URL` | Auth.js session configuration |
+| `NEXT_PUBLIC_SITE_URL` | Canonical public site origin (preferred for SEO) |
+| `GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token |
 | `AUTH_DEV_*` | Local bootstrap staff account (dev) |
 | `SMTP_*` | Transactional email |
 | `PAYSTACK_*` | Donation checkout and webhook verification |

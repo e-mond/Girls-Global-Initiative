@@ -26,6 +26,12 @@ const SUPPORT_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
+const LEGAL_LINKS = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Use" },
+  { href: "/accessibility", label: "Accessibility" },
+] as const;
+
 /** Public site footer: responsive columns and accessible link lists. */
 export async function PublicFooter() {
   const settings = await getSiteSettings();
@@ -100,7 +106,7 @@ export async function PublicFooter() {
           <p className="text-white/80">
             <a
               href={`mailto:${contactEmail}`}
-              className="hover:text-brand-sky"
+              className="hover:text-brand-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sky"
             >
               {contactEmail}
             </a>
@@ -121,9 +127,28 @@ export async function PublicFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60 sm:px-6">
-        © {new Date().getFullYear()} Girls Global Initiative. All rights
-        reserved.
+      <div className="border-t border-white/10 px-4 py-4 sm:px-6">
+        <nav
+          aria-label="Legal"
+          className="mx-auto flex max-w-6xl flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left"
+        >
+          <p className="text-xs text-white/75">
+            © {new Date().getFullYear()} Girls Global Initiative. All rights
+            reserved.
+          </p>
+          <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">
+            {LEGAL_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="inline-flex min-h-11 items-center text-white/75 underline-offset-2 hover:text-brand-sky hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sky"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </footer>
   );

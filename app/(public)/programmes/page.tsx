@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.programmes.title,
+  description: PAGE_SEO.programmes.description,
+  path: "/programmes",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, HeartHandshake, Users } from "lucide-react";
@@ -123,7 +132,7 @@ export default function ProgrammesPage() {
                         ? "/home/community-2.jpg"
                         : "/home/community-3.jpg"
                     }
-                    alt=""
+                    alt={project.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 50vw"

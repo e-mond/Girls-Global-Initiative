@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.gallery.title,
+  description: PAGE_SEO.gallery.description,
+  path: "/gallery",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import { Camera, MapPin, Users } from "lucide-react";

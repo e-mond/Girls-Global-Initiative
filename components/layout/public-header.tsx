@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, Heart, Menu, X } from "lucide-react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { cn } from "@/lib/utils";
 
 const PRIMARY_LINKS = [
@@ -38,10 +39,14 @@ export function PublicHeader() {
   const menuId = useId();
   const aboutMenuId = useId();
   const aboutRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const aboutActive = ABOUT_LINKS.some((link) =>
     linkIsActive(pathname, link.href),
   );
+
+  useFocusTrap(open, mobileMenuRef, menuButtonRef);
 
   useEffect(() => {
     setOpen(false);
@@ -80,6 +85,11 @@ export function PublicHeader() {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setAboutOpen(false);
+        // Return focus to the About toggle when dismissing with Escape.
+        const toggle = aboutRef.current?.querySelector<HTMLElement>(
+          'button[aria-haspopup="menu"]',
+        );
+        toggle?.focus();
       }
     };
     document.addEventListener("mousedown", onPointer);
@@ -118,7 +128,7 @@ export function PublicHeader() {
 
         <nav
           aria-label="Primary"
-          className="absolute left-1/2 top-1/2 z-0 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 lg:gap-2 md:flex"
+          className="absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 pointer-events-auto lg:gap-2 md:flex"
         >
           {PRIMARY_LINKS.slice(0, 2).map((link) => (
             <Link
@@ -221,6 +231,7 @@ export function PublicHeader() {
             <Heart className="h-3.5 w-3.5 fill-current" aria-hidden />
           </Link>
           <button
+            ref={menuButtonRef}
             type="button"
             className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-brand-navy/20 bg-bg-base text-brand-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky md:hidden"
             aria-expanded={open}
@@ -239,7 +250,11 @@ export function PublicHeader() {
 
       {open ? (
         <div
+          ref={mobileMenuRef}
           id={menuId}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Primary mobile"
           className="mt-2 rounded-2xl border border-border-default bg-bg-surface shadow-md md:hidden"
         >
           <nav aria-label="Primary mobile" className="px-3 py-3">

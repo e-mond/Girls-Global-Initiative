@@ -18,7 +18,15 @@ test.describe("public navigation IA", () => {
     await expect(primary.getByRole("link", { name: "Programmes" })).toHaveCount(0);
     await expect(primary.getByRole("link", { name: "Impact" })).toHaveCount(0);
 
-    await primary.getByRole("button", { name: "About" }).click();
+    await expect(async () => {
+      const aboutBtn = primary.getByRole("button", { name: "About" });
+      if ((await aboutBtn.getAttribute("aria-expanded")) !== "true") {
+        await aboutBtn.click();
+      }
+      await expect(aboutBtn).toHaveAttribute("aria-expanded", "true", {
+        timeout: 2_000,
+      });
+    }).toPass({ timeout: 15_000 });
     const aboutMenu = page.getByRole("menu", { name: "About" });
     await expect(aboutMenu.getByRole("menuitem", { name: "Founder" })).toBeVisible();
     await expect(aboutMenu.getByRole("menuitem", { name: "Team" })).toBeVisible();

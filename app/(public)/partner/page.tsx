@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.partner.title,
+  description: PAGE_SEO.partner.description,
+  path: "/partner",
+});
+
 import Link from "next/link";
 import { Handshake, School, Users } from "lucide-react";
 import {

@@ -7,12 +7,13 @@ import { signIn } from "next-auth/react";
 import { FormEvent, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { safeAdminCallbackUrl } from "@/lib/auth/safe-callback-url";
 
 /** Staff credentials sign-in with forgotten-password link. */
 export function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/admin";
+  const callbackUrl = safeAdminCallbackUrl(searchParams.get("callbackUrl"));
   const reduceMotion = useReducedMotion();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,9 +60,12 @@ export function AdminLoginForm() {
           type="email"
           autoComplete="username"
           required
+          aria-required="true"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "login-error" : undefined}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus:border-brand-sky"
+          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
         />
       </div>
       <div className="space-y-2">
@@ -77,14 +81,17 @@ export function AdminLoginForm() {
           type="password"
           autoComplete="current-password"
           required
+          aria-required="true"
           minLength={8}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "login-error" : undefined}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus:border-brand-sky"
+          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
         />
       </div>
       {error ? (
-        <p className="text-sm text-brand-magenta" role="alert">
+        <p id="login-error" className="text-sm text-brand-magenta" role="alert">
           {error}
         </p>
       ) : null}

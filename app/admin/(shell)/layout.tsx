@@ -24,6 +24,12 @@ export default async function AdminShellLayout({
 
   return (
     <AdminShellProvider>
+      <a
+        href="#admin-main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-navy focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-text-on-inverse"
+      >
+        Skip to main content
+      </a>
       <div className="flex min-h-screen bg-bg-base">
         <AdminSidebar
           groups={groups}
@@ -41,9 +47,13 @@ export default async function AdminShellLayout({
             staffRole={session?.user?.role}
             canManageSettings={canManageSettings(role)}
           />
-          <div className="flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <main
+            id="admin-main"
+            tabIndex={-1}
+            className="flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8"
+          >
             {children}
-          </div>
+          </main>
         </div>
       </div>
     </AdminShellProvider>

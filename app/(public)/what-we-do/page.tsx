@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.whatWeDo.title,
+  description: PAGE_SEO.whatWeDo.description,
+  path: "/what-we-do",
+});
+
 import Link from "next/link";
 import { ArrowRight, HeartHandshake, Sparkles } from "lucide-react";
 import {

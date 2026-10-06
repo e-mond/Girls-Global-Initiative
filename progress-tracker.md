@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Staff invite, revoke access, Worker 1102, live news blast**
-* **Status:** Validated on `feature/staff-invite-prod-hardening` — ready for PR / merge / redeploy
-* **Previous phase:** Public pages story structure / Cloudflare deploy hardening
-* **Current branch:** `feature/staff-invite-prod-hardening`
+* **SEO, Security, Accessibility, Privacy & Legal Hardening**
+* **Status:** In Progress
+* **Previous phase:** Staff invite / Worker 1102 / news blast (merged to `main`)
+* **Current branch:** `feature/seo-security-a11y-legal`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Staff invite email (no temp password), disable/re-enable, Worker 1102 fixes for settings/audit, news share buttons + site-live post/announce scripts.
-* **Owner notes:** After merge: run migration `0008`, redeploy OpenNext Worker with `AUTH_SECRET`/`DATABASE_URL`/`SMTP_*` on the correct Cloudflare account, then `npm run db:publish-site-live-news` and `npm run announce:site-live` once SMTP is confirmed. Verify `/admin/settings` and `/admin/audit` no longer return Worker 1102.
+* **Current objective:** Sitemap/robots/metadata/structured data; Auth.js cookie hardening + security headers; WCAG 2.2 AA fixes; Privacy/Terms/Accessibility placeholder pages; no cookie banner (essential Auth.js cookies only).
+* **Owner notes:** Legal policy body text remains “Awaiting official GGI confirmation” until GGI supplies approved copy. Optional `GOOGLE_SITE_VERIFICATION` for Search Console.
 
 ---
 
 ## Current Goal
 
-Finish icon/logout/docs follow-up, validate, push to PR #17.
+Complete SEO / security / accessibility / privacy / legal production hardening on `feature/seo-security-a11y-legal`.
 
 ---
 
@@ -82,13 +82,83 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
+## SEO, Security, Accessibility, Privacy & Legal Hardening
+
+**Branch:** `feature/seo-security-a11y-legal`
+
+### Google Search & SEO
+
+| Item | Status |
+| --- | --- |
+| Sitemap | Implemented |
+| Robots | Implemented |
+| Metadata / canonicals / OG / Twitter | Implemented |
+| Structured data (Organization + WebSite) | Implemented |
+| CMS SEO defaults wired | Implemented |
+| Search Console readiness | Awaiting configuration (`GOOGLE_SITE_VERIFICATION` + Console submit) |
+
+### Security & Authentication
+
+| Item | Status |
+| --- | --- |
+| Admin authentication / middleware | Verified (existing + regression tests) |
+| Session cookies + 24h TTL | Implemented |
+| JWT role hardening | Implemented |
+| Login callbackUrl validation | Implemented |
+| Media upload error sanitisation | Implemented |
+| Security headers | Implemented |
+| Browser storage / third-party audit | Implemented (docs) |
+
+### Accessibility
+
+| Item | Status |
+| --- | --- |
+| WCAG 2.2 AA review (targeted) | Implemented |
+| Keyboard / focus traps | Implemented |
+| Forms / privacy disclosures | Implemented |
+| Alt text pass (content cards) | Implemented |
+| Accessibility statement page | Implemented |
+| Accessibility testing | Implemented (Playwright smoke) |
+| Formal third-party audit | Awaiting GGI approval / configuration |
+
+### Privacy & Cookies
+
+| Item | Status |
+| --- | --- |
+| Cookie inventory | Implemented |
+| Consent banner | Not required (essential Auth.js only) — documented |
+| Cookie Policy route | Not created (by design) |
+| Browser storage audit | Implemented |
+
+### Legal / Policy
+
+| Item | Status |
+| --- | --- |
+| `/privacy` | Implemented — body **Awaiting GGI approval** where marked |
+| `/terms` | Implemented — body **Awaiting GGI approval** where marked |
+| `/accessibility` | Implemented — commitment language only |
+| No unapproved legal claims | Implemented |
+
+### Verification
+
+| Check | Status |
+| --- | --- |
+| Lint | Verified (PASS) |
+| Type-check | Verified (PASS) |
+| Playwright unit tests | Verified (PASS — 44) |
+| Cypress e2e | Verified (PASS — 1) |
+| Production build | Verified (PASS) |
+
+---
+
 ## Post-roadmap operational follow-ups
 
 **Status:** After Unit 8 merge
 
 * Supply Paystack / SMTP / Cloudinary / org transfer credentials
-* Replace Eugenia placeholder photo
 * Seed/publish live CMS content
+* Google Search Console verification
+* Official Privacy / Terms copy from GGI
 
 ---
 
