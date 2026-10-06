@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.impact.title,
+  description: PAGE_SEO.impact.description,
+  path: "/impact",
+});
+
 import { Camera, HeartHandshake, School, Sparkles } from "lucide-react";
 import { HomeCommunities } from "@/components/home/home-communities";
 import {

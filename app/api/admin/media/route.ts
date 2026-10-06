@@ -70,11 +70,16 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ data: { item } }, { status: 201 });
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Upload failed. Please try again.";
-    return NextResponse.json({ error: { message } }, { status: 400 });
+    console.error("[admin/media] upload failed", error);
+    return NextResponse.json(
+      {
+        error: {
+          message:
+            "Upload failed. Check the file type, size and alt text, then try again.",
+        },
+      },
+      { status: 400 },
+    );
   }
 }
 

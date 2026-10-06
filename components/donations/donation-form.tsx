@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FormPrivacyNotice } from "@/components/forms/form-privacy-notice";
 import { Button } from "@/components/ui/button";
 import { PRESET_AMOUNTS_GHS } from "@/features/donations/schemas";
 
@@ -238,12 +239,18 @@ export function DonationForm() {
             <p className="text-sm font-semibold text-brand-navy">
               Amount (GHS) <RequiredMark />
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div
+              className="mt-3 flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-label="Donation amount in GHS"
+            >
               {PRESET_AMOUNTS_GHS.map((value) => (
                 <Button
                   key={value}
                   type="button"
                   size="sm"
+                  role="radio"
+                  aria-checked={!custom && amount === value}
                   variant={!custom && amount === value ? "secondary" : "outline"}
                   onClick={() => {
                     setAmount(value);
@@ -263,7 +270,7 @@ export function DonationForm() {
                 value={custom}
                 onChange={(event) => setCustom(event.target.value)}
                 placeholder="e.g. 75"
-                className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
               />
             </label>
           </div>
@@ -272,10 +279,16 @@ export function DonationForm() {
             <legend className="text-sm font-semibold text-brand-navy">
               Frequency
             </legend>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div
+              className="mt-3 flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-label="Donation frequency"
+            >
               <Button
                 type="button"
                 size="sm"
+                role="radio"
+                aria-checked={frequency === "one_time"}
                 variant={frequency === "one_time" ? "secondary" : "outline"}
                 onClick={() => setFrequency("one_time")}
               >
@@ -284,6 +297,8 @@ export function DonationForm() {
               <Button
                 type="button"
                 size="sm"
+                role="radio"
+                aria-checked={frequency === "monthly_intent"}
                 variant={
                   frequency === "monthly_intent" ? "secondary" : "outline"
                 }
@@ -318,7 +333,7 @@ export function DonationForm() {
                 <input
                   value={donorName}
                   onChange={(event) => setDonorName(event.target.value)}
-                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
               <label className="space-y-1.5 text-sm">
@@ -331,7 +346,7 @@ export function DonationForm() {
                   aria-required="true"
                   value={donorEmail}
                   onChange={(event) => setDonorEmail(event.target.value)}
-                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
             </div>
@@ -344,7 +359,7 @@ export function DonationForm() {
                 type="email"
                 value={donorEmail}
                 onChange={(event) => setDonorEmail(event.target.value)}
-                className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
               />
             </label>
           )}
@@ -364,6 +379,8 @@ export function DonationForm() {
               Choose Direct payment for organisation transfer details.
             </p>
           ) : null}
+
+          <FormPrivacyNotice />
 
           <Button
             type="submit"
@@ -467,7 +484,7 @@ export function DonationForm() {
                   onChange={(event) => {
                     setCustom(event.target.value);
                   }}
-                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
 
@@ -479,7 +496,7 @@ export function DonationForm() {
                   <input
                     value={donorName}
                     onChange={(event) => setDonorName(event.target.value)}
-                    className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                    className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                   />
                 </label>
                 <label className="space-y-1.5 text-sm">
@@ -490,7 +507,7 @@ export function DonationForm() {
                     type="email"
                     value={donorEmail}
                     onChange={(event) => setDonorEmail(event.target.value)}
-                    className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                    className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                   />
                 </label>
               </div>
@@ -502,7 +519,7 @@ export function DonationForm() {
                 <input
                   value={transferReference}
                   onChange={(event) => setTransferReference(event.target.value)}
-                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
 
@@ -514,7 +531,7 @@ export function DonationForm() {
                   type="date"
                   value={transferredOn}
                   onChange={(event) => setTransferredOn(event.target.value)}
-                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus:border-brand-sky"
+                  className="h-11 w-full rounded-xl border border-border-default px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
 
@@ -526,7 +543,7 @@ export function DonationForm() {
                   value={donorNote}
                   onChange={(event) => setDonorNote(event.target.value)}
                   rows={3}
-                  className="w-full rounded-xl border border-border-default px-3 py-2 outline-none focus:border-brand-sky"
+                  className="w-full rounded-xl border border-border-default px-3 py-2 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
                 />
               </label>
 
@@ -540,6 +557,8 @@ export function DonationForm() {
                   {notifySuccess}
                 </p>
               ) : null}
+
+              <FormPrivacyNotice />
 
               <Button
                 type="submit"

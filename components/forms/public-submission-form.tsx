@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FormPrivacyNotice } from "@/components/forms/form-privacy-notice";
 
 type Field = {
   name: string;
@@ -10,6 +11,9 @@ type Field = {
   required?: boolean;
   step?: number;
 };
+
+const FIELD_FOCUS =
+  "w-full rounded-xl border border-border-default bg-bg-base px-3 outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky";
 
 export function PublicSubmissionForm({
   kind,
@@ -28,6 +32,7 @@ export function PublicSubmissionForm({
   const [values, setValues] = useState<Record<string, string>>({});
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
 
   const stepFields = useMemo(
@@ -36,17 +41,23 @@ export function PublicSubmissionForm({
   );
 
   function validateStep(): string | null {
+    const nextErrors: Record<string, string> = {};
     for (const field of stepFields) {
       if (!field.required) continue;
       const value = (values[field.name] ?? "").trim();
       if (!value) {
-        return `Please enter your ${field.label.toLowerCase()}.`;
-      }
-      if (field.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        return "Enter a valid email address, for example name@example.com.";
+        nextErrors[field.name] = `Please enter your ${field.label.toLowerCase()}.`;
+      } else if (
+        field.type === "email" &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+      ) {
+        nextErrors[field.name] =
+          "Enter a valid email address, for example name@example.com.";
       }
     }
-    return null;
+    setFieldErrors(nextErrors);
+    const first = Object.values(nextErrors)[0];
+    return first ?? null;
   }
 
   async function onSubmit(event: FormEvent) {
@@ -108,7 +119,10 @@ export function PublicSubmissionForm({
       noValidate
     >
       {steps > 1 ? (
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+        <p
+          className="text-xs font-semibold uppercase tracking-wide text-brand-magenta"
+          aria-live="polite"
+        >
           Step {step} of {steps}
         </p>
       ) : null}
@@ -120,63 +134,78 @@ export function PublicSubmissionForm({
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {stepFields.map((field) => (
-          <label
-            key={field.name}
-            className={`space-y-1.5 text-sm ${field.type === "textarea" ? "sm:col-span-2" : ""}`}
-          >
-            <span className="font-medium text-brand-navy">
-              {field.label}
-              {field.required ? (
-                <>
-                  {" "}
-                  <span className="text-brand-magenta" aria-hidden>
-                    *
-                  </span>
-                </>
+        {stepFields.map((field) => {
+          const errorId = `${field.name}-error`;
+          const hasError = Boolean(fieldErrors[field.name]);
+          return (
+            <label
+              key={field.name}
+              className={`space-y-1.5 text-sm ${field.type === "textarea" ? "sm:col-span-2" : ""}`}
+            >
+              <span className="font-medium text-brand-navy">
+                {field.label}
+                {field.required ? (
+                  <>
+                    {" "}
+                    <span className="text-brand-magenta" aria-hidden>
+                      *
+                    </span>
+                  </>
+                ) : (
+                  " (optional)"
+                )}
+              </span>
+              {field.type === "textarea" ? (
+                <textarea
+                  name={field.name}
+                  required={field.required}
+                  aria-required={field.required || undefined}
+                  aria-invalid={hasError || undefined}
+                  aria-describedby={hasError ? errorId : undefined}
+                  value={values[field.name] ?? ""}
+                  onChange={(event) =>
+                    setValues((current) => ({
+                      ...current,
+                      [field.name]: event.target.value,
+                    }))
+                  }
+                  className={`min-h-28 py-2 ${FIELD_FOCUS}`}
+                />
               ) : (
-                " (optional)"
+                <input
+                  name={field.name}
+                  type={field.type ?? "text"}
+                  required={field.required}
+                  aria-required={field.required || undefined}
+                  aria-invalid={hasError || undefined}
+                  aria-describedby={hasError ? errorId : undefined}
+                  value={values[field.name] ?? ""}
+                  onChange={(event) =>
+                    setValues((current) => ({
+                      ...current,
+                      [field.name]: event.target.value,
+                    }))
+                  }
+                  className={`h-11 ${FIELD_FOCUS}`}
+                />
               )}
-            </span>
-            {field.type === "textarea" ? (
-              <textarea
-                name={field.name}
-                required={field.required}
-                aria-required={field.required || undefined}
-                value={values[field.name] ?? ""}
-                onChange={(event) =>
-                  setValues((current) => ({
-                    ...current,
-                    [field.name]: event.target.value,
-                  }))
-                }
-                className="min-h-28 w-full rounded-xl border border-border-default bg-bg-base px-3 py-2 outline-none focus:border-brand-sky"
-              />
-            ) : (
-              <input
-                name={field.name}
-                type={field.type ?? "text"}
-                required={field.required}
-                aria-required={field.required || undefined}
-                value={values[field.name] ?? ""}
-                onChange={(event) =>
-                  setValues((current) => ({
-                    ...current,
-                    [field.name]: event.target.value,
-                  }))
-                }
-                className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 outline-none focus:border-brand-sky"
-              />
-            )}
-          </label>
-        ))}
+              {hasError ? (
+                <span id={errorId} className="block text-xs text-brand-magenta">
+                  {fieldErrors[field.name]}
+                </span>
+              ) : null}
+            </label>
+          );
+        })}
       </div>
 
       {error ? (
-        <p className="text-sm text-brand-magenta" role="alert">
+        <p id="form-error-summary" className="text-sm text-brand-magenta" role="alert">
           {error}
         </p>
       ) : null}
+
+      <FormPrivacyNotice includeTerms />
 
       <div className="flex flex-wrap gap-3">
         {step > 1 ? (

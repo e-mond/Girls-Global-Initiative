@@ -93,13 +93,7 @@ export function paystackConfigured(): boolean {
   return Boolean(process.env.PAYSTACK_SECRET_KEY?.trim());
 }
 
-export function siteOrigin(): string {
-  return (
-    process.env.AUTH_URL ??
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "http://localhost:3000"
-  ).replace(/\/$/, "");
-}
+export { getSiteOrigin as siteOrigin } from "@/lib/seo/site-origin";
 
 export function createReference(prefix = "ggi"): string {
   return `${prefix}_${Date.now().toString(36)}_${randomUUID().slice(0, 8)}`;

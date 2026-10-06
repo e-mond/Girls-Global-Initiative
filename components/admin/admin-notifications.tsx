@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 type AttentionItem = {
   id: string;
@@ -21,6 +22,9 @@ export function AdminNotifications() {
   const [error, setError] = useState<string | null>(null);
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useFocusTrap(open, rootRef, buttonRef);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,6 +85,7 @@ export function AdminNotifications() {
   return (
     <div className="relative" ref={rootRef}>
       <button
+        ref={buttonRef}
         type="button"
         className={cn(
           "relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border-default bg-bg-base text-brand-navy hover:bg-bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky",
@@ -104,6 +109,7 @@ export function AdminNotifications() {
         <div
           id={panelId}
           role="dialog"
+          aria-modal="true"
           aria-label="Notifications"
           className="absolute right-0 top-full z-40 mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-border-default bg-bg-surface p-3 shadow-md"
         >

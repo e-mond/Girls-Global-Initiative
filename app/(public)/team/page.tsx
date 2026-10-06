@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.team.title,
+  description: PAGE_SEO.team.description,
+  path: "/team",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import { Handshake, Heart, Sparkles, Users } from "lucide-react";

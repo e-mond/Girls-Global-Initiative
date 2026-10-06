@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.advocate.title,
+  description: PAGE_SEO.advocate.description,
+  path: "/get-involved/advocate",
+});
+
 import Link from "next/link";
 import { Megaphone, Share2, Users } from "lucide-react";
 import {

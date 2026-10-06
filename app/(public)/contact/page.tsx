@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.contact.title,
+  description: PAGE_SEO.contact.description,
+  path: "/contact",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Mail, MessageCircle, Phone } from "lucide-react";
@@ -124,7 +133,7 @@ export default function ContactPage() {
               <div className="relative h-44">
                 <Image
                   src="/home/hero-little-girl.jpg"
-                  alt=""
+                  alt="A girl looking ahead with confidence"
                   fill
                   className="object-cover object-top opacity-80"
                   sizes="(max-width: 1024px) 100vw, 50vw"

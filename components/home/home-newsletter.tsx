@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { FormPrivacyNotice } from "@/components/forms/form-privacy-notice";
 import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 
 /**
- * Homepage newsletter band , Letters for her future (double opt-in).
+ * Homepage newsletter band — Letters for her future (double opt-in).
  */
 export function HomeNewsletter() {
   const [email, setEmail] = useState("");
@@ -52,6 +53,8 @@ export function HomeNewsletter() {
     }
   }
 
+  const showError = status === "error" || status === "invalid";
+
   return (
     <section
       id="newsletter"
@@ -62,66 +65,77 @@ export function HomeNewsletter() {
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
             Letters for her future, monthly
           </h2>
-          <p className="mt-2 text-sm text-white/75">
-            Subscribe for updates from Girls Global Initiative. We’ll email a
-            confirmation link to finish signup.
+          <p className="mt-2 text-sm text-white/80">
+            Subscribe for updates from Girls Global Initiative. We&apos;ll email
+            a confirmation link to finish signup.
           </p>
         </div>
         <form
           onSubmit={onSubmit}
-          className="flex w-full max-w-xl flex-col gap-2 sm:flex-row sm:items-start"
+          className="flex w-full max-w-xl flex-col gap-2"
           noValidate
         >
-          <div className="flex-1">
-            <label htmlFor="newsletter-email" className="mb-1 block text-xs text-white/70 sm:sr-only">
-              Email address{" "}
-              <span className="text-blob-pink" aria-hidden>
-                *
-              </span>
-            </label>
-            <input
-              id="newsletter-email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              aria-required="true"
-              value={email}
-              onChange={(event) => {
-                setEmail(event.target.value);
-                if (status !== "idle" && status !== "loading") {
-                  setStatus("idle");
-                  setMessage(null);
-                }
-              }}
-              placeholder="Enter your email"
-              disabled={status === "loading"}
-              className="h-11 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-sm text-text-on-inverse placeholder:text-white/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sky disabled:opacity-60"
-            />
-            {message ? (
-              <p
-                className={`mt-2 text-xs ${
-                  status === "error" || status === "invalid"
-                    ? "text-blob-pink"
-                    : "text-white/80"
-                }`}
-                role={
-                  status === "error" || status === "invalid"
-                    ? "alert"
-                    : "status"
-                }
+          <p className="text-xs text-white/75">
+            <span className="text-blob-pink" aria-hidden>
+              *
+            </span>{" "}
+            Required field
+          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
+            <div className="flex-1">
+              <label
+                htmlFor="newsletter-email"
+                className="mb-1 block text-xs text-white/80 sm:sr-only"
               >
-                {message}
-              </p>
-            ) : null}
+                Email address{" "}
+                <span className="text-blob-pink" aria-hidden>
+                  *
+                </span>
+              </label>
+              <input
+                id="newsletter-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                aria-required="true"
+                aria-invalid={showError || undefined}
+                aria-describedby={message ? "newsletter-message" : undefined}
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  if (status !== "idle" && status !== "loading") {
+                    setStatus("idle");
+                    setMessage(null);
+                  }
+                }}
+                placeholder="Enter your email"
+                disabled={status === "loading"}
+                className="h-11 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-sm text-text-on-inverse placeholder:text-white/55 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sky disabled:opacity-60"
+              />
+              {message ? (
+                <p
+                  id="newsletter-message"
+                  className={`mt-2 text-xs ${
+                    showError ? "text-blob-pink" : "text-white/85"
+                  }`}
+                  role={showError ? "alert" : "status"}
+                >
+                  {message}
+                </p>
+              ) : null}
+            </div>
+            <Button
+              type="submit"
+              disabled={status === "loading"}
+              className="h-11 shrink-0 rounded-xl bg-brand-magenta px-6 hover:bg-brand-magenta/90"
+            >
+              {status === "loading" ? "Sending…" : "Subscribe"}
+            </Button>
           </div>
-          <Button
-            type="submit"
-            disabled={status === "loading"}
-            className="h-11 shrink-0 rounded-xl bg-brand-magenta px-6 hover:bg-brand-magenta/90"
-          >
-            {status === "loading" ? "Sending…" : "Subscribe"}
-          </Button>
+          <div className="text-white/75 [&_a]:text-brand-sky [&_p]:text-white/75">
+            <FormPrivacyNotice />
+          </div>
         </form>
       </Reveal>
     </section>

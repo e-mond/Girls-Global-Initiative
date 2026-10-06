@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.communities.title,
+  description: PAGE_SEO.communities.description,
+  path: "/communities",
+});
+
 import Link from "next/link";
 import {
   HeartHandshake,

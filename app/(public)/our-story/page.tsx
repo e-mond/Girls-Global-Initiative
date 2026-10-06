@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.ourStory.title,
+  description: PAGE_SEO.ourStory.description,
+  path: "/our-story",
+});
+
 import { OurStoryView } from "@/components/our-story/our-story-view";
 import { getPublicGalleryItems } from "@/features/content/public-content";
-
-export const metadata: Metadata = {
-  title: "Our story",
-  description:
-    "How Girls Global Initiative began — from a conversation between two young women to a youth-led organisation advancing the rights, health and potential of girls.",
-};
 
 export default async function OurStoryPage() {
   const gallery = await getPublicGalleryItems();

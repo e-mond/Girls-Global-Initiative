@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from "react";
 import { X } from "lucide-react";
 import { AdminNavBody } from "@/components/admin/admin-nav-body";
 import { useAdminShell } from "@/components/admin/admin-shell-provider";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import type { AdminNavGroup } from "@/features/admin/nav";
 
 /** Accessible mobile navigation drawer. */
@@ -19,12 +20,28 @@ export function AdminMobileNav({
   const { mobileNavOpen, closeMobileNav } = useAdminShell();
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const restoreRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (mobileNavOpen) {
-      closeRef.current?.focus();
-    }
+    if (!mobileNavOpen) return;
+    restoreRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    closeRef.current?.focus();
   }, [mobileNavOpen]);
+
+  useFocusTrap(mobileNavOpen, dialogRef, restoreRef);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMobileNav();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileNavOpen, closeMobileNav]);
 
   if (!mobileNavOpen) return null;
 
@@ -37,6 +54,7 @@ export function AdminMobileNav({
         onClick={closeMobileNav}
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

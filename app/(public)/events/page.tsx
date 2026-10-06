@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.events.title,
+  description: PAGE_SEO.events.description,
+  path: "/events",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, MapPin, Sparkles } from "lucide-react";
@@ -98,7 +107,7 @@ export default async function EventsPage() {
                   {item.imageSrc ? (
                     <Image
                       src={item.imageSrc}
-                      alt=""
+                      alt={item.title}
                       fill
                       className="object-cover"
                       sizes="220px"

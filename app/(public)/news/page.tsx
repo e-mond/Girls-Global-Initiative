@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.news.title,
+  description: PAGE_SEO.news.description,
+  path: "/news",
+});
+
 import Image from "next/image";
 import { Newspaper, Radio } from "lucide-react";
 import {
@@ -68,7 +77,7 @@ export default async function NewsPage() {
                   <div className="relative h-48">
                     <Image
                       src={item.imageSrc}
-                      alt=""
+                      alt={item.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 50vw"

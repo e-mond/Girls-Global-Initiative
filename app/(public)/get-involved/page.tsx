@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.getInvolved.title,
+  description: PAGE_SEO.getInvolved.description,
+  path: "/get-involved",
+});
+
 import Link from "next/link";
 import { ArrowRight, Heart, Megaphone, Users } from "lucide-react";
 import {

@@ -40,7 +40,7 @@ export async function HomeEvents() {
                   {item.imageSrc ? (
                     <Image
                       src={item.imageSrc}
-                      alt=""
+                      alt={item.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 33vw"

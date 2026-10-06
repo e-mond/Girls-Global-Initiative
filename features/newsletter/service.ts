@@ -350,10 +350,4 @@ export async function adminSetStatus(
   return serialize(row as never);
 }
 
-export function siteOrigin(): string {
-  return (
-    process.env.AUTH_URL ??
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "http://localhost:3000"
-  ).replace(/\/$/, "");
-}
+export { getSiteOrigin as siteOrigin } from "@/lib/seo/site-origin";

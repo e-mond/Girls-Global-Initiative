@@ -1,3 +1,12 @@
+import { PAGE_SEO } from "@/content/page-seo";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+export const metadata = buildPageMetadata({
+  title: PAGE_SEO.founder.title,
+  description: PAGE_SEO.founder.description,
+  path: "/founder",
+});
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -139,7 +148,7 @@ export default function FounderPage() {
           <div className="relative h-14 w-14 overflow-hidden rounded-full">
             <Image
               src={founderSpotlight.imageSrc}
-              alt=""
+              alt={`${FOUNDER_MESSAGE.signatureName}, Founder of Girls Global Initiative`}
               fill
               className="object-cover object-top"
               sizes="56px"

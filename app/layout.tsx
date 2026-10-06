@@ -6,6 +6,12 @@ import {
 } from "next/font/google";
 import { MswProvider } from "@/components/providers/msw-provider";
 import { AuthSessionProvider } from "@/components/providers/auth-session-provider";
+import {
+  DEFAULT_SITE_DESCRIPTION,
+  DEFAULT_SITE_TITLE,
+} from "@/content/page-seo";
+import { getSiteSettings } from "@/features/settings/service";
+import { getSiteOrigin } from "@/lib/seo/site-origin";
 import "./globals.css";
 
 const redHatDisplay = Red_Hat_Display({
@@ -26,38 +32,56 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  ),
-  title: {
-    default: "Girls Global Initiative",
-    template: "%s | Girls Global Initiative",
-  },
-  description:
-    "Advancing the rights, dignity, health, wellbeing and potential of girls in rural, remote and underserved communities.",
-  applicationName: "Girls Global Initiative",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
-    shortcut: ["/favicon.ico"],
-  },
-  manifest: "/site.webmanifest",
-  openGraph: {
-    title: "Girls Global Initiative",
-    description:
-      "Advancing the rights, dignity, health, wellbeing and potential of girls in rural, remote and underserved communities.",
-    type: "website",
-    locale: "en_GB",
-    siteName: "Girls Global Initiative",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const titleDefault =
+    settings.seoDefaultTitle.trim() || DEFAULT_SITE_TITLE;
+  const description =
+    settings.seoDefaultDescription.trim() || DEFAULT_SITE_DESCRIPTION;
+  const origin = getSiteOrigin();
+  const ogImage = `${origin}/brand/ggi-logo.png`;
+  const verification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+
+  return {
+    metadataBase: new URL(origin),
+    title: {
+      default: titleDefault,
+      template: "%s | Girls Global Initiative",
+    },
+    description,
+    applicationName: "Girls Global Initiative",
+    icons: {
+      icon: [
+        { url: "/favicon.ico" },
+        { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+      shortcut: ["/favicon.ico"],
+    },
+    manifest: "/site.webmanifest",
+    openGraph: {
+      title: titleDefault,
+      description,
+      type: "website",
+      locale: "en_GB",
+      siteName: "Girls Global Initiative",
+      url: origin,
+      images: [{ url: ogImage, alt: "Girls Global Initiative" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titleDefault,
+      description,
+      images: [ogImage],
+    },
+    ...(verification
+      ? { verification: { google: verification } }
+      : {}),
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { HeartHandshake, Sparkles } from "lucide-react";
 import {
   DualToneCards,
@@ -13,9 +14,31 @@ import {
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { PILLAR_FOCUS } from "@/content/site-copy";
 import { getPillar, pillars } from "@/features/content/mock-home";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export function generateStaticParams() {
   return pillars.map((pillar) => ({ pillar: pillar.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ pillar: string }>;
+}): Promise<Metadata> {
+  const { pillar: slug } = await params;
+  const pillar = getPillar(slug);
+  if (!pillar) {
+    return buildPageMetadata({
+      title: "What we do",
+      description: "Girls Global Initiative programme pillars.",
+      path: "/what-we-do",
+    });
+  }
+  return buildPageMetadata({
+    title: pillar.title,
+    description: pillar.description,
+    path: `/what-we-do/${pillar.slug}`,
+  });
 }
 
 export default async function PillarDetailPage({
