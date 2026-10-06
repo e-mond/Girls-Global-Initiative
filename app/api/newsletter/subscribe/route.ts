@@ -63,6 +63,7 @@ export async function POST(request: Request) {
     subject: mail.subject,
     text: mail.text,
     html: mail.html,
+    listUnsubscribeUrl: unsubscribeUrl,
   });
 
   await writeAuditLog({
