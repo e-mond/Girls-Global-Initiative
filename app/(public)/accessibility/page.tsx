@@ -17,14 +17,15 @@ export default function AccessibilityPage() {
   return (
     <PolicyPage
       title="Accessibility"
-      intro="Girls Global Initiative is committed to making this website accessible and usable by as many people as possible. The website is being developed with WCAG 2.2 AA accessibility principles in mind."
+      intro="Girls Global Initiative is committed to making this website accessible and usable by as many people as possible. The website is developed with WCAG 2.2 AA accessibility principles in mind."
     >
       <PolicySection title="Our commitment">
         <p>
           We aim to support keyboard use, screen readers, clear language,
           visible focus, meaningful labels, and respectful colour contrast
-          within the GGI brand. We do not claim that this website is fully
-          accessible or that every page has completed a formal audit.
+          within the GGI brand. We continue to improve accessibility and welcome
+          feedback. We do not claim that every page has completed a formal
+          third-party audit.
         </p>
       </PolicySection>
 
@@ -50,20 +51,20 @@ export default function AccessibilityPage() {
         </ul>
       </PolicySection>
 
-      <PolicySection title="Known limitations" awaiting>
+      <PolicySection title="Known limitations">
         <p>
           Some content images, complex admin tables, and third-party checkout
-          pages (Paystack) may present residual barriers. A published list of
-          known limitations and remediation timelines is awaiting official GGI
-          confirmation.
+          pages (such as Paystack) may present residual barriers. We work to
+          reduce these issues as the website develops and when you report them
+          to us.
         </p>
       </PolicySection>
 
-      <PolicySection title="Updates to this statement" awaiting>
+      <PolicySection title="Updates to this statement">
         <p>
           This accessibility statement may be updated as the website improves.
           The “Last updated” date at the top will change when revisions are
-          published. Formal review cadence is awaiting official GGI confirmation.
+          published.
         </p>
       </PolicySection>
 

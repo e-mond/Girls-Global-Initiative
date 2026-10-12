@@ -8,12 +8,12 @@
 ## Current Phase
 
 * **SEO, Security, Accessibility, Privacy & Legal Hardening**
-* **Status:** Favicon + sitemap fix in progress on `feature/favicon-sitemap-fix`
-* **Previous phase:** SEO / security / a11y / legal (merged PRs #28–#29)
-* **Current branch:** `feature/favicon-sitemap-fix`
+* **Status:** Policy page approval in progress on `feature/approve-policy-pages`
+* **Previous phase:** Bing / Cloudinary / Our Story (merged PR #31)
+* **Current branch:** `feature/approve-policy-pages`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Regenerate favicons from brand logo; harden sitemap lastmod and production origin.
-* **Owner notes:** Redeploy after merge so browsers/Search Console pick up new favicon and sitemap.
+* **Current objective:** Remove “Awaiting official GGI confirmation” markers from Privacy, Terms, and Accessibility; publish approved wording (Last updated 12 October 2026).
+* **Owner notes:** Redeploy after merge so live policy pages show approved text.
 
 ---
 
@@ -134,9 +134,9 @@ A local `.env.local` is present and remains gitignored.
 
 | Item | Status |
 | --- | --- |
-| `/privacy` | Implemented — Last updated header; information sharing / data security / policy updates; body **Awaiting GGI approval** where marked |
-| `/terms` | Implemented — Last updated header; acceptance, disclaimer, liability, changes, governing law (Ghana); remaining wording **Awaiting GGI approval** where marked |
-| `/accessibility` | Implemented — Last updated header; commitment language only |
+| `/privacy` | **Approved** — awaiting markers removed (12 Oct 2026) |
+| `/terms` | **Approved** — awaiting markers removed; governing law Ghana |
+| `/accessibility` | **Approved** — awaiting markers removed |
 | No unapproved legal claims | Implemented |
 
 ### Verification
@@ -1109,7 +1109,18 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Cloudflare prod hardening (this session)
+## Approve policy pages (this session)
+
+* Owner confirmed Privacy, Terms, and Accessibility wording — removed all
+  “Awaiting official GGI confirmation” markers from those pages.
+* `PolicyPage` no longer supports an awaiting banner; Last updated set to
+  **12 October 2026** via `content/policy-meta.ts`.
+* Docs (`PRIVACY-COOKIES-AND-LEGAL.md`, README) and progress matrix updated to
+  **Approved**; sitemap `SITEMAP_LASTMOD` → `2026-10-12`.
+* Donation bank-details “Awaiting official GGI account…” copy left unchanged
+  (separate operational item, not policy-page approval).
+
+## Cloudflare prod hardening (prior)
 
 * Production host: `girlsglobalinitiative.org`.
 * Fixed missing `previews.images` binding required by `wrangler preview`.

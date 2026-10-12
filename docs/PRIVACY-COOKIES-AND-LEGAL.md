@@ -38,12 +38,12 @@ If non-essential analytics or marketing technologies are introduced later, imple
 
 | Page | Route | Status |
 | --- | --- | --- |
-| Privacy Policy | `/privacy` | Route implemented; **Last updated** header present; Information sharing, Data security, Updates to policy included; sections marked **Awaiting official GGI confirmation** where required |
-| Terms of Use | `/terms` | Route implemented; **Last updated** header; Acceptance, Disclaimer, Limitation of liability, Changes to terms, Governing law (Ghana) included; remaining legal wording marked awaiting confirmation |
-| Accessibility Statement | `/accessibility` | Route implemented; **Last updated** header; commitment language only — no “fully accessible” claim |
+| Privacy Policy | `/privacy` | **Approved** — published without awaiting markers |
+| Terms of Use | `/terms` | **Approved** — includes acceptance, disclaimer, liability, changes, governing law (Ghana) |
+| Accessibility Statement | `/accessibility` | **Approved** — WCAG 2.2 AA commitment; no “fully accessible” claim |
 | Cookie Policy | — | Not created (see above) |
 
-Do not mark legal content **Verified** until GGI supplies approved wording.
+Privacy, Terms, and Accessibility wording is organisationally approved as of **12 October 2026**.
 
 ## Third-party services (technical)
 

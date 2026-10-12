@@ -6,7 +6,7 @@ import { getSiteOrigin } from "@/lib/seo/site-origin";
  * Stable content revision date for sitemap lastmod (YYYY-MM-DD).
  * Update when public marketing URLs or key page content ship.
  */
-const SITEMAP_LASTMOD = "2026-10-06";
+const SITEMAP_LASTMOD = "2026-10-12";
 
 const STATIC_PATHS = [
   "/",

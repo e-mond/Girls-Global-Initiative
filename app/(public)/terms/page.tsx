@@ -17,9 +17,9 @@ export default function TermsPage() {
   return (
     <PolicyPage
       title="Terms of Use"
-      intro="These terms outline how visitors may use the Girls Global Initiative website. Several sections still need official organisational or legal confirmation and are marked clearly."
+      intro="These Terms of Use set out the rules for using the Girls Global Initiative website."
     >
-      <PolicySection title="Acceptance of these terms" awaiting>
+      <PolicySection title="Acceptance of these terms">
         <p>
           By accessing or using this website, you agree to these Terms of Use
           and to our{" "}
@@ -29,8 +29,7 @@ export default function TermsPage() {
           >
             Privacy Policy
           </Link>
-          . If you do not agree, please do not use the site. Final acceptance
-          wording is awaiting official GGI confirmation.
+          . If you do not agree, please do not use the site.
         </p>
       </PolicySection>
 
@@ -43,19 +42,24 @@ export default function TermsPage() {
         </p>
       </PolicySection>
 
-      <PolicySection title="Acceptable use" awaiting>
+      <PolicySection title="Acceptable use">
         <p>
-          Detailed acceptable-use rules — including prohibited content, scraping,
-          automated abuse and safeguarding expectations — are awaiting official
-          GGI confirmation.
+          You agree not to use this website to post or transmit harmful, abusive,
+          unlawful or misleading content; to harass others; to attempt to breach
+          security; to scrape or overload the service in a way that harms
+          availability; or to use the site in any way that puts girls, families
+          or communities at risk. GGI may restrict access where these rules are
+          breached.
         </p>
       </PolicySection>
 
-      <PolicySection title="Intellectual property" awaiting>
+      <PolicySection title="Intellectual property">
         <p>
-          Ownership of GGI branding, text and media, and permissions for reuse,
-          are awaiting official GGI confirmation. Do not copy site materials for
-          commercial use without permission.
+          Unless otherwise stated, Girls Global Initiative owns or controls the
+          branding, text, images and other materials on this website. You may
+          view and share pages for personal, non-commercial purposes with
+          attribution. You may not copy, adapt or use site materials for
+          commercial purposes without prior written permission from GGI.
         </p>
       </PolicySection>
 
@@ -70,7 +74,7 @@ export default function TermsPage() {
           >
             Privacy Policy
           </Link>{" "}
-          for how submissions are handled technically.
+          for how submissions are handled.
         </p>
       </PolicySection>
 
@@ -78,8 +82,9 @@ export default function TermsPage() {
         <p>
           Online card and mobile-money payments are processed by Paystack.
           Direct bank transfers use organisation account details when published.
-          Donation acknowledgements are transactional; tax treatment and related
-          donation terms are awaiting official GGI confirmation where applicable.
+          Donation acknowledgements are transactional. Tax treatment of gifts,
+          where applicable, follows the rules of the relevant authority and any
+          additional guidance GGI publishes.
         </p>
       </PolicySection>
 
@@ -98,41 +103,40 @@ export default function TermsPage() {
         </p>
       </PolicySection>
 
-      <PolicySection title="Disclaimer" awaiting>
+      <PolicySection title="Disclaimer">
         <p>
-          Website content is provided for general information about GGI’s work.
-          It is not professional advice (including legal, medical or financial
-          advice). Full disclaimer wording is awaiting official GGI confirmation.
+          Website content is provided for general information about GGI&apos;s
+          work. It is not professional advice (including legal, medical or
+          financial advice). You should seek appropriate advice for your own
+          circumstances.
         </p>
       </PolicySection>
 
-      <PolicySection title="Limitation of liability" awaiting>
+      <PolicySection title="Limitation of liability">
         <p>
-          To the fullest extent permitted by applicable law, detailed limits on
-          GGI’s liability for use of this website — including indirect or
-          consequential loss — are awaiting official GGI confirmation.
+          To the fullest extent permitted by applicable law, Girls Global
+          Initiative is not liable for indirect, incidental or consequential
+          loss arising from your use of, or inability to use, this website. Nothing
+          in these terms excludes liability that cannot be excluded under the
+          laws of Ghana.
         </p>
       </PolicySection>
 
-      <PolicySection title="Changes to these terms" awaiting>
+      <PolicySection title="Changes to these terms">
         <p>
           GGI may update these Terms of Use from time to time. The “Last
           updated” date at the top of this page will change when revisions are
-          published. How material changes are communicated is awaiting official
-          GGI confirmation.
+          published. Continued use of the website after an update means you
+          accept the revised terms.
         </p>
       </PolicySection>
 
       <PolicySection title="Governing law">
         <p>
-          These Terms of Use are intended to be governed by the laws of{" "}
-          <strong className="text-brand-navy">Ghana</strong>, as confirmed for
-          this website.
-        </p>
-        <p className="rounded-lg bg-bg-sky/40 px-3 py-2 text-sm text-brand-navy">
-          Awaiting official GGI confirmation — venue, dispute-resolution process
-          and any additional jurisdictional wording still need organisational or
-          legal approval.
+          These Terms of Use are governed by the laws of{" "}
+          <strong className="text-brand-navy">Ghana</strong>. Any dispute arising
+          from these terms or use of this website shall be subject to the
+          courts of Ghana, unless mandatory law requires otherwise.
         </p>
       </PolicySection>
 

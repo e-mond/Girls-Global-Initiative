@@ -44,6 +44,6 @@ test.describe("sitemap route", () => {
     expect(body).toContain("/terms");
     expect(body).toContain("/accessibility");
     expect(body).toContain("/what-we-do/rights-dignity");
-    expect(body).toContain("2026-10-06");
+    expect(body).toContain("2026-10-12");
   });
 });
