@@ -1305,9 +1305,9 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-On `feature/donations-dual-method`: dual donation methods, manual transfer
-notify + admin verify, newsletter welcome email, form required markers,
-Eugenia + Patience team assets, authenticity CTA pass.
+On `feature/admin-team-media-donations-notifs`: admin Team CRUD (edit name/role,
+add/remove), Media upload location + preview, Donations JSON-safe responses,
+clearable notifications.
 
 ### Session Notes — Payments / email / authenticity / team (audit pass)
 
@@ -1374,6 +1374,16 @@ Eugenia + Patience team assets, authenticity CTA pass.
   account that owns `girls-global-initiative` / girlsglobalinitiative.org
   (`npm run build:cloudflare` + `npx opennextjs-cloudflare deploy` there,
   or Cloudflare Git deploy). Confirm `SMTP_PASS` remains a Secret after vars sync.
+
+### Session Notes — Admin Team / Media / Donations / Notifications
+
+* ContentEntityManager: edit mode (PATCH), role subtitle, photo upload for
+  team (`photoMediaId`), safe JSON parsing on all fetches.
+* Media: storage location select (`ggi`, `ggi/team`, `ggi/gallery`,
+  `ggi/news`, `ggi/events`) + local file preview before upload.
+* Donations API: try/catch returns JSON 500; client uses `readJsonResponse`
+  to avoid `Unexpected token '<'` HTML parse errors.
+* Notifications: dismiss one / Clear all via `localStorage`.
 
 ---
 

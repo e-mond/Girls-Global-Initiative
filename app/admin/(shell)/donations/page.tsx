@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
+import { readJsonResponse } from "@/lib/safe-json";
 
 type Item = {
   id: string;
@@ -38,13 +39,17 @@ export default function AdminDonationsPage() {
     if (q.trim()) params.set("q", q.trim());
     try {
       const response = await fetch(`/api/admin/donations?${params}`);
-      const json = await response.json();
+      const json = await readJsonResponse<{
+        data?: { items?: Item[] };
+        error?: { message?: string };
+      }>(response, "Could not load donations.");
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Could not load donations.");
       }
-      setItems(json.data.items);
+      setItems(json.data?.items ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load donations.");
+      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -66,7 +71,10 @@ export default function AdminDonationsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, action }),
       });
-      const json = await response.json();
+      const json = await readJsonResponse<{ error?: { message?: string } }>(
+        response,
+        "Action failed.",
+      );
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Action failed.");
       }

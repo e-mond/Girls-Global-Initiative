@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import type { ContentEntity, ContentStatus } from "@/features/governance/rbac";
+import { readJsonResponse } from "@/lib/safe-json";
 
 type ContentItem = {
   id: string;
@@ -37,6 +38,10 @@ export function ContentEntityManager({
   const [saving, setSaving] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
+  const [imagePreviews, setImagePreviews] = useState<Record<string, string>>(
+    {},
+  );
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   function primaryLabel(item: ContentItem): string {
     return String(
@@ -44,16 +49,25 @@ export function ContentEntityManager({
     );
   }
 
+  function secondaryLabel(item: ContentItem): string | null {
+    const role = item.roleTitle;
+    if (typeof role === "string" && role.trim()) return role;
+    return null;
+  }
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(`/api/admin/content/${entity}`);
-      const json = await response.json();
+      const json = await readJsonResponse<{
+        data?: { items?: ContentItem[] };
+        error?: { message?: string };
+      }>(response, "Could not load content.");
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Could not load content.");
       }
-      setItems(json.data.items);
+      setItems(json.data?.items ?? []);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Could not load content.",
@@ -66,6 +80,40 @@ export function ContentEntityManager({
   useEffect(() => {
     void load();
   }, [load]);
+
+  function startEdit(item: ContentItem) {
+    const next: Record<string, string> = {};
+    const nextPreviews: Record<string, string> = {};
+    for (const field of fields) {
+      const value = item[field.name];
+      next[field.name] =
+        value == null
+          ? ""
+          : typeof value === "number"
+            ? String(value)
+            : String(value);
+      if (field.type === "image") {
+        if (field.name === "photoMediaId") {
+          // Resolved preview URL is not stored on the row; clear until re-upload.
+          nextPreviews[field.name] = "";
+        } else if (typeof value === "string" && value) {
+          nextPreviews[field.name] = value;
+        }
+      }
+    }
+    setForm(next);
+    setImagePreviews(nextPreviews);
+    setEditingId(item.id);
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm({});
+    setImagePreviews({});
+    setError(null);
+  }
 
   async function uploadImage(fieldName: string, file: File) {
     setUploadingField(fieldName);
@@ -80,17 +128,36 @@ export function ContentEntityManager({
           file.name.replace(/\.[^.]+$/, "") ||
           "Uploaded image",
       );
+      if (entity === "team_members" || fieldName === "photoMediaId") {
+        body.append("folder", "ggi/team");
+      } else if (entity === "gallery_items") {
+        body.append("folder", "ggi/gallery");
+      } else if (entity === "news_posts") {
+        body.append("folder", "ggi/news");
+      } else if (entity === "events") {
+        body.append("folder", "ggi/events");
+      }
       const response = await fetch("/api/admin/media", {
         method: "POST",
         body,
       });
-      const json = await response.json();
+      const json = await readJsonResponse<{
+        data?: { item?: { id?: string; url?: string } };
+        error?: { message?: string };
+      }>(response, "Upload failed.");
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Upload failed.");
       }
+      const uploadedUrl = String(json.data?.item?.url ?? "");
+      const uploadedId = String(json.data?.item?.id ?? "");
       setForm((current) => ({
         ...current,
-        [fieldName]: String(json.data.item.url),
+        [fieldName]:
+          fieldName === "photoMediaId" ? uploadedId : uploadedUrl,
+      }));
+      setImagePreviews((current) => ({
+        ...current,
+        [fieldName]: uploadedUrl,
       }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed.");
@@ -99,15 +166,15 @@ export function ContentEntityManager({
     }
   }
 
-  async function onCreate(event: FormEvent) {
+  async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setSaving(true);
     setError(null);
 
-    const payload: Record<string, unknown> = {
-      ...(createDefaults ?? {}),
-      status: "draft",
-    };
+    const payload: Record<string, unknown> = editingId
+      ? { id: editingId }
+      : { ...(createDefaults ?? {}), status: "draft" };
+
     for (const field of fields) {
       const value = form[field.name] ?? "";
       if (field.type === "image" && field.required && !value) {
@@ -115,25 +182,41 @@ export function ContentEntityManager({
         setSaving(false);
         return;
       }
-      payload[field.name] =
-        field.type === "number" ? Number(value || 0) : value;
+      if (field.name === "photoMediaId") {
+        payload[field.name] = value.trim() ? value.trim() : null;
+      } else {
+        payload[field.name] =
+          field.type === "number" ? Number(value || 0) : value;
+      }
     }
 
     try {
       const response = await fetch(`/api/admin/content/${entity}`, {
-        method: "POST",
+        method: editingId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = await response.json();
+      const json = await readJsonResponse<{ error?: { message?: string } }>(
+        response,
+        editingId ? "Could not update item." : "Could not create item.",
+      );
       if (!response.ok) {
-        throw new Error(json?.error?.message ?? "Could not create item.");
+        throw new Error(
+          json?.error?.message ??
+            (editingId ? "Could not update item." : "Could not create item."),
+        );
       }
       setForm({});
+      setImagePreviews({});
+      setEditingId(null);
       await load();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Could not create item.",
+        err instanceof Error
+          ? err.message
+          : editingId
+            ? "Could not update item."
+            : "Could not create item.",
       );
     } finally {
       setSaving(false);
@@ -147,7 +230,10 @@ export function ContentEntityManager({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),
     });
-    const json = await response.json();
+    const json = await readJsonResponse<{ error?: { message?: string } }>(
+      response,
+      "Could not update status.",
+    );
     if (!response.ok) {
       setError(json?.error?.message ?? "Could not update status.");
       return;
@@ -164,11 +250,15 @@ export function ContentEntityManager({
       `/api/admin/content/${entity}?id=${encodeURIComponent(id)}`,
       { method: "DELETE" },
     );
-    const json = await response.json();
+    const json = await readJsonResponse<{ error?: { message?: string } }>(
+      response,
+      "Could not delete item.",
+    );
     if (!response.ok) {
       setError(json?.error?.message ?? "Could not delete item.");
       return;
     }
+    if (editingId === id) cancelEdit();
     await load();
   }
 
@@ -181,10 +271,19 @@ export function ContentEntityManager({
       />
 
       <form
-        onSubmit={onCreate}
+        onSubmit={onSubmit}
         className="space-y-4 rounded-2xl border border-border-default bg-bg-surface p-5"
       >
-        <p className="text-sm font-semibold text-brand-navy">Create draft</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm font-semibold text-brand-navy">
+            {editingId ? "Edit item" : "Create draft"}
+          </p>
+          {editingId ? (
+            <Button type="button" size="sm" variant="ghost" onClick={cancelEdit}>
+              Cancel edit
+            </Button>
+          ) : null}
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {fields.map((field) => (
             <label
@@ -224,14 +323,19 @@ export function ContentEntityManager({
                   {uploadingField === field.name ? (
                     <p className="text-xs text-text-muted">Uploading…</p>
                   ) : null}
-                  {form[field.name] ? (
+                  {form[field.name] || imagePreviews[field.name] ? (
                     <div className="flex flex-wrap items-center gap-3">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={form[field.name]}
-                        alt="Upload preview"
-                        className="h-20 w-20 rounded-lg object-cover"
-                      />
+                      {imagePreviews[field.name] ||
+                      (field.name !== "photoMediaId" && form[field.name]) ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={
+                            imagePreviews[field.name] || form[field.name]
+                          }
+                          alt="Upload preview"
+                          className="h-20 w-20 rounded-lg object-cover"
+                        />
+                      ) : null}
                       <p className="text-xs text-text-muted break-all">
                         Image ready
                       </p>
@@ -239,12 +343,16 @@ export function ContentEntityManager({
                         type="button"
                         size="sm"
                         variant="ghost"
-                        onClick={() =>
+                        onClick={() => {
                           setForm((current) => ({
                             ...current,
                             [field.name]: "",
-                          }))
-                        }
+                          }));
+                          setImagePreviews((current) => ({
+                            ...current,
+                            [field.name]: "",
+                          }));
+                        }}
                       >
                         Remove
                       </Button>
@@ -273,7 +381,11 @@ export function ContentEntityManager({
           ))}
         </div>
         <Button type="submit" disabled={saving || Boolean(uploadingField)}>
-          {saving ? "Saving…" : "Save draft"}
+          {saving
+            ? "Saving…"
+            : editingId
+              ? "Save changes"
+              : "Save draft"}
         </Button>
       </form>
 
@@ -308,13 +420,31 @@ export function ContentEntityManager({
                 <div className="min-w-0">
                   <p className="font-medium text-brand-navy">
                     {primaryLabel(item)}
+                    {editingId === item.id ? (
+                      <span className="ml-2 text-xs font-semibold text-brand-magenta">
+                        Editing
+                      </span>
+                    ) : null}
                   </p>
+                  {secondaryLabel(item) ? (
+                    <p className="mt-0.5 text-sm text-text-muted">
+                      {secondaryLabel(item)}
+                    </p>
+                  ) : null}
                   <p className="mt-1 text-xs uppercase tracking-wide text-text-muted">
                     {item.status}
                   </p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => startEdit(item)}
+                >
+                  Edit
+                </Button>
                 {item.status === "draft" ? (
                   <Button
                     type="button"
