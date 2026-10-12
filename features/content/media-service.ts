@@ -4,6 +4,10 @@ import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { mediaAssets } from "@/db/schema";
+import {
+  cloudinaryConfigured,
+  uploadImageToCloudinary,
+} from "@/lib/cloudinary";
 
 export type MediaRecord = {
   id: string;
@@ -84,14 +88,28 @@ export async function saveMediaUpload(input: {
   }
 
   const id = randomUUID();
-  const ext = extensionFor(input.mimeType);
-  const storageKey = `${id}.${ext}`;
-  const root = localStorageRoot();
-  await mkdir(root, { recursive: true });
-  await writeFile(path.join(root, storageKey), input.bytes);
-
-  const url = `/api/admin/media/${id}/file`;
   const now = new Date();
+  let storageKey: string;
+  let url: string;
+
+  if (cloudinaryConfigured()) {
+    const uploaded = await uploadImageToCloudinary({
+      bytes: input.bytes,
+      filename: input.filename,
+      mimeType: input.mimeType,
+    });
+    storageKey = uploaded.storageKey;
+    url = uploaded.url;
+  } else {
+    const ext = extensionFor(input.mimeType);
+    storageKey = `${id}.${ext}`;
+    const root = localStorageRoot();
+    await mkdir(root, { recursive: true });
+    await writeFile(path.join(root, storageKey), input.bytes);
+    // Public route so gallery/news/events can display without an admin session.
+    url = `/api/media/${id}/file`;
+  }
+
   const record: MediaRecord = {
     id,
     filename: input.filename,
@@ -159,10 +177,13 @@ export async function deleteMedia(id: string): Promise<boolean> {
     return false;
   }
 
-  try {
-    await unlink(path.join(localStorageRoot(), existing.storageKey));
-  } catch {
-    // File may already be missing in offline resets.
+  // Local-disk cleanup only; Cloudinary assets are left in place for audit trail.
+  if (!existing.url.startsWith("http")) {
+    try {
+      await unlink(path.join(localStorageRoot(), existing.storageKey));
+    } catch {
+      // File may already be missing in offline resets.
+    }
   }
 
   const db = getDb();

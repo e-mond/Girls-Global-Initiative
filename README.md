@@ -252,7 +252,7 @@ See `.env.example` for the full list. High-level groups:
 | `SMTP_*` | Transactional email |
 | `PAYSTACK_*` | Donation checkout and webhook verification |
 | `ORG_*` | Direct-transfer details on the donate page |
-| `CLOUDINARY_*` | Media library (credentials pending) |
+| `CLOUDINARY_*` | Media library uploads (Cloudinary when set; local fallback otherwise) |
 | `NEXT_PUBLIC_ENABLE_MSW` / `NEXT_PUBLIC_MOCK_API` | Offline mock behaviour |
 
 Never put real secrets in the README or commit them to Git.

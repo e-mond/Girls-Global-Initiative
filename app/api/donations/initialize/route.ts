@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   }
 
   const amountMinor = Math.round(parsed.data.amountGhs * 100);
-  const reference = createReference();
+  const reference = await createReference("paystack");
   const donorEmail = parsed.data.isAnonymous
     ? parsed.data.donorEmail || "anonymous@ggi.local"
     : (parsed.data.donorEmail as string);

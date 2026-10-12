@@ -11,7 +11,7 @@ export default function AdminNewsPage() {
         { name: "slug", label: "Slug", required: true },
         { name: "summary", label: "Summary", type: "textarea", required: true },
         { name: "body", label: "Body", type: "textarea" },
-        { name: "imageUrl", label: "Image URL" },
+        { name: "imageUrl", label: "Image", type: "image" },
         { name: "publishedOn", label: "Display date (text)" },
         { name: "sortOrder", label: "Sort order", type: "number" },
       ]}

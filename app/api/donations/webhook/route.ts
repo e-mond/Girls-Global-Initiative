@@ -4,7 +4,7 @@ import {
   findDonationByReference,
   markDonationOutcome,
   markDonationSuccess,
-  sendDonationThankYou,
+  scheduleDonationThankYou,
   verifyPaystackSignature,
 } from "@/features/donations/service";
 
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   if (event.event === "charge.success") {
     if (existing.status === "success") {
       if (existing.donorEmail && !existing.emailSentAt) {
-        await sendDonationThankYou(existing);
+        scheduleDonationThankYou(existing);
       }
       return NextResponse.json({ received: true, duplicate: true });
     }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     });
 
     if (updated) {
-      await sendDonationThankYou(updated);
+      scheduleDonationThankYou(updated);
     }
 
     await writeAuditLog({

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   }
 
   const amountMinor = Math.round(parsed.data.amountGhs * 100);
-  const reference = createReference("ggi_direct");
+  const reference = await createReference("direct");
   const noteParts = [
     parsed.data.transferredOn
       ? `Transferred on: ${parsed.data.transferredOn}`

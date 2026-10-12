@@ -146,6 +146,26 @@ Cloudflare DNS / custom domain on the Worker. Keep TLS on Cloudflare.
 Email SPF/DKIM/DMARC records are separate from the Worker hostname records —
 add both.
 
+## Error 1102 — Worker exceeded resource limits
+
+Cloudflare returns **Error 1102** when a Worker hits **CPU time** or **isolate
+memory** (128MB). Common GGI triggers: OpenNext cold start, SMTP handshake on
+the request path, and buffering large media on the Worker.
+
+Mitigations in this repo:
+
+* `wrangler.jsonc` `limits.cpu_ms` raised to `30000` (Workers Paid; Free plan
+  may still cap lower — upgrade if 1102 continues)
+* Homepage `revalidate = 120` to cut repeated SSR CPU
+* Donation thank-you SMTP deferred via Next.js `after()` / `waitUntil`
+* Media uploads prefer **Cloudinary** when `CLOUDINARY_*` secrets are set (no
+  Worker filesystem binary streaming for new uploads)
+* Newsletter blast stays **off** the Worker (`npm run announce:site-live` locally)
+
+Also add Cloudflare dashboard **WAF / Rate Limiting** in front of `/api/*`
+without removing application rate limits. Confirm the invocation outcome
+(`exceededCpu` vs `exceededMemory`) in Workers analytics when debugging.
+
 ## Scalability notes
 
 * Public pages are mostly static/SSG; dynamic admin/API routes scale with

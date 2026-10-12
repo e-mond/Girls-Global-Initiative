@@ -14,7 +14,7 @@ export default function AdminEventsPage() {
         { name: "location", label: "Location" },
         { name: "startsOn", label: "Starts on (text)" },
         { name: "endsOn", label: "Ends on (text)" },
-        { name: "imageUrl", label: "Image URL" },
+        { name: "imageUrl", label: "Image", type: "image" },
         { name: "sortOrder", label: "Sort order", type: "number" },
       ]}
       createDefaults={{ summary: "", body: "", sortOrder: 0 }}

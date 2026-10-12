@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { initializeDonationSchema } from "../../features/donations/schemas";
-import { mapPaystackGatewayStatus } from "../../features/donations/service";
+import {
+  createReference,
+  mapPaystackGatewayStatus,
+} from "../../features/donations/service";
 
 test.describe("donation schemas", () => {
   test("requires email unless anonymous", () => {
@@ -33,6 +36,15 @@ test.describe("Paystack gateway status mapping", () => {
   });
 });
 
+test.describe("donation references", () => {
+  test("creates readable daily receipt references", async () => {
+    const paystack = await createReference("paystack");
+    const direct = await createReference("direct");
+    expect(paystack).toMatch(/^GGI-\d{8}-\d{4}$/);
+    expect(direct).toMatch(/^GGI-MOMO-\d{8}-\d{4}$/);
+  });
+});
+
 test.describe("donate page", () => {
   test("renders dual payment method choice", async ({ page }) => {
     await page.goto("/get-involved/donate", { waitUntil: "domcontentloaded" });
@@ -56,13 +68,13 @@ test.describe("donate page", () => {
 
 test.describe("donation outcome pages", () => {
   test("failed page offers retry and MoMo fallback", async ({ page }) => {
-    await page.goto("/get-involved/donate/failed?reference=ggi_test_fail", {
+    await page.goto("/get-involved/donate/failed?reference=GGI-20261012-0001", {
       waitUntil: "domcontentloaded",
     });
     await expect(
       page.getByRole("heading", { name: /Payment not completed/i }),
     ).toBeVisible();
-    await expect(page.getByText(/ggi_test_fail/i)).toBeVisible();
+    await expect(page.getByText(/GGI-20261012-0001/i)).toBeVisible();
     await expect(
       page.getByRole("link", { name: /Try Paystack again/i }),
     ).toBeVisible();
