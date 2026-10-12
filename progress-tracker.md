@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **Fix Wrangler Free-plan deploy**
-* **Status:** In progress on `feature/fix-wrangler-free-plan-cpu-limit`
-* **Previous phase:** Stale static assets / CSP (merged PR #35)
-* **Current branch:** `feature/fix-wrangler-free-plan-cpu-limit`
+* **Cloudflare deploy metadata fetch**
+* **Status:** In progress on `feature/fix-cf-deploy-metadata-fetch`
+* **Previous phase:** Free-plan cpu_ms fix (merged PR #36) + a11y (PR #37)
+* **Current branch:** `feature/fix-cf-deploy-metadata-fetch`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Remove unsupported `limits.cpu_ms` (Free plan API 100328); preserve MoMo vars + custom domain on deploy.
-* **Owner notes:** Re-run Cloudflare deploy after merge, then Purge Everything.
+* **Current objective:** Harden wrangler custom-domain route sync; document retry for dashboard metadata fetch failures.
+* **Owner notes:** Retry Cloudflare deploy (clear build cache if it fails again), then Purge Everything.
 
 ---
 
@@ -1111,7 +1111,14 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Wrangler Free-plan deploy fix (this session)
+## CF deploy metadata fetch (this session)
+
+* Latest CI deploy failed after successful OpenNext build with:
+  `Unable to fetch bindings, routes, or services metadata from the dashboard`
+  (Cloudflare API / remote-config sync — usually transient).
+* Matched `zone_name` on custom-domain route; documented retry + cache-clear.
+
+## Wrangler Free-plan deploy fix (prior)
 
 * CI deploy failed: `CPU limits are not supported for the Free plan` (100328)
   after `limits.cpu_ms` was added — removed.

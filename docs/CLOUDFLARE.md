@@ -28,6 +28,14 @@ npm run deploy
 # → opennextjs-cloudflare build && opennextjs-cloudflare deploy
 ```
 
+### Deploy errors
+
+| Error | Cause | Fix |
+| --- | --- | --- |
+| `CPU limits are not supported for the Free plan` (`100328`) | `limits.cpu_ms` in `wrangler.jsonc` | Do not set CPU limits on Free |
+| `Unable to fetch bindings, routes, or services metadata from the dashboard` | Transient Cloudflare API / remote-config sync timeout | **Retry deploy** (often succeeds on 2nd try). Optionally clear Cloudflare **Build cache**, then retry. Local fallback: `npm run deploy` with a Wrangler API token. |
+| Custom domain / MoMo vars disappear after deploy | Dashboard-only settings overwritten by wrangler | Keep `ORG_*` and `routes` (custom domain) in `wrangler.jsonc` |
+
 ### After every production deploy — purge CDN cache
 
 Next/OpenNext can emit HTML with long shared-cache TTLs. If Cloudflare keeps

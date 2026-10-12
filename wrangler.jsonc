@@ -38,11 +38,12 @@
     "ORG_ACCOUNT_NAME": "Philomena Larbi",
     "ORG_MOBILE_MONEY": "0241351294"
   },
-  // Keep the custom domain attached when deploying from CI (do not rely on
-  // dashboard-only route config — wrangler overwrites remote config).
+  // Keep the custom domain attached when deploying from CI (wrangler overwrites
+  // remote config). zone_name matches the dashboard custom-domain binding.
   "routes": [
     {
       "pattern": "girlsglobalinitiative.org",
+      "zone_name": "girlsglobalinitiative.org",
       "custom_domain": true
     }
   ],
