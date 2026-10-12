@@ -40,7 +40,11 @@ export async function generateMetadata(): Promise<Metadata> {
     settings.seoDefaultDescription.trim() || DEFAULT_SITE_DESCRIPTION;
   const origin = getSiteOrigin();
   const ogImage = `${origin}/brand/ggi-logo.png`;
-  const verification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  // Bing Webmaster Tools HTML meta tag (msvalidate.01).
+  const bingVerification =
+    process.env.BING_SITE_VERIFICATION?.trim() ||
+    "861FC8B82DE81460937BBDDA6D0EAFCF";
 
   return {
     metadataBase: new URL(origin),
@@ -77,9 +81,12 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [ogImage],
     },
-    ...(verification
-      ? { verification: { google: verification } }
-      : {}),
+    verification: {
+      ...(googleVerification ? { google: googleVerification } : {}),
+      other: {
+        "msvalidate.01": bingVerification,
+      },
+    },
   };
 }
 

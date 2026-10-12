@@ -247,6 +247,7 @@ See `.env.example` for the full list. High-level groups:
 | `AUTH_SECRET` / `AUTH_URL` | Auth.js session configuration |
 | `NEXT_PUBLIC_SITE_URL` | Canonical public site origin (preferred for SEO) |
 | `GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token |
+| `BING_SITE_VERIFICATION` | Optional Bing Webmaster `msvalidate.01` token |
 | `AUTH_DEV_*` | Local bootstrap staff account (dev) |
 | `SMTP_*` | Transactional email |
 | `PAYSTACK_*` | Donation checkout and webhook verification |

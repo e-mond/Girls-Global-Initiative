@@ -57,3 +57,13 @@ Homepage emits Organization + WebSite JSON-LD (`components/seo/json-ld.tsx`). So
 5. Use URL Inspection on a few public pages after crawl.
 
 Do not claim the site is “verified in Search Console” until GGI completes these steps.
+
+## Bing Webmaster Tools
+
+The root layout emits:
+
+```html
+<meta name="msvalidate.01" content="…" />
+```
+
+Set `BING_SITE_VERIFICATION` (content value only) in `.env.local` / Cloudflare Worker vars. Keep the meta tag after verification succeeds.

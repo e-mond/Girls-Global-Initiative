@@ -51,6 +51,11 @@ must show `"authSecret":"ok"` and `"database":"ok"`. Until then, login will 500.
 | `SMTP_FROM` | Text / vars | `Girls Global Initiative <mailbox@…>` |
 | `SMTP_REPLY_TO` | Text / vars | Optional; defaults to From mailbox |
 | `SMTP_PASS` | **Secret only** | App password / ESP SMTP password — never in git |
+| `BING_SITE_VERIFICATION` | Text / vars | Bing Webmaster `msvalidate.01` content value |
+| `CLOUDINARY_CLOUD_NAME` | Text / vars | Cloudinary cloud name |
+| `CLOUDINARY_FOLDER` | Text / vars | e.g. `ggi` |
+| `CLOUDINARY_API_KEY` | **Secret only** | Cloudinary API key — never in git |
+| `CLOUDINARY_API_SECRET` | **Secret only** | Cloudinary API secret — never in git |
 
 Do **not** put secrets only in `.env.local` — that file never reaches Cloudflare.
 If you have multiple Cloudflare accounts, set secrets on the account that owns
