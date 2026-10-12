@@ -14,7 +14,8 @@ Do not invent credentials; obtain them from GGI before go-live.
 | `PAYSTACK_PUBLIC_KEY` | For card checkout | Client-visible key |
 | `PAYSTACK_WEBHOOK_SECRET` | Optional | Defaults to secret key for HMAC |
 | `SMTP_HOST` / `SMTP_FROM` | For email | Acknowledgements / opt-in mail |
-| `ORG_BANK_NAME` / `ORG_ACCOUNT_*` | Recommended | Direct-transfer details on donate page |
+| `ORG_MOBILE_MONEY` / `ORG_ACCOUNT_NAME` | Recommended | MoMo / direct-transfer details on donate page |
+| `ORG_BANK_NAME` / `ORG_ACCOUNT_NUMBER` | Optional | Publish when bank details are available |
 | `CLOUDINARY_*` | Later | Media library (local fallback until set) |
 
 Never commit real secrets. Use platform secret stores / `.env.local` (gitignored).

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import {
   findDonationByReference,
+  markDonationOutcome,
   markDonationSuccess,
   sendDonationThankYou,
   verifyPaystackSignature,
@@ -38,43 +39,69 @@ export async function POST(request: Request) {
     );
   }
 
-  // Always acknowledge quickly; only process charge.success for records.
-  if (event.event !== "charge.success" || !event.data?.reference) {
+  const reference = event.data?.reference;
+  if (!reference) {
     return NextResponse.json({ received: true });
   }
 
-  const reference = event.data.reference;
   const existing = await findDonationByReference(reference);
   if (!existing) {
     return NextResponse.json({ received: true });
   }
 
-  if (existing.status === "success") {
-    if (existing.donorEmail && !existing.emailSentAt) {
-      await sendDonationThankYou(existing);
+  if (event.event === "charge.success") {
+    if (existing.status === "success") {
+      if (existing.donorEmail && !existing.emailSentAt) {
+        await sendDonationThankYou(existing);
+      }
+      return NextResponse.json({ received: true, duplicate: true });
     }
-    return NextResponse.json({ received: true, duplicate: true });
+
+    const updated = await markDonationSuccess({
+      reference,
+      paystackEventId: event.data?.id != null ? String(event.data.id) : null,
+      channel: event.data?.channel ?? null,
+      paidAt: event.data?.paid_at ? new Date(event.data.paid_at) : new Date(),
+    });
+
+    if (updated) {
+      await sendDonationThankYou(updated);
+    }
+
+    await writeAuditLog({
+      actorUserId: null,
+      action: "donation.webhook_success",
+      entityType: "donation",
+      entityId: updated?.id ?? existing.id,
+      summary: "Paystack charge.success applied",
+      metadata: { reference, duplicate: false },
+    });
+
+    return NextResponse.json({ received: true });
   }
 
-  const updated = await markDonationSuccess({
-    reference,
-    paystackEventId: event.data.id != null ? String(event.data.id) : null,
-    channel: event.data.channel ?? null,
-    paidAt: event.data.paid_at ? new Date(event.data.paid_at) : new Date(),
-  });
+  if (event.event === "charge.failed") {
+    if (existing.status === "success") {
+      return NextResponse.json({ received: true, ignored: true });
+    }
 
-  if (updated) {
-    await sendDonationThankYou(updated);
+    const updated = await markDonationOutcome({
+      reference,
+      status: "failed",
+      channel: event.data?.channel ?? null,
+    });
+
+    await writeAuditLog({
+      actorUserId: null,
+      action: "donation.webhook_failed",
+      entityType: "donation",
+      entityId: updated?.id ?? existing.id,
+      summary: "Paystack charge.failed applied",
+      metadata: { reference },
+    });
+
+    return NextResponse.json({ received: true });
   }
-
-  await writeAuditLog({
-    actorUserId: null,
-    action: "donation.webhook_success",
-    entityType: "donation",
-    entityId: updated?.id ?? existing.id,
-    summary: "Paystack charge.success applied",
-    metadata: { reference, duplicate: false },
-  });
 
   return NextResponse.json({ received: true });
 }

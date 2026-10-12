@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormPrivacyNotice } from "@/components/forms/form-privacy-notice";
 import { Button } from "@/components/ui/button";
 import { PRESET_AMOUNTS_GHS } from "@/features/donations/schemas";
@@ -27,7 +27,13 @@ function RequiredMark() {
 
 export function DonationForm() {
   const router = useRouter();
-  const [method, setMethod] = useState<MethodChoice>("choose");
+  const searchParams = useSearchParams();
+  const [method, setMethod] = useState<MethodChoice>(() => {
+    const requested = searchParams.get("method");
+    return requested === "direct" || requested === "paystack"
+      ? requested
+      : "choose";
+  });
   const [amount, setAmount] = useState<number>(50);
   const [custom, setCustom] = useState("");
   const [frequency, setFrequency] = useState<"one_time" | "monthly_intent">(
@@ -44,6 +50,13 @@ export function DonationForm() {
   const [transferReference, setTransferReference] = useState("");
   const [transferredOn, setTransferredOn] = useState("");
   const [donorNote, setDonorNote] = useState("");
+
+  useEffect(() => {
+    const requested = searchParams.get("method");
+    if (requested === "direct" || requested === "paystack") {
+      setMethod(requested);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     void (async () => {
@@ -401,16 +414,19 @@ export function DonationForm() {
               Direct payment details
             </h2>
             <p className="mt-2 text-sm text-text-muted">
-              Make a bank or approved direct payment using GGI&apos;s official
-              account details. Keep your receipt. Submitting a notification below
-              does not mark the gift as successful until staff verify it.
+              Send a mobile-money transfer (or bank transfer when published)
+              using GGI&apos;s official details. Keep your receipt. Submitting a
+              notification below does not mark the gift as successful until staff
+              verify it.
             </p>
             {transfer?.configured ? (
               <dl className="mt-4 space-y-3 text-sm text-brand-navy">
-                {transfer.bankName ? (
+                {transfer.mobileMoney ? (
                   <div>
-                    <dt className="font-semibold">Bank</dt>
-                    <dd>{transfer.bankName}</dd>
+                    <dt className="font-semibold">MoMo number</dt>
+                    <dd className="font-mono text-base tracking-wide">
+                      {transfer.mobileMoney}
+                    </dd>
                   </div>
                 ) : null}
                 {transfer.accountName ? (
@@ -419,16 +435,25 @@ export function DonationForm() {
                     <dd>{transfer.accountName}</dd>
                   </div>
                 ) : null}
+                {transfer.bankName ? (
+                  <div>
+                    <dt className="font-semibold">Bank</dt>
+                    <dd>{transfer.bankName}</dd>
+                  </div>
+                ) : null}
                 {transfer.accountNumber ? (
                   <div>
                     <dt className="font-semibold">Account number</dt>
                     <dd>{transfer.accountNumber}</dd>
                   </div>
                 ) : null}
-                {transfer.mobileMoney ? (
+                {!transfer.bankName && !transfer.accountNumber ? (
                   <div>
-                    <dt className="font-semibold">Mobile money</dt>
-                    <dd>{transfer.mobileMoney}</dd>
+                    <dt className="font-semibold">Bank details</dt>
+                    <dd className="text-text-muted">
+                      Bank account details will be published here when available.
+                      Use MoMo for now.
+                    </dd>
                   </div>
                 ) : null}
                 {transfer.notes ? (

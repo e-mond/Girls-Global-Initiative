@@ -259,6 +259,44 @@ export async function markDonationSuccess(input: {
   return serialize(row as never);
 }
 
+/** Mark a Paystack checkout as failed or abandoned (never overrides success). */
+export async function markDonationOutcome(input: {
+  reference: string;
+  status: "failed" | "abandoned";
+  channel?: string | null;
+}): Promise<DonationRecord | null> {
+  const db = getDb();
+  const now = new Date();
+
+  if (!db) {
+    const found = store().items.find(
+      (item) => item.reference === input.reference,
+    );
+    if (!found) return null;
+    if (found.status === "success") return found;
+    found.status = input.status;
+    found.channel = input.channel ?? found.channel;
+    found.updatedAt = now.toISOString();
+    return found;
+  }
+
+  const existing = await findDonationByReference(input.reference);
+  if (!existing) return null;
+  if (existing.status === "success") return existing;
+
+  const [row] = await db
+    .update(donations)
+    .set({
+      status: input.status,
+      channel: input.channel ?? existing.channel,
+      updatedAt: now,
+    })
+    .where(eq(donations.reference, input.reference))
+    .returning();
+
+  return serialize(row as never);
+}
+
 export async function markDonationEmailResult(input: {
   id: string;
   sent: boolean;
@@ -441,11 +479,44 @@ export async function initializePaystackTransaction(input: {
   }
 }
 
-export async function verifyPaystackTransaction(
-  reference: string,
-): Promise<{ success: boolean; channel?: string; paidAt?: string }> {
+export type PaystackVerifyOutcome =
+  | "success"
+  | "failed"
+  | "abandoned"
+  | "pending"
+  | "unknown";
+
+export function mapPaystackGatewayStatus(
+  status: string | undefined,
+): PaystackVerifyOutcome {
+  switch ((status ?? "").toLowerCase()) {
+    case "success":
+      return "success";
+    case "failed":
+    case "reversed":
+      return "failed";
+    case "abandoned":
+      return "abandoned";
+    case "ongoing":
+    case "processing":
+    case "queued":
+    case "pending":
+      return "pending";
+    default:
+      return "unknown";
+  }
+}
+
+export async function verifyPaystackTransaction(reference: string): Promise<{
+  outcome: PaystackVerifyOutcome;
+  success: boolean;
+  channel?: string;
+  paidAt?: string;
+}> {
   const secret = process.env.PAYSTACK_SECRET_KEY?.trim();
-  if (!secret) return { success: false };
+  if (!secret) {
+    return { outcome: "unknown", success: false };
+  }
 
   try {
     const response = await fetch(
@@ -457,15 +528,14 @@ export async function verifyPaystackTransaction(
     const json = (await response.json()) as {
       data?: { status?: string; channel?: string; paid_at?: string };
     };
-    if (json.data?.status === "success") {
-      return {
-        success: true,
-        channel: json.data.channel,
-        paidAt: json.data.paid_at,
-      };
-    }
-    return { success: false };
+    const outcome = mapPaystackGatewayStatus(json.data?.status);
+    return {
+      outcome,
+      success: outcome === "success",
+      channel: json.data?.channel,
+      paidAt: json.data?.paid_at,
+    };
   } catch {
-    return { success: false };
+    return { outcome: "unknown", success: false };
   }
 }

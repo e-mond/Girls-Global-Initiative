@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   findDonationByReference,
+  markDonationOutcome,
   markDonationSuccess,
   sendDonationThankYou,
   verifyPaystackTransaction,
@@ -28,11 +29,14 @@ export async function GET(_request: Request, context: RouteContext) {
 
   if (
     record.status !== "success" &&
+    record.status !== "failed" &&
+    record.status !== "abandoned" &&
+    record.status !== "rejected" &&
     record.frequency === "one_time" &&
     record.method === "paystack"
   ) {
     const verified = await verifyPaystackTransaction(reference);
-    if (verified.success) {
+    if (verified.outcome === "success") {
       record =
         (await markDonationSuccess({
           reference,
@@ -43,6 +47,16 @@ export async function GET(_request: Request, context: RouteContext) {
         await sendDonationThankYou(record);
         record = (await findDonationByReference(reference)) ?? record;
       }
+    } else if (
+      verified.outcome === "failed" ||
+      verified.outcome === "abandoned"
+    ) {
+      record =
+        (await markDonationOutcome({
+          reference,
+          status: verified.outcome,
+          channel: verified.channel ?? null,
+        })) ?? record;
     }
   }
 

@@ -7,6 +7,7 @@ export const metadata = buildPageMetadata({
   path: "/get-involved/donate",
 });
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { BookOpen, HeartHandshake, School, Users } from "lucide-react";
 import {
@@ -14,8 +15,10 @@ import {
   ProcessBand,
 } from "@/components/layout/editorial";
 import { ContentSection, CtaBand } from "@/components/layout/content-section";
+import { PageSkeleton } from "@/components/layout/page-skeleton";
 import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import { DonationForm } from "@/components/donations/donation-form";
+
 export default function DonatePage() {
   return (
     <>
@@ -42,7 +45,7 @@ export default function DonatePage() {
       <ContentSection
         tone="navy"
         title="Give toward education, health, mentorship and rural girl support."
-        description="Choose Paystack checkout or a direct bank transfer — both are supported. Monthly giving is captured as interest until recurring billing launches."
+        description="Choose Paystack checkout or a direct MoMo transfer — both are supported. Monthly giving is captured as interest until recurring billing launches."
       />
 
       <ContentSection
@@ -126,7 +129,9 @@ export default function DonatePage() {
             </p>
           </aside>
           <div className="rounded-[1.75rem] border border-border-default bg-bg-surface p-6 sm:p-8">
-            <DonationForm />
+            <Suspense fallback={<PageSkeleton variant="public" />}>
+              <DonationForm />
+            </Suspense>
           </div>
         </div>
       </ContentSection>

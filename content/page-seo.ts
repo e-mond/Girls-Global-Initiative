@@ -111,6 +111,11 @@ export const PAGE_SEO = {
     title: "Thank you for your donation",
     description: "Donation confirmation for Girls Global Initiative supporters.",
   },
+  donateFailed: {
+    title: "Payment not completed",
+    description:
+      "Paystack checkout was not completed. Try again or use mobile money.",
+  },
   newsletterConfirm: {
     title: "Confirm newsletter",
     description: "Confirm your Girls Global Initiative newsletter subscription.",

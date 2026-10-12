@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **SEO, Security, Accessibility, Privacy & Legal Hardening**
-* **Status:** Policy page approval in progress on `feature/approve-policy-pages`
-* **Previous phase:** Bing / Cloudinary / Our Story (merged PR #31)
-* **Current branch:** `feature/approve-policy-pages`
+* **Donations — Paystack outcomes + MoMo**
+* **Status:** In progress on `feature/paystack-outcome-pages`
+* **Previous phase:** Policy page approval (merged PR #32)
+* **Current branch:** `feature/paystack-outcome-pages`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Remove “Awaiting official GGI confirmation” markers from Privacy, Terms, and Accessibility; publish approved wording (Last updated 12 October 2026).
-* **Owner notes:** Redeploy after merge so live policy pages show approved text.
+* **Current objective:** Harden Paystack success confirmation and failure fallback pages; publish MoMo `0241351294` (Philomena Larbi) for manual payment until bank details arrive.
+* **Owner notes:** Set the same `ORG_*` and Paystack secrets on Cloudflare before production checkout/MoMo display works live.
 
 ---
 
@@ -516,7 +516,9 @@ Do not hardcode or assume the production domain.
 
 ## Paystack Credentials
 
-Paystack credentials have not yet been supplied by GGI.
+Paystack keys are present in local `.env.local` (gitignored). Mirror the same
+keys (and `ORG_*` MoMo values) into the Cloudflare production secret store
+before go-live checkout.
 
 Donation functionality should therefore use the approved mock/MSW contract until the real credentials and account configuration are available.
 
@@ -1109,7 +1111,18 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Approve policy pages (this session)
+## Paystack outcomes + MoMo (this session)
+
+* Added `/get-involved/donate/failed` with retry + MoMo fallback CTAs.
+* Hardened `/get-involved/donate/thanks` confirmation: soft-verify polling,
+  Paystack `trxref` support, redirect to failed on terminal failure statuses.
+* Soft-verify + webhook now mark `failed` / `abandoned` (never override success);
+  webhook handles `charge.failed`.
+* Local MoMo: `ORG_MOBILE_MONEY=0241351294`, `ORG_ACCOUNT_NAME=Philomena Larbi`
+  (gitignored `.env.local`). Bank fields left blank until supplied.
+* Donate form deep-link `?method=direct` for failure fallbacks.
+
+## Approve policy pages (prior)
 
 * Owner confirmed Privacy, Terms, and Accessibility wording — removed all
   “Awaiting official GGI confirmation” markers from those pages.
