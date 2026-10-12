@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import { POLICY_LAST_UPDATED_ISO, POLICY_LAST_UPDATED_LABEL } from "@/content/policy-meta";
+import {
+  POLICY_LAST_UPDATED_ISO,
+  POLICY_LAST_UPDATED_LABEL,
+} from "@/content/policy-meta";
 
 /** Shared prose shell for public policy / legal pages. */
 export function PolicyPage({
@@ -31,16 +34,6 @@ export function PolicyPage({
         <p className="text-base leading-relaxed text-text-muted sm:text-lg">
           {intro}
         </p>
-        <p className="rounded-xl border border-border-default bg-bg-surface px-4 py-3 text-sm text-brand-navy">
-          <span className="font-semibold">Status:</span> Official wording for
-          several sections is{" "}
-          <span className="font-semibold">
-            awaiting official GGI confirmation
-          </span>
-          . Sections marked below still need organisational or legal approval.
-          This page is not legal advice and does not claim verified regulatory
-          compliance.
-        </p>
       </header>
       <div className="prose-policy mt-10 space-y-8 text-sm leading-relaxed text-text-muted sm:text-base">
         {children}
@@ -52,22 +45,15 @@ export function PolicyPage({
 export function PolicySection({
   title,
   children,
-  awaiting = false,
 }: {
   title: string;
   children: ReactNode;
-  awaiting?: boolean;
 }) {
   return (
     <section className="space-y-3">
       <h2 className="font-display text-xl font-bold text-brand-navy">
         {title}
       </h2>
-      {awaiting ? (
-        <p className="rounded-lg bg-bg-sky/40 px-3 py-2 text-sm text-brand-navy">
-          Awaiting official GGI confirmation
-        </p>
-      ) : null}
       {children}
     </section>
   );

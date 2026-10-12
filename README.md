@@ -203,7 +203,7 @@ Details: [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md). Do not claim a full for
 - Essential Auth.js cookies only — **no cookie consent banner** while no non-essential trackers exist
 - No standalone Cookie Policy route; inventory lives in `/privacy` and [docs/PRIVACY-COOKIES-AND-LEGAL.md](docs/PRIVACY-COOKIES-AND-LEGAL.md)
 - Public routes: `/privacy`, `/terms`, `/accessibility` (footer Legal nav)
-- Policy body text that needs organisational approval is marked **Awaiting official GGI confirmation**
+- Privacy, Terms and Accessibility pages are published as approved GGI policy wording
 
 ---
 

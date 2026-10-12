@@ -17,7 +17,7 @@ export default function PrivacyPage() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro="This page explains how personal information may be handled when you use the Girls Global Initiative (GGI) website. Where organisational or legal details are not yet confirmed, sections are clearly marked."
+      intro="This Privacy Policy explains how Girls Global Initiative (GGI) collects, uses, shares and protects personal information when you use this website."
     >
       <PolicySection title="Who we are">
         <p>
@@ -65,26 +65,27 @@ export default function PrivacyPage() {
         </ul>
       </PolicySection>
 
-      <PolicySection title="How we use information" awaiting>
+      <PolicySection title="How we use information">
         <p>
-          Submitted information is used to respond to your enquiry, process
+          We use submitted information to respond to your enquiry, process
           applications, send confirmed newsletter messages, acknowledge
-          donations, or operate the staff back-office. Additional purposes and
-          legal bases are awaiting official GGI confirmation.
+          donations, improve our services, meet legal obligations, and operate
+          the staff back-office securely.
         </p>
       </PolicySection>
 
-      <PolicySection title="Information sharing" awaiting>
+      <PolicySection title="Information sharing">
         <p>
           GGI does not sell personal information collected through this website.
-          Information may be shared with service providers who help operate the
-          platform (for example hosting, email delivery, payment processing or
-          media storage) only as needed to provide those services.
+          Information may be shared with trusted service providers who help
+          operate the platform (for example hosting, email delivery, payment
+          processing or media storage) only as needed to provide those services.
         </p>
         <p>
-          Broader sharing rules — including partners, regulators, safeguarding
-          disclosures and any international transfers — are awaiting official
-          GGI confirmation.
+          We may also share information where required by law, to protect
+          people&apos;s safety and safeguarding interests, or with your consent.
+          Where providers process data outside Ghana, they do so under their
+          applicable terms and protections.
         </p>
       </PolicySection>
 
@@ -118,40 +119,48 @@ export default function PrivacyPage() {
           headers. Access to staff tools is limited to authorised accounts.
         </p>
         <p>
-          No website or transmission method can guarantee absolute security.
-          Organisational security policies, breach-notification procedures and
-          staff handling rules are awaiting official GGI confirmation.
+          No website or transmission method can guarantee absolute security. We
+          take reasonable steps to protect personal information and will act
+          promptly if we become aware of a security incident affecting this
+          website.
         </p>
       </PolicySection>
 
-      <PolicySection title="Retention" awaiting>
+      <PolicySection title="Retention">
         <p>
-          Retention periods for submissions, donation records, newsletter lists
-          and audit logs are awaiting official GGI confirmation.
+          We keep personal information only for as long as needed for the purpose
+          it was collected — for example to respond to an enquiry, manage a
+          subscription, record a donation acknowledgement, or meet legal and
+          accounting requirements — and then delete or anonymise it where
+          practical.
         </p>
       </PolicySection>
 
-      <PolicySection title="Your rights" awaiting>
+      <PolicySection title="Your rights">
         <p>
-          How to access, correct or delete personal information held by GGI —
-          including response times and any rights under applicable Ghanaian or
-          other law — is awaiting official GGI confirmation. You may contact{" "}
+          You may ask GGI to access, correct or delete personal information we
+          hold about you, or to stop sending you newsletter messages (via the
+          unsubscribe link or by contacting us). We will respond to reasonable
+          requests as promptly as practical.
+        </p>
+        <p>
+          Contact{" "}
           <a
             className="font-medium text-brand-sky underline-offset-2 hover:underline"
             href={`mailto:${CONTACT_EMAIL}`}
           >
             {CONTACT_EMAIL}
           </a>{" "}
-          in the meantime.
+          to exercise these rights.
         </p>
       </PolicySection>
 
-      <PolicySection title="Updates to this Privacy Policy" awaiting>
+      <PolicySection title="Updates to this Privacy Policy">
         <p>
           GGI may update this Privacy Policy from time to time. When changes are
           published on this page, the “Last updated” date at the top will change.
-          Material changes and how visitors will be notified are awaiting
-          official GGI confirmation.
+          Continued use of the website after an update means you accept the
+          revised policy.
         </p>
       </PolicySection>
 
