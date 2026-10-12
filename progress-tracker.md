@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **Fix stale static assets / CSP**
-* **Status:** In progress on `feature/fix-stale-static-assets-csp`
-* **Previous phase:** Admin upload + readable refs + Worker 1102 (merged PR #34)
-* **Current branch:** `feature/fix-stale-static-assets-csp`
+* **Fix Wrangler Free-plan deploy**
+* **Status:** In progress on `feature/fix-wrangler-free-plan-cpu-limit`
+* **Previous phase:** Stale static assets / CSP (merged PR #35)
+* **Current branch:** `feature/fix-wrangler-free-plan-cpu-limit`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Stop year-long HTML CDN cache causing ChunkLoadError/MIME errors; allow Cloudflare Insights in CSP.
-* **Owner notes:** After deploy, Purge Everything in Cloudflare Caching, then hard-refresh.
+* **Current objective:** Remove unsupported `limits.cpu_ms` (Free plan API 100328); preserve MoMo vars + custom domain on deploy.
+* **Owner notes:** Re-run Cloudflare deploy after merge, then Purge Everything.
 
 ---
 
@@ -1111,7 +1111,14 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Stale static assets / CSP (this session)
+## Wrangler Free-plan deploy fix (this session)
+
+* CI deploy failed: `CPU limits are not supported for the Free plan` (100328)
+  after `limits.cpu_ms` was added — removed.
+* Added `ORG_*` MoMo vars + custom domain `routes` to `wrangler.jsonc` so
+  dashboard-only config is not wiped on the next successful deploy.
+
+## Stale static assets / CSP (prior)
 
 * Production donate console: CSS/JS served as `text/html` + ChunkLoadError —
   root cause was CDN-cached HTML (`s-maxage=31536000`) pointing at deleted

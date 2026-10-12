@@ -33,8 +33,19 @@
     "SMTP_PORT": "587",
     "SMTP_USER": "girlsglobalinitiative@gmail.com",
     "SMTP_FROM": "Girls Global Initiative <girlsglobalinitiative@gmail.com>",
-    "SMTP_REPLY_TO": "girlsglobalinitiative@gmail.com"
+    "SMTP_REPLY_TO": "girlsglobalinitiative@gmail.com",
+    // Keep MoMo details in wrangler so deploys do not wipe dashboard-only vars.
+    "ORG_ACCOUNT_NAME": "Philomena Larbi",
+    "ORG_MOBILE_MONEY": "0241351294"
   },
+  // Keep the custom domain attached when deploying from CI (do not rely on
+  // dashboard-only route config — wrangler overwrites remote config).
+  "routes": [
+    {
+      "pattern": "girlsglobalinitiative.org",
+      "custom_domain": true
+    }
+  ],
   // Required when Cloudflare dashboard runs `wrangler preview`.
   // Production deploy must still be: npx opennextjs-cloudflare deploy
   "previews": {
@@ -44,10 +55,7 @@
   },
   "observability": {
     "enabled": true
-  },
-  // Raises per-request CPU budget on Workers Paid (helps Error 1102 cold starts).
-  // Free plan ignores or caps this — upgrade if 1102 persists after deploy.
-  "limits": {
-    "cpu_ms": 30000
   }
+  // Do NOT set `limits.cpu_ms` on Workers Free — deploy fails with API
+  // code 100328. Upgrade to Workers Paid before raising CPU limits for 1102.
 }

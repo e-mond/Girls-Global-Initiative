@@ -180,8 +180,8 @@ the request path, and buffering large media on the Worker.
 
 Mitigations in this repo:
 
-* `wrangler.jsonc` `limits.cpu_ms` raised to `30000` (Workers Paid; Free plan
-  may still cap lower — upgrade if 1102 continues)
+* Do **not** set `limits.cpu_ms` while on Workers **Free** — deploy fails with
+  API code `100328`. Upgrade to Workers Paid before raising CPU limits.
 * Homepage `revalidate = 120` to cut repeated SSR CPU
 * Donation thank-you SMTP deferred via Next.js `after()` / `waitUntil`
 * Media uploads prefer **Cloudinary** when `CLOUDINARY_*` secrets are set (no
