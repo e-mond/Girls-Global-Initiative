@@ -56,6 +56,13 @@ must show `"authSecret":"ok"` and `"database":"ok"`. Until then, login will 500.
 | `CLOUDINARY_FOLDER` | Text / vars | e.g. `ggi` |
 | `CLOUDINARY_API_KEY` | **Secret only** | Cloudinary API key — never in git |
 | `CLOUDINARY_API_SECRET` | **Secret only** | Cloudinary API secret — never in git |
+| `PAYSTACK_SECRET_KEY` | **Secret only** | Live/test secret for checkout + verify |
+| `PAYSTACK_PUBLIC_KEY` | Text / vars | Public key (safe to expose) |
+| `PAYSTACK_WEBHOOK_SECRET` | **Secret only** | Optional; defaults to secret key |
+| `ORG_MOBILE_MONEY` | Text / vars | e.g. `0241351294` (shown on donate) |
+| `ORG_ACCOUNT_NAME` | Text / vars | e.g. `Philomena Larbi` |
+| `ORG_TRANSFER_NOTES` | Text / vars | Optional transfer narration guidance |
+| `ORG_BANK_NAME` / `ORG_ACCOUNT_NUMBER` | Text / vars | Add when bank details are published |
 
 Do **not** put secrets only in `.env.local` — that file never reaches Cloudflare.
 If you have multiple Cloudflare accounts, set secrets on the account that owns
