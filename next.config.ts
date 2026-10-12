@@ -21,11 +21,12 @@ const securityHeaders = [
       "frame-ancestors 'none'",
       "object-src 'none'",
       // Next.js App Router requires inline scripts/styles in practice.
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      // Cloudflare Web Analytics beacon is first-party observability on the zone.
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https:",
+      "connect-src 'self' https: https://cloudflareinsights.com",
       "upgrade-insecure-requests",
     ].join("; "),
   },

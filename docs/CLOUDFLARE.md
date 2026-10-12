@@ -28,6 +28,32 @@ npm run deploy
 # → opennextjs-cloudflare build && opennextjs-cloudflare deploy
 ```
 
+### After every production deploy — purge CDN cache
+
+Next/OpenNext can emit HTML with long shared-cache TTLs. If Cloudflare keeps
+serving an older HTML document, browsers request `/_next/static/*` hashes that
+no longer exist → CSS/JS return `text/html` 404s, MIME errors, and
+`ChunkLoadError`.
+
+After `npm run deploy` (or a successful CI deploy):
+
+1. Cloudflare Dashboard → Caching → Configuration → **Purge Everything**
+   (or purge by URL for `/` and key routes), **or**
+2. API purge if you have a token:
+
+```bash
+# Requires CLOUDFLARE_API_TOKEN + CLOUDFLARE_ZONE_ID in the environment
+curl -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data '{"purge_everything":true}'
+```
+
+Then hard-refresh the browser (or open a private window).
+
+Public routes set `revalidate = 60` so new HTML is not cached for a year.
+Hashed `/_next/static/*` assets remain immutable.
+
 ## Required Worker secrets / vars
 
 Set these on the **live Worker** that serves `girlsglobalinitiative.org`

@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **Admin upload + readable donation refs + Worker 1102**
-* **Status:** In progress on `feature/admin-upload-readable-refs-worker-limits`
-* **Previous phase:** Paystack outcomes + MoMo (merged PR #33)
-* **Current branch:** `feature/admin-upload-readable-refs-worker-limits`
+* **Fix stale static assets / CSP**
+* **Status:** In progress on `feature/fix-stale-static-assets-csp`
+* **Previous phase:** Admin upload + readable refs + Worker 1102 (merged PR #34)
+* **Current branch:** `feature/fix-stale-static-assets-csp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** File upload in admin Gallery/News/Events; human-readable donation refs; mitigate Cloudflare Error 1102.
-* **Owner notes:** Ensure Cloudinary API key/secret + Paystack/`ORG_*` are set on the Worker; redeploy after merge.
+* **Current objective:** Stop year-long HTML CDN cache causing ChunkLoadError/MIME errors; allow Cloudflare Insights in CSP.
+* **Owner notes:** After deploy, Purge Everything in Cloudflare Caching, then hard-refresh.
 
 ---
 
@@ -1111,7 +1111,15 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Admin upload / readable refs / Worker 1102 (this session)
+## Stale static assets / CSP (this session)
+
+* Production donate console: CSS/JS served as `text/html` + ChunkLoadError —
+  root cause was CDN-cached HTML (`s-maxage=31536000`) pointing at deleted
+  `/_next/static` hashes after redeploy.
+* Public layout `revalidate = 60`; CSP allows `static.cloudflareinsights.com`.
+* Docs: purge Cloudflare cache after every production deploy.
+
+## Admin upload / readable refs / Worker 1102 (prior)
 
 * Gallery, News, Events admin forms: **file upload** instead of Image URL.
 * Media upload prefers Cloudinary when configured; local fallback served at

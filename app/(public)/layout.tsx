@@ -1,6 +1,13 @@
 import { PublicFooter } from "@/components/layout/public-footer";
 import { PublicHeader } from "@/components/layout/public-header";
 
+/**
+ * Keep public HTML off the default Next.js `s-maxage=31536000` CDN cache.
+ * Year-long HTML caching after deploys leaves pages pointing at deleted
+ * `/_next/static/*` hashes (CSS/JS MIME errors / ChunkLoadError).
+ */
+export const revalidate = 60;
+
 /** Public marketing chrome shared by visitor-facing routes. */
 export default function PublicLayout({
   children,
