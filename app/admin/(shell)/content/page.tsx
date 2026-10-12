@@ -20,7 +20,7 @@ const CONTENT_SECTIONS = [
   {
     href: "/admin/content/gallery",
     title: "Gallery",
-    body: "Where we work community/gallery items with image URLs.",
+    body: "Where we work community/gallery items with image uploads.",
   },
   {
     href: "/admin/content/news",

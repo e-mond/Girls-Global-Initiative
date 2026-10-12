@@ -7,13 +7,13 @@
 
 ## Current Phase
 
-* **Donations — Paystack outcomes + MoMo**
-* **Status:** In progress on `feature/paystack-outcome-pages`
-* **Previous phase:** Policy page approval (merged PR #32)
-* **Current branch:** `feature/paystack-outcome-pages`
+* **Admin upload + readable donation refs + Worker 1102**
+* **Status:** In progress on `feature/admin-upload-readable-refs-worker-limits`
+* **Previous phase:** Paystack outcomes + MoMo (merged PR #33)
+* **Current branch:** `feature/admin-upload-readable-refs-worker-limits`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Harden Paystack success confirmation and failure fallback pages; publish MoMo `0241351294` (Philomena Larbi) for manual payment until bank details arrive.
-* **Owner notes:** Set the same `ORG_*` and Paystack secrets on Cloudflare before production checkout/MoMo display works live.
+* **Current objective:** File upload in admin Gallery/News/Events; human-readable donation refs; mitigate Cloudflare Error 1102.
+* **Owner notes:** Ensure Cloudinary API key/secret + Paystack/`ORG_*` are set on the Worker; redeploy after merge.
 
 ---
 
@@ -1111,7 +1111,16 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 
 # Session Notes
 
-## Paystack outcomes + MoMo (this session)
+## Admin upload / readable refs / Worker 1102 (this session)
+
+* Gallery, News, Events admin forms: **file upload** instead of Image URL.
+* Media upload prefers Cloudinary when configured; local fallback served at
+  `/api/media/[id]/file` (public).
+* Donation references: `GGI-YYYYMMDD-0001` / `GGI-MOMO-YYYYMMDD-0001`.
+* Worker 1102 mitigations: `limits.cpu_ms`, homepage `revalidate`, deferred
+  donation thank-you email via `after()`.
+
+## Paystack outcomes + MoMo (prior)
 
 * Added `/get-involved/donate/failed` with retry + MoMo fallback CTAs.
 * Hardened `/get-involved/donate/thanks` confirmation: soft-verify polling,

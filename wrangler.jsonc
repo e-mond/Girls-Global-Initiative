@@ -44,5 +44,10 @@
   },
   "observability": {
     "enabled": true
+  },
+  // Raises per-request CPU budget on Workers Paid (helps Error 1102 cold starts).
+  // Free plan ignores or caps this — upgrade if 1102 persists after deploy.
+  "limits": {
+    "cpu_ms": 30000
   }
 }

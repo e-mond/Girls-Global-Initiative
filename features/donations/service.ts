@@ -1,5 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from "crypto";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, like } from "drizzle-orm";
+import { after } from "next/server";
 import { getDb } from "@/db/client";
 import { donations } from "@/db/schema";
 import type {
@@ -95,8 +96,45 @@ export function paystackConfigured(): boolean {
 
 export { getSiteOrigin as siteOrigin } from "@/lib/seo/site-origin";
 
-export function createReference(prefix = "ggi"): string {
-  return `${prefix}_${Date.now().toString(36)}_${randomUUID().slice(0, 8)}`;
+/**
+ * Human-readable donation / receipt reference.
+ * Examples: GGI-20261012-0007, GGI-MOMO-20261012-0003
+ */
+export async function createReference(
+  kind: "paystack" | "direct" = "paystack",
+): Promise<string> {
+  const now = new Date();
+  const yyyy = now.getUTCFullYear();
+  const mm = String(now.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(now.getUTCDate()).padStart(2, "0");
+  const datePart = `${yyyy}${mm}${dd}`;
+  const label = kind === "direct" ? "GGI-MOMO" : "GGI";
+  const dayPrefix = `${label}-${datePart}-`;
+
+  const sequence = await nextDailyReferenceSequence(dayPrefix);
+  return `${dayPrefix}${String(sequence).padStart(4, "0")}`;
+}
+
+async function nextDailyReferenceSequence(dayPrefix: string): Promise<number> {
+  const db = getDb();
+  if (!db) {
+    const count = store().items.filter((item) =>
+      item.reference.startsWith(dayPrefix),
+    ).length;
+    return count + 1;
+  }
+
+  const rows = await db
+    .select({ reference: donations.reference })
+    .from(donations)
+    .where(like(donations.reference, `${dayPrefix}%`));
+  let max = 0;
+  for (const row of rows) {
+    const tail = row.reference.slice(dayPrefix.length);
+    const n = Number.parseInt(tail, 10);
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  return max + 1;
 }
 
 export function organisationTransferDetails(): {
@@ -361,6 +399,16 @@ export async function sendDonationThankYou(
   });
 
   return result;
+}
+
+/** Defer SMTP so Worker responses return before Nodemailer finishes (Error 1102). */
+export function scheduleDonationThankYou(
+  record: DonationRecord,
+  options?: { force?: boolean },
+): void {
+  after(() => {
+    void sendDonationThankYou(record, options);
+  });
 }
 
 export async function setDonationVerification(input: {

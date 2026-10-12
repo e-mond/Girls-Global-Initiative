@@ -5,12 +5,12 @@ export default function AdminGalleryPage() {
     <ContentEntityManager
       entity="gallery_items"
       title="Gallery"
-      description="Community gallery items. Paste an image URL from the Media library after upload."
+      description="Community gallery items. Upload an image file for each item."
       fields={[
         { name: "title", label: "Title", required: true },
         { name: "caption", label: "Caption", type: "textarea" },
         { name: "location", label: "Location" },
-        { name: "imageUrl", label: "Image URL", required: true },
+        { name: "imageUrl", label: "Image", type: "image", required: true },
         { name: "badge", label: "Badge text" },
         { name: "sortOrder", label: "Sort order", type: "number" },
       ]}

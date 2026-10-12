@@ -3,7 +3,7 @@ import {
   findDonationByReference,
   markDonationOutcome,
   markDonationSuccess,
-  sendDonationThankYou,
+  scheduleDonationThankYou,
   verifyPaystackTransaction,
 } from "@/features/donations/service";
 
@@ -44,8 +44,7 @@ export async function GET(_request: Request, context: RouteContext) {
           paidAt: verified.paidAt ? new Date(verified.paidAt) : new Date(),
         })) ?? record;
       if (record.status === "success" && !record.emailSentAt) {
-        await sendDonationThankYou(record);
-        record = (await findDonationByReference(reference)) ?? record;
+        scheduleDonationThankYou(record);
       }
     } else if (
       verified.outcome === "failed" ||

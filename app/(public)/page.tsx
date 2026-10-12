@@ -12,6 +12,9 @@ import { PAGE_SEO } from "@/content/page-seo";
 import { getSiteSettings } from "@/features/settings/service";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
+/** Reduce Worker CPU on cold public homepage renders (Error 1102 mitigation). */
+export const revalidate = 120;
+
 export async function generateMetadata() {
   return buildPageMetadata({
     title: PAGE_SEO.home.title,
