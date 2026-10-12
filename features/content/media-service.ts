@@ -8,6 +8,13 @@ import {
   cloudinaryConfigured,
   uploadImageToCloudinary,
 } from "@/lib/cloudinary";
+import { normalizeMediaFolder } from "@/features/content/media-folders";
+
+export {
+  MEDIA_FOLDERS,
+  normalizeMediaFolder,
+  type MediaFolder,
+} from "@/features/content/media-folders";
 
 export type MediaRecord = {
   id: string;
@@ -81,6 +88,7 @@ export async function saveMediaUpload(input: {
   bytes: Buffer;
   altText: string;
   uploadedById: string | null;
+  folder?: string | null;
 }): Promise<MediaRecord> {
   const validationError = isAllowedImage(input.mimeType, input.bytes.byteLength);
   if (validationError) {
@@ -91,12 +99,14 @@ export async function saveMediaUpload(input: {
   const now = new Date();
   let storageKey: string;
   let url: string;
+  const folder = normalizeMediaFolder(input.folder);
 
   if (cloudinaryConfigured()) {
     const uploaded = await uploadImageToCloudinary({
       bytes: input.bytes,
       filename: input.filename,
       mimeType: input.mimeType,
+      folder,
     });
     storageKey = uploaded.storageKey;
     url = uploaded.url;

@@ -34,6 +34,7 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const file = form.get("file");
   const altText = String(form.get("altText") ?? "").trim();
+  const folder = String(form.get("folder") ?? "").trim();
 
   if (!(file instanceof File)) {
     return NextResponse.json(
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
       bytes,
       altText,
       uploadedById: access.user.id,
+      folder,
     });
 
     await writeAuditLog({

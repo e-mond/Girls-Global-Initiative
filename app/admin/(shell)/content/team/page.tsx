@@ -10,6 +10,7 @@ export default function AdminTeamPage() {
         { name: "name", label: "Name", required: true },
         { name: "roleTitle", label: "Role", required: true },
         { name: "bio", label: "Bio", type: "textarea" },
+        { name: "photoMediaId", label: "Photo", type: "image" },
         { name: "quote", label: "Founder quote", type: "textarea" },
         { name: "callout1Title", label: "Callout 1 title" },
         { name: "callout1Body", label: "Callout 1 body" },

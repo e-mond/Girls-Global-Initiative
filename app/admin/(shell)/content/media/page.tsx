@@ -4,6 +4,11 @@ import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
+import {
+  MEDIA_FOLDERS,
+  type MediaFolder,
+} from "@/features/content/media-folders";
+import { readJsonResponse } from "@/lib/safe-json";
 
 type MediaItem = {
   id: string;
@@ -20,7 +25,9 @@ export default function AdminMediaPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [altText, setAltText] = useState("");
+  const [folder, setFolder] = useState<MediaFolder>("ggi");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [q, setQ] = useState("");
 
@@ -29,11 +36,14 @@ export default function AdminMediaPage() {
     setError(null);
     try {
       const response = await fetch("/api/admin/media");
-      const json = await response.json();
+      const json = await readJsonResponse<{
+        data?: { items?: MediaItem[] };
+        error?: { message?: string };
+      }>(response, "Could not load media.");
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Could not load media.");
       }
-      setItems(json.data.items);
+      setItems(json.data?.items ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load media.");
     } finally {
@@ -44,6 +54,16 @@ export default function AdminMediaPage() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -67,17 +87,22 @@ export default function AdminMediaPage() {
     const body = new FormData();
     body.append("file", file);
     body.append("altText", altText);
+    body.append("folder", folder);
     try {
       const response = await fetch("/api/admin/media", {
         method: "POST",
         body,
       });
-      const json = await response.json();
+      const json = await readJsonResponse<{ error?: { message?: string } }>(
+        response,
+        "Upload failed.",
+      );
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Upload failed.");
       }
       setFile(null);
       setAltText("");
+      setFolder("ggi");
       setSuccess("Media uploaded successfully.");
       await load();
     } catch (err) {
@@ -97,7 +122,10 @@ export default function AdminMediaPage() {
       `/api/admin/media?id=${encodeURIComponent(id)}`,
       { method: "DELETE" },
     );
-    const json = await response.json();
+    const json = await readJsonResponse<{ error?: { message?: string } }>(
+      response,
+      "Could not delete media.",
+    );
     if (!response.ok) {
       setError(json?.error?.message ?? "Could not delete media.");
       return;
@@ -125,8 +153,37 @@ export default function AdminMediaPage() {
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            className="block w-full text-sm"
+            className="block w-full text-sm text-text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-sky/15 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-navy"
           />
+        </label>
+        {previewUrl ? (
+          <div className="overflow-hidden rounded-xl border border-border-default bg-bg-base">
+            <div className="relative aspect-video max-h-64 w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewUrl}
+                alt="Selected file preview"
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <p className="truncate border-t border-border-default px-3 py-2 text-xs text-text-muted">
+              {file?.name}
+            </p>
+          </div>
+        ) : null}
+        <label className="block space-y-1 text-sm">
+          <span className="font-medium text-brand-navy">Storage location</span>
+          <select
+            value={folder}
+            onChange={(event) => setFolder(event.target.value as MediaFolder)}
+            className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm outline-none focus:border-brand-sky"
+          >
+            {MEDIA_FOLDERS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block space-y-1 text-sm">
           <span className="font-medium text-brand-navy">Alt text</span>
