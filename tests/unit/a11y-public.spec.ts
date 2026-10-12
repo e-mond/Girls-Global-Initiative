@@ -29,7 +29,7 @@ test.describe("public accessibility smoke", () => {
     await legal.getByRole("link", { name: "Privacy Policy" }).click();
     await expect(page).toHaveURL(/\/privacy/);
     await expect(
-      page.getByRole("heading", { name: "Privacy Policy" }),
+      page.getByRole("heading", { name: "Privacy Policy", exact: true }),
     ).toBeVisible({ timeout: 15_000 });
   });
 
