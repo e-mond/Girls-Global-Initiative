@@ -18,13 +18,17 @@
   "images": {
     "binding": "IMAGES"
   },
-  // Non-secret runtime config. Secrets (AUTH_SECRET, DATABASE_URL, SMTP_PASS)
-  // must be set in Cloudflare Worker Settings → Variables and Secrets.
+  // Non-secret runtime config. Secrets (AUTH_SECRET, DATABASE_URL, SMTP_PASS,
+  // CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET) must be set in Cloudflare
+  // Worker Settings → Variables and Secrets.
   "vars": {
     "AUTH_URL": "https://girlsglobalinitiative.org",
     "NEXT_PUBLIC_SITE_URL": "https://girlsglobalinitiative.org",
     "NEXT_PUBLIC_ENABLE_MSW": "false",
     "NEXT_PUBLIC_MOCK_API": "false",
+    "BING_SITE_VERIFICATION": "861FC8B82DE81460937BBDDA6D0EAFCF",
+    "CLOUDINARY_CLOUD_NAME": "okcaby69",
+    "CLOUDINARY_FOLDER": "ggi",
     "SMTP_HOST": "smtp.gmail.com",
     "SMTP_PORT": "587",
     "SMTP_USER": "girlsglobalinitiative@gmail.com",

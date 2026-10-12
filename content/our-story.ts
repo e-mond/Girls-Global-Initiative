@@ -6,9 +6,9 @@
 export const STORY_HERO = {
   badge: "Our story",
   meta: "Youth-led · Community-rooted",
-  title: "It started with a conversation. It continues with girls.",
+  title: "It started as a conversation. It continues with girls.",
   description:
-    "Girls Global Initiative was born from a heartfelt conversation between two young women who recognised the challenges confronting girls in their communities. That conversation became an initiative centred on empowerment, education and advocacy.",
+    "Girls Global Initiative was born from a heartfelt conversation between a young lady and a young man who recognised the challenges confronting girls in their communities. That conversation became an initiative centred on empowerment, education and advocacy.",
   imageCaption: "Born from listening",
   imageTags: "Empowerment · Education · Advocacy",
 } as const;

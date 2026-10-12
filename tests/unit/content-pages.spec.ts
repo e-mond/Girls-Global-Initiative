@@ -7,7 +7,7 @@ test.describe("content public pages", () => {
     await page.goto("/our-story", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", {
-        name: /It started with a conversation/i,
+        name: /It started as a conversation/i,
       }),
     ).toBeVisible();
     await expect(
