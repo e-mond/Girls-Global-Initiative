@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Real photography replacement**
-* **Status:** Validated, ready for review on `feature/real-photography`
+* **Status:** Implementation and local release checks validated; release tracked in PR #40
 * **Previous phase:** Cloudflare deploy metadata fetch
-* **Current branch:** `feature/real-photography`
+* **Implementation branch:** `feature/real-photography`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Replace generated illustrative photographs with licensed real photography, preserve owner-supplied portraits, and verify the existing layouts.
-* **Owner notes:** Licensed real photographs are approved where GGI activity photographs are unavailable. Deployment remains a separate operational follow-up.
+* **Current objective:** Merge the photography replacement and deploy it through the existing Cloudflare production connection.
+* **Owner notes:** Merge and production deployment are authorised. Skip the manual CDN cache refresh at the owner's request; verify the live photographs directly.
 
 ---
 
 ## Current Goal
 
-Complete the owner-requested photography replacement on `feature/real-photography`.
+Complete the real-photography release in PR #40, including the supported-framework compatibility needed by OpenNext.
 
 ---
 
@@ -123,6 +123,27 @@ A local `.env.local` is present and remains gitignored.
 ---
 
 # In Progress
+
+## Next.js 16 release compatibility — 26 October 2026
+
+* PR #40 passed lint, type-check, unit tests and the standard production build;
+  OpenNext rejected Next.js 15.5.27 because its two-year support guard expired.
+* Updated the framework dependency to Next.js 16.4.3 and its lockfile entries.
+  Existing React 19 and Auth.js dependencies satisfy its peer requirements.
+  Retained the approved lint policy and application behavior. Included Next's
+  generated type references, required TypeScript settings and managed agent-doc block.
+* Scoped public text assertions to the rendered `main` landmark so temporary
+  streamed HTML does not produce duplicate matches.
+* No schema changes, data writes, cookie-format changes or security-check bypasses.
+  Deploy the complete Worker bundle atomically after validation.
+* Rollback: reactivate the prior Cloudflare Worker artifact
+  `a94c1f4d-d1e6-4340-99c9-2248b1ab74e7`; do not roll back database migrations.
+* Local validation: lint and type-check PASS; all 51 browser tests PASS without
+  retries against both development and production servers; Cypress PASS in both
+  modes; standard production build and OpenNext Cloudflare bundle PASS.
+* GitHub validation, merge and live deployment are tracked in PR #40. The owner
+  explicitly requested skipping the manual Cloudflare cache purge; verify live
+  assets and page scripts/styles directly after the release.
 
 ## SEO, Security, Accessibility, Privacy & Legal Hardening
 

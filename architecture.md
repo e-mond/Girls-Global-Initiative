@@ -8,7 +8,7 @@
 
 | Layer            | Technology                                   | Role                                                              |
 | ---------------- | --------------------------------------------- | ------------------------------------------------------------------ |
-| Framework        | Next.js (App Router) + TypeScript (strict)    | Full-stack: pages, layouts, server components, route handlers      |
+| Framework        | Next.js 16 (App Router) + TypeScript (strict) | Full-stack: pages, layouts, server components, route handlers      |
 | UI               | Tailwind CSS + shadcn/ui                      | Design system, accessible primitives (GGI brand tokens — see `ui-context.md`) |
 | ORM              | Drizzle ORM                                    | Type-safe schema, migrations, queries against Postgres              |
 | Database         | Neon Postgres (serverless Postgres)            | System of record for all structured data                            |

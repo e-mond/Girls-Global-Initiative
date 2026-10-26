@@ -28,6 +28,11 @@ npm run deploy
 # → opennextjs-cloudflare build && opennextjs-cloudflare deploy
 ```
 
+The app uses Next.js 16.4.3. OpenNext's two-year support-date guard stopped
+accepting Next.js 15 on 21 October 2026. Keep the framework on a supported
+release instead of bypassing that check. Existing React 19 and Auth.js versions
+remain compatible; no database migration accompanies this framework update.
+
 ### Deploy errors
 
 | Error | Cause | Fix |

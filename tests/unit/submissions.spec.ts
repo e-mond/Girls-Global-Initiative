@@ -20,6 +20,8 @@ test.describe("public submission pages", () => {
     await expect(
       page.getByRole("heading", { name: /Volunteer & mentor/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Step 1 of 3/i)).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/Step 1 of 3/i),
+    ).toBeVisible();
   });
 });
