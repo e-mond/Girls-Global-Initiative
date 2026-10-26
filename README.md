@@ -101,7 +101,7 @@ Verified against this repository:
 
 | Area | Technology |
 | --- | --- |
-| App framework | Next.js 16 (App Router), React 19, TypeScript |
+| App framework | Next.js 15 (App Router), React 19, TypeScript |
 | Styling | Tailwind CSS 4, shadcn/ui button foundation |
 | Icons | Lucide React |
 | Motion | Framer Motion (respects reduced motion) |

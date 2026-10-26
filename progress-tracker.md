@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Real photography replacement**
-* **Status:** Implementation and local release checks validated; release tracked in PR #40
-* **Previous phase:** Cloudflare deploy metadata fetch
-* **Implementation branch:** `feature/real-photography`
+* **Cloudflare runtime recovery for the real-photo release**
+* **Status:** Recovery implementation validated locally
+* **Previous phase:** Real photography merged through PR #40
+* **Current branch:** `feature/cloudflare-runtime-fix`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Merge the photography replacement and deploy it through the existing Cloudflare production connection.
-* **Owner notes:** Merge and production deployment are authorised. Skip the manual CDN cache refresh at the owner's request; verify the live photographs directly.
+* **Current objective:** Restore working production rendering and verify the real photographs on the live site.
+* **Owner notes:** Merge and deployment are authorised. Manual CDN cache purge is explicitly skipped at the owner's request.
 
 ---
 
 ## Current Goal
 
-Complete the real-photography release in PR #40, including the supported-framework compatibility needed by OpenNext.
+Recover the photo release with the original framework family and the targeted OpenNext adapter patch.
 
 ---
 
@@ -124,26 +124,23 @@ A local `.env.local` is present and remains gitignored.
 
 # In Progress
 
-## Next.js 16 release compatibility — 26 October 2026
+## Cloudflare runtime recovery — 26 October 2026
 
-* PR #40 passed lint, type-check, unit tests and the standard production build;
-  OpenNext rejected Next.js 15.5.27 because its two-year support guard expired.
-* Updated the framework dependency to Next.js 16.4.3 and its lockfile entries.
-  Existing React 19 and Auth.js dependencies satisfy its peer requirements.
-  Retained the approved lint policy and application behavior. Included Next's
-  generated type references, required TypeScript settings and managed agent-doc block.
-* Scoped public text assertions to the rendered `main` landmark so temporary
-  streamed HTML does not produce duplicate matches.
-* No schema changes, data writes, cookie-format changes or security-check bypasses.
-  Deploy the complete Worker bundle atomically after validation.
-* Rollback: reactivate the prior Cloudflare Worker artifact
-  `a94c1f4d-d1e6-4340-99c9-2248b1ab74e7`; do not roll back database migrations.
-* Local validation: lint and type-check PASS; all 51 browser tests PASS without
-  retries against both development and production servers; Cypress PASS in both
-  modes; standard production build and OpenNext Cloudflare bundle PASS.
-* GitHub validation, merge and live deployment are tracked in PR #40. The owner
-  explicitly requested skipping the manual Cloudflare cache purge; verify live
-  assets and page scripts/styles directly after the release.
+* PR #40 merged the photographs plus a Next.js 16 compatibility attempt after
+  OpenNext 1.20.8's outdated version guard rejected Next.js 15.
+* The bundle and Node-based tests passed, but the deployed Worker returned 1101.
+  Local Worker preview reproduced `Unexpected loadManifest(...preview-props.json)`.
+* Upstream OpenNext 1.20.13 fixes the false Next.js 15 support check; 1.20.12
+  introduced the missing manifest handling. Restore the Next.js 15 family
+  (resolved 15.5.28), update the adapter to 1.20.13, and retain the real photos
+  and correctly scoped browser assertions. No application or database behavior changes.
+* Add a CI runtime smoke that boots the actual Worker and checks homepage/photo
+  credits, health, and the staff API's 401 response before release.
+* Local validation: lint, type-check, production/OpenNext build, all 51 browser
+  tests without retries, Cypress, and actual Worker runtime smoke passed.
+* Previous working Worker artifact for emergency rollback:
+  `a94c1f4d-d1e6-4340-99c9-2248b1ab74e7`. Deployment access is through the existing
+  Cloudflare Git connection; the local Wrangler login is a different account.
 
 ## SEO, Security, Accessibility, Privacy & Legal Hardening
 

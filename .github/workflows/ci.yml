@@ -63,3 +63,21 @@ jobs:
           NEXT_PUBLIC_MOCK_API: "false"
           AUTH_SECRET: ci-test-auth-secret-not-for-production
           AUTH_URL: https://girlsglobalinitiative.org
+
+      - name: Cloudflare Worker runtime smoke
+        run: |
+          npx --no-install opennextjs-cloudflare preview --port 8787 \
+            --var AUTH_SECRET:ci-worker-smoke-secret \
+            --var AUTH_URL:http://127.0.0.1:8787 > "$RUNNER_TEMP/ggi-worker.log" 2>&1 &
+          ggi_worker_pid=$!
+          trap 'ggi_status=$?; kill "$ggi_worker_pid" 2>/dev/null || true; cat "$RUNNER_TEMP/ggi-worker.log"; exit "$ggi_status"' EXIT
+          for ggi_attempt in {1..30}; do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:8787/api/health > /dev/null; then
+              curl --fail --silent --max-time 10 http://127.0.0.1:8787/ > "$RUNNER_TEMP/ggi-home.html"
+              node -e 'require("node:assert/strict").match(require("node:fs").readFileSync(process.env.RUNNER_TEMP + "/ggi-home.html", "utf8"), /Photo credits/)'
+              test "$(curl --silent --max-time 5 --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8787/api/admin/users)" = "401"
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
