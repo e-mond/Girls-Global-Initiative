@@ -28,10 +28,13 @@ npm run deploy
 # → opennextjs-cloudflare build && opennextjs-cloudflare deploy
 ```
 
-The app uses Next.js 16.4.3. OpenNext's two-year support-date guard stopped
-accepting Next.js 15 on 21 October 2026. Keep the framework on a supported
-release instead of bypassing that check. Existing React 19 and Auth.js versions
-remain compatible; no database migration accompanies this framework update.
+Use the maintained Next.js 15 line with OpenNext 1.20.13 or newer. The adapter
+patch corrects the old Next.js 15 support-date check and includes newer manifest
+handling. See the [upstream release notes](https://github.com/opennextjs/opennextjs-cloudflare/releases).
+
+CI boots the built Worker after packaging and checks the homepage, health endpoint
+and unauthenticated staff API protection. A successful bundle alone does not prove
+that the Worker can serve requests.
 
 ### Deploy errors
 
@@ -40,6 +43,7 @@ remain compatible; no database migration accompanies this framework update.
 | `CPU limits are not supported for the Free plan` (`100328`) | `limits.cpu_ms` in `wrangler.jsonc` | Do not set CPU limits on Free |
 | `Unable to fetch bindings, routes, or services metadata from the dashboard` | Transient Cloudflare API / remote-config sync timeout | **Retry deploy** (often succeeds on 2nd try). Optionally clear Cloudflare **Build cache**, then retry. Local fallback: `npm run deploy` with a Wrangler API token. |
 | Custom domain / MoMo vars disappear after deploy | Dashboard-only settings overwritten by wrangler | Keep `ORG_*` and `routes` (custom domain) in `wrangler.jsonc` |
+| `Unexpected loadManifest(...preview-props.json)` / Error 1101 after a green build | Framework/adapter manifest mismatch | Use a compatible adapter release and run the Worker runtime smoke before deploying |
 
 ### After every production deploy — purge CDN cache
 
