@@ -132,8 +132,8 @@ export default function ContactPage() {
             <aside className="space-y-6 overflow-hidden rounded-[1.75rem] bg-brand-navy text-text-on-inverse">
               <div className="relative h-44">
                 <Image
-                  src="/home/hero-little-girl.jpg"
-                  alt="A girl looking ahead with confidence"
+                  src="/home/hero-little-girl.jpg?v=20261026"
+                  alt="Two schoolgirls reading a book together outdoors in Ghana"
                   fill
                   className="object-cover object-top opacity-80"
                   sizes="(max-width: 1024px) 100vw, 50vw"

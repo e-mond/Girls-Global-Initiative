@@ -31,8 +31,8 @@ export default function TeamPage() {
         meta="Youth-led · Community-rooted"
         title="Meet the people building GGI."
         description="A small leadership circle advancing rights, health, and opportunity for girls."
-        imageSrc="/home/community-1.jpg"
-        imageAlt="Girls Global Initiative team and community"
+        imageSrc="/home/community-1.jpg?v=20261026"
+        imageAlt="Two schoolgirls reading a book together outdoors in Ghana"
         ctas={[
           { href: "/founder", label: "Meet the founder", variant: "onDark" },
           {
@@ -124,7 +124,7 @@ export default function TeamPage() {
         </Stagger>
       </ContentSection>
 
-      <PhotoBand src="/our-story/growth.jpg" alt="Girls growing with GGI support" />
+      <PhotoBand src="/our-story/growth.jpg?v=20261026" alt="A smiling schoolgirl running in her school uniform in Ghana" />
 
       <CtaBand
         title="Want to work alongside this team?"

@@ -115,7 +115,7 @@ export default async function NewsPage() {
         </Stagger>
       </ContentSection>
 
-      <PhotoBand src="/our-story/values.jpg" alt="Stories from girls and communities" />
+      <PhotoBand src="/our-story/values.jpg?v=20261026" alt="Two schoolgirls reading a book together outdoors in Ghana" />
 
       <CtaBand
         title="Stay closer to the work."
