@@ -27,8 +27,8 @@ export default function PartnerPage() {
         meta="Schools · Families · Communities"
         title="Invite GGI to your community"
         description="Schools, families and local leaders can request a conversation about bringing GGI support — school tours, mentorship, health education and rural girl empowerment — to girls who need it most."
-        imageSrc="/home/community-3.jpg"
-        imageAlt="Community partnership with Girls Global Initiative"
+        imageSrc="/home/community-3.jpg?v=20261026"
+        imageAlt="Three schoolgirls standing together in Hohoe, Ghana"
         imageCaption="Open a door"
         imageTags="Conversation · Trust · Care"
         ctas={[

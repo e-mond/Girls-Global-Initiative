@@ -35,6 +35,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Docker image uses standalone; Cloudflare OpenNext uses default Next output.
   ...(process.env.DOCKER_BUILD === "1" ? { output: "standalone" as const } : {}),
+  images: {
+    // Preserve local image support while allowing versioned photo URLs.
+    localPatterns: [{ pathname: "/**" }],
+  },
   async headers() {
     return [
       {

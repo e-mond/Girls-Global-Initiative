@@ -7,23 +7,65 @@
 
 ## Current Phase
 
-* **Cloudflare deploy metadata fetch**
-* **Status:** In progress on `feature/fix-cf-deploy-metadata-fetch`
-* **Previous phase:** Free-plan cpu_ms fix (merged PR #36) + a11y (PR #37)
-* **Current branch:** `feature/fix-cf-deploy-metadata-fetch`
+* **Real photography replacement**
+* **Status:** Implementation and local release checks validated; release tracked in PR #40
+* **Previous phase:** Cloudflare deploy metadata fetch
+* **Implementation branch:** `feature/real-photography`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Harden wrangler custom-domain route sync; document retry for dashboard metadata fetch failures.
-* **Owner notes:** Retry Cloudflare deploy (clear build cache if it fails again), then Purge Everything.
+* **Current objective:** Merge the photography replacement and deploy it through the existing Cloudflare production connection.
+* **Owner notes:** Merge and production deployment are authorised. Skip the manual CDN cache refresh at the owner's request; verify the live photographs directly.
 
 ---
 
 ## Current Goal
 
-Complete SEO / security / accessibility / privacy / legal production hardening on `feature/seo-security-a11y-legal`.
+Complete the real-photography release in PR #40, including the supported-framework compatibility needed by OpenNext.
 
 ---
 
 # Completed
+
+## Real photography replacement — 26 October 2026
+
+**Branch:** `feature/real-photography` — implemented and validated.
+
+* Replaced all 12 bundled illustrative photo assets with eight real photographs
+  of school and community life in Ghana. Preserved owner-supplied founder/team
+  portraits and the approved design-reference mockups.
+* Recorded creators, source pages, licences and asset paths in
+  `content/photo-credits.ts`; added keyboard-accessible footer credits and an
+  illustrative-photography disclosure. Corrected image descriptions that had
+  implied the pictures documented GGI programmes.
+* Versioned photo URLs and explicitly configured the existing local-image policy
+  so cached Next.js renditions do not continue showing generated photographs.
+  Kept existing asset paths compatible with previously saved references.
+* Removed unused generated sources (`assets/Hero1.jpg`,
+  `assets/HeroLittleGirl.jpg`, `public/home/origin.jpg`).
+* The 12 replacement files total 1,964,225 bytes, down from 4,287,247 bytes (54%).
+
+### Validation
+
+| Check | Result |
+| --- | --- |
+| Lint | PASS |
+| Type-check | PASS |
+| Playwright, configured development test server | PASS — 51 tests |
+| Cypress homepage smoke | PASS — 1 test, development and production previews |
+| Production build | PASS — existing `jose` Edge Runtime warnings |
+| Image file/credit coverage | PASS — 12 JPEGs, eight licensed sources |
+| Production image loading | PASS — 15 routes at desktop and phone widths |
+| Photo credits | PASS — keyboard expansion and all eight source links |
+| Visual review | Homepage at 1440/768/390px; Our Story at 1440/390px |
+
+A supplementary full-suite run against `next start` hit timing-sensitive text
+selectors during streamed page loading; the final run with the repository's
+configured `next dev` test server passed all 51 tests. Design-skill inspection
+retained the existing brand/style findings; this unit did not redesign the site.
+
+Security review: photographs are local files with recorded reuse licences;
+no new dependencies, external image hosts, authentication changes, payment changes
+or CMS writes. Published CMS uploads were not audited or changed. Deployment and
+the Cloudflare-specific bundle are separate release steps.
 
 ## Unit 1 — Foundations
 
@@ -81,6 +123,27 @@ A local `.env.local` is present and remains gitignored.
 ---
 
 # In Progress
+
+## Next.js 16 release compatibility — 26 October 2026
+
+* PR #40 passed lint, type-check, unit tests and the standard production build;
+  OpenNext rejected Next.js 15.5.27 because its two-year support guard expired.
+* Updated the framework dependency to Next.js 16.4.3 and its lockfile entries.
+  Existing React 19 and Auth.js dependencies satisfy its peer requirements.
+  Retained the approved lint policy and application behavior. Included Next's
+  generated type references, required TypeScript settings and managed agent-doc block.
+* Scoped public text assertions to the rendered `main` landmark so temporary
+  streamed HTML does not produce duplicate matches.
+* No schema changes, data writes, cookie-format changes or security-check bypasses.
+  Deploy the complete Worker bundle atomically after validation.
+* Rollback: reactivate the prior Cloudflare Worker artifact
+  `a94c1f4d-d1e6-4340-99c9-2248b1ab74e7`; do not roll back database migrations.
+* Local validation: lint and type-check PASS; all 51 browser tests PASS without
+  retries against both development and production servers; Cypress PASS in both
+  modes; standard production build and OpenNext Cloudflare bundle PASS.
+* GitHub validation, merge and live deployment are tracked in PR #40. The owner
+  explicitly requested skipping the manual Cloudflare cache purge; verify live
+  assets and page scripts/styles directly after the release.
 
 ## SEO, Security, Accessibility, Privacy & Legal Hardening
 
@@ -1068,10 +1131,10 @@ Purpose:
 * **Content social links (merged via PR #13)**
 * **Public pages revamp (merged via PR #14)**
 
-### Active branch — `feature/public-ui-revamp`
+### Active branch — `feature/real-photography`
 
-Sticky floating nav + About dropdown; distinct inner-page heroes/sections.
-Homepage body untouched.
+Licensed real photographs, accurate image descriptions, source credits and cache
+versions across the public site and staff sign-in. Ready for review and release.
 
 ### Next Branch
 
@@ -1110,6 +1173,13 @@ case, branch per `AGENTS.md` §5 as normal (e.g. `feature/cloudinary-wiring`).
 ---
 
 # Session Notes
+
+## Real photography replacement — 26 October 2026
+
+* Owner authorised licensed real photographs where GGI activity photos are unavailable.
+* Replaced the bundled illustrative photographs; retained GGI portraits and layout references.
+* Image-source and licence records are in `content/photo-credits.ts`.
+* Verification results and release limitations are recorded in Completed above.
 
 ## CF deploy metadata fetch (this session)
 

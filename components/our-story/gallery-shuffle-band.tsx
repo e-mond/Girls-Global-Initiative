@@ -28,8 +28,8 @@ export function GalleryShuffleBand({
       : [
           {
             id: "fallback",
-            src: "/our-story/community.jpg",
-            alt: "Girls Global Initiative community moment",
+            src: "/our-story/community.jpg?v=20261026",
+            alt: "Three schoolgirls standing together in Hohoe, Ghana",
           },
         ];
 
