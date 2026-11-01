@@ -1,7 +1,16 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { MarkdownToolbar } from "@/components/admin/markdown-toolbar";
+import { CmsMarkdown } from "@/components/content/cms-markdown";
 import { Button } from "@/components/ui/button";
 import type { ContentEntity, ContentStatus } from "@/features/governance/rbac";
 import { readJsonResponse } from "@/lib/safe-json";
@@ -18,6 +27,10 @@ type FieldDef = {
   type?: "text" | "textarea" | "number" | "image" | "select";
   required?: boolean;
   options?: Array<{ value: string; label: string }>;
+  placeholder?: string;
+  description?: string;
+  /** Enable Markdown formatting toolbar (body fields). */
+  markdown?: boolean;
 };
 
 type StatusAction = {
@@ -57,6 +70,7 @@ export function ContentEntityManager({
   const [previewingForm, setPreviewingForm] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const markdownRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
   const actions: StatusAction[] = statusActions ?? [
     { status: "draft", label: "Unpublish" },
@@ -393,18 +407,49 @@ export function ContentEntityManager({
               }`}
             >
               <span className="font-medium text-brand-navy">{field.label}</span>
+              {field.description ? (
+                <span className="block text-xs text-text-muted">
+                  {field.description}
+                </span>
+              ) : null}
               {field.type === "textarea" ? (
-                <textarea
-                  required={field.required}
-                  value={form[field.name] ?? ""}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      [field.name]: event.target.value,
-                    }))
-                  }
-                  className="min-h-24 w-full rounded-xl border border-border-default bg-bg-base px-3 py-2 text-sm outline-none focus:border-brand-sky"
-                />
+                <div>
+                  {field.markdown ? (
+                    <MarkdownToolbar
+                      value={form[field.name] ?? ""}
+                      onChange={(next) =>
+                        setForm((current) => ({
+                          ...current,
+                          [field.name]: next,
+                        }))
+                      }
+                      textareaRef={{
+                        get current() {
+                          return markdownRefs.current[field.name] ?? null;
+                        },
+                      }}
+                    />
+                  ) : null}
+                  <textarea
+                    ref={(el) => {
+                      markdownRefs.current[field.name] = el;
+                    }}
+                    required={field.required}
+                    value={form[field.name] ?? ""}
+                    placeholder={field.placeholder}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        [field.name]: event.target.value,
+                      }))
+                    }
+                    className={`min-h-24 w-full border border-border-default bg-bg-base px-3 py-2 text-sm outline-none focus:border-brand-sky ${
+                      field.markdown
+                        ? "rounded-b-xl rounded-t-none font-mono text-xs leading-relaxed"
+                        : "rounded-xl"
+                    }`}
+                  />
+                </div>
               ) : field.type === "select" ? (
                 <select
                   required={field.required}
@@ -484,6 +529,7 @@ export function ContentEntityManager({
                   type={field.type === "number" ? "number" : "text"}
                   required={field.required}
                   value={form[field.name] ?? ""}
+                  placeholder={field.placeholder}
                   onChange={(event) =>
                     setForm((current) => ({
                       ...current,
@@ -537,10 +583,27 @@ export function ContentEntityManager({
                 className="mt-4 max-h-56 w-full rounded-xl object-contain bg-bg-base"
               />
             ) : null}
+            {form.summary ? (
+              <p className="mt-3 text-sm text-text-muted">{form.summary}</p>
+            ) : null}
+            {form.body?.trim() ? (
+              <div className="mt-4 text-sm text-brand-navy">
+                <CmsMarkdown body={form.body} />
+              </div>
+            ) : null}
             <dl className="mt-4 space-y-3 text-sm">
               {fields.map((field) => {
                 const value = form[field.name]?.trim();
-                if (!value || field.type === "image") return null;
+                if (
+                  !value ||
+                  field.type === "image" ||
+                  field.name === "summary" ||
+                  field.name === "body" ||
+                  field.name === "title" ||
+                  field.name === "name"
+                ) {
+                  return null;
+                }
                 return (
                   <div key={field.name}>
                     <dt className="font-semibold text-brand-navy">

@@ -30,7 +30,7 @@ export default async function AdminShellLayout({
       >
         Skip to main content
       </a>
-      <div className="flex min-h-screen bg-bg-base">
+      <div className="flex h-dvh overflow-hidden bg-bg-base">
         <AdminSidebar
           groups={groups}
           staffName={session?.user?.name}
@@ -41,7 +41,7 @@ export default async function AdminShellLayout({
           staffName={session?.user?.name}
           staffRole={session?.user?.role}
         />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
           <AdminTopbar
             staffName={session?.user?.name}
             staffRole={session?.user?.role}

@@ -8,12 +8,12 @@ export function cloudinaryConfigured(): boolean {
   );
 }
 
-/** Upload an image buffer to Cloudinary; returns the public HTTPS URL. */
-export async function uploadImageToCloudinary(input: {
+async function uploadToCloudinary(input: {
   bytes: Buffer;
   filename: string;
   mimeType: string;
   folder?: string;
+  resourceType: "image" | "raw";
 }): Promise<{ url: string; publicId: string; storageKey: string }> {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
   const apiKey = process.env.CLOUDINARY_API_KEY?.trim();
@@ -45,7 +45,7 @@ export async function uploadImageToCloudinary(input: {
   form.append("signature", signature);
 
   const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${cloudName}/${input.resourceType}/upload`,
     { method: "POST", body: form },
   );
   const json = (await response.json()) as {
@@ -63,6 +63,26 @@ export async function uploadImageToCloudinary(input: {
     publicId: json.public_id,
     storageKey: json.public_id,
   };
+}
+
+/** Upload an image buffer to Cloudinary; returns the public HTTPS URL. */
+export async function uploadImageToCloudinary(input: {
+  bytes: Buffer;
+  filename: string;
+  mimeType: string;
+  folder?: string;
+}): Promise<{ url: string; publicId: string; storageKey: string }> {
+  return uploadToCloudinary({ ...input, resourceType: "image" });
+}
+
+/** Upload a raw file (e.g. report PDF) to Cloudinary. */
+export async function uploadRawToCloudinary(input: {
+  bytes: Buffer;
+  filename: string;
+  mimeType: string;
+  folder?: string;
+}): Promise<{ url: string; publicId: string; storageKey: string }> {
+  return uploadToCloudinary({ ...input, resourceType: "raw" });
 }
 
 function signCloudinaryParams(
