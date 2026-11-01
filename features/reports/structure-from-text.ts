@@ -329,14 +329,14 @@ function buildFactsBlock(text: string): string | null {
   const schools = text.match(/Schools Visited:\s*(\d+)/i)?.[1]?.trim();
   const girls = text.match(/Girls Reached:\s*([^\n]+)/i)?.[1]?.trim();
 
-  if (date) facts.push(`• **Date:** ${date}`);
-  if (venue) facts.push(`• **Venue:** ${venue}`);
-  if (time) facts.push(`• **Time:** ${time}`);
-  if (target) facts.push(`• **Target participants:** ${target}`);
-  if (actual) facts.push(`• **Actual attendance:** ${actual}`);
-  if (other) facts.push(`• **Other participants:** ${other}`);
-  if (schools) facts.push(`• **Schools visited:** ${schools}`);
-  if (girls) facts.push(`• **Girls reached:** ${girls}`);
+  if (date) facts.push(`• **Date**: ${date}`);
+  if (venue) facts.push(`• **Venue**: ${venue}`);
+  if (time) facts.push(`• **Time**: ${time}`);
+  if (target) facts.push(`• **Target participants**: ${target}`);
+  if (actual) facts.push(`• **Actual attendance**: ${actual}`);
+  if (other) facts.push(`• **Other participants**: ${other}`);
+  if (schools) facts.push(`• **Schools visited**: ${schools}`);
+  if (girls) facts.push(`• **Girls reached**: ${girls}`);
 
   return facts.length ? facts.join("\n") : null;
 }
@@ -371,11 +371,11 @@ export function structureReportFromText(
       body = body
         .replace(
           /\s*(Organisation|Programme|Theme|Date):\s*/gi,
-          "\n• **$1:** ",
+          "\n• **$1**: ",
         )
         .replace(
           /^(Miss |Mr\. |Mrs\. |Ms\. )([^\n]+?)(\s+President|\s+Deputy|\s+Outreach)/i,
-          "• **Prepared by:** $1$2\n• **Role:** $3",
+          "• **Prepared by**: $1$2\n• **Role**: $3",
         )
         .replace(/^\n+/, "")
         .trim();

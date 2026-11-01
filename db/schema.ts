@@ -116,7 +116,7 @@ export const newsPosts = pgTable("news_posts", {
   body: text("body").notNull().default(""),
   imageUrl: text("image_url"),
   publishedOn: text("published_on"),
-  /** `news` (default) or `report` for programme/activity reports. */
+  /** `news` (default), `newsletter` (observances/campaign notes), or `report`. */
   kind: text("kind").notNull().default("news"),
   /** Original source PDF URL/path (not the branded generated PDF). */
   attachmentUrl: text("attachment_url"),

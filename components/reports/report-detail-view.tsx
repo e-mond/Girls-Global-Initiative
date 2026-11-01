@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, CalendarDays, FileText } from "lucide-react";
+import { BookOpen, CalendarDays, FileText, MapPin } from "lucide-react";
 import { CtaBand } from "@/components/layout/content-section";
 import { PageBreadcrumb } from "@/components/layout/editorial";
 import { Reveal } from "@/components/motion/reveal";
@@ -23,17 +23,25 @@ function slugify(text: string) {
     .slice(0, 64);
 }
 
+/** Render inline markdown emphasis without leaving raw ** markers visible. */
 function renderInline(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  // Convert legacy `**Label:**` (colon inside markers) to `**Label**:`.
+  const normalized = text.replace(/\*\*([^*]+):\*\*/g, "**$1**:");
+  const parts = normalized.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={`${part}-${index}`} className="font-semibold text-brand-navy">
+        <strong
+          key={`${part}-${index}`}
+          className="font-semibold text-brand-navy"
+        >
           {part.slice(2, -2)}
         </strong>
       );
     }
-    return <span key={`${part.slice(0, 24)}-${index}`}>{part}</span>;
+    // Fallback: strip unpaired emphasis markers so they never show as plain text.
+    const cleaned = part.replace(/\*\*/g, "");
+    return <span key={`${cleaned.slice(0, 24)}-${index}`}>{cleaned}</span>;
   });
 }
 
@@ -75,7 +83,12 @@ function parseBlocks(body: string): Block[] {
     }
     if (
       lines.length > 1 &&
-      lines.every((line) => /^•\s+/.test(line) || /^\*\*[^*]+\*\*:/.test(line))
+      lines.every(
+        (line) =>
+          /^•\s+/.test(line) ||
+          /^\*\*[^*]+\*\*:/.test(line) ||
+          /^\*\*[^*]+\*\*\s*:/.test(line),
+      )
     ) {
       blocks.push({
         type: "list",
@@ -88,12 +101,22 @@ function parseBlocks(body: string): Block[] {
   return blocks;
 }
 
+function inferLocationHint(report: PublicNewsItem): string | null {
+  const match = report.body.match(/\*\*Venue\*\*\s*:\s*([^\n•]+)/i);
+  if (match?.[1]) return match[1].trim();
+  if (/Enchi/i.test(report.summary) || /Enchi/i.test(report.title)) {
+    return "Enchi, Western North Region, Ghana";
+  }
+  return null;
+}
+
 export function ReportDetailView({ report }: { report: PublicNewsItem }) {
   const blocks = parseBlocks(report.body);
   const headings = blocks.filter(
     (block): block is Extract<Block, { type: "heading" }> =>
       block.type === "heading",
   );
+  const locationHint = inferLocationHint(report);
 
   return (
     <>
@@ -105,68 +128,75 @@ export function ReportDetailView({ report }: { report: PublicNewsItem }) {
               alt=""
               fill
               priority
-              className="object-cover opacity-35"
+              className="object-cover opacity-25"
               sizes="100vw"
             />
           ) : null}
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/85 to-brand-navy/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/92 to-brand-navy/75" />
         </div>
-        <Reveal className="relative mx-auto max-w-6xl px-4 pb-14 pt-[calc(var(--public-header-offset)+2.25rem)] lg:px-6 lg:pb-16">
+        <Reveal className="relative mx-auto max-w-6xl px-4 pb-8 pt-[calc(var(--public-header-offset)+1.5rem)] lg:px-6 lg:pb-10">
           <PageBreadcrumb current="Reports" onDark />
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-2">
             <span className="inline-flex rounded-full bg-brand-magenta px-3 py-1 text-xs font-bold uppercase tracking-wide">
+              Girls Global Initiative
+            </span>
+            <span className="inline-flex rounded-full border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
               Programme report
             </span>
+          </div>
+          <h1 className="mt-4 max-w-4xl font-display text-3xl font-bold leading-tight sm:text-4xl">
+            {report.title}
+          </h1>
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-white/85">
             {report.publishedOn ? (
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85">
+              <span className="inline-flex items-center gap-1.5">
                 <CalendarDays className="h-4 w-4 text-brand-sky" aria-hidden />
                 {report.publishedOn}
               </span>
             ) : null}
+            {locationHint ? (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-brand-sky" aria-hidden />
+                {locationHint}
+              </span>
+            ) : null}
           </div>
-          <h1 className="mt-5 max-w-4xl font-display text-4xl font-bold leading-tight sm:text-5xl">
-            {report.title}
-          </h1>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/85 sm:text-lg">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/80 sm:text-base">
             {report.summary}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#report-body"
-              className="inline-flex h-11 items-center rounded-xl bg-brand-magenta px-5 text-sm font-semibold hover:bg-brand-magenta/90"
-            >
-              Read the report
-            </a>
+          <div className="mt-6 flex flex-wrap gap-3">
             <DownloadBrandedPdf
               title={report.title}
               summary={report.summary}
               publishedOn={report.publishedOn}
               body={report.body}
               fileName={`${report.slug}-ggi.pdf`}
+              label="Download Full Report"
             />
+            <a
+              href="#report-body"
+              className="inline-flex h-11 items-center rounded-full border border-white/30 px-5 text-sm font-semibold text-text-on-inverse hover:border-brand-sky hover:text-brand-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+            >
+              Read online
+            </a>
+            {report.attachmentUrl ? (
+              <a
+                href={report.attachmentUrl}
+                className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 px-5 text-sm font-semibold text-text-on-inverse hover:border-brand-sky hover:text-brand-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+              >
+                <FileText className="h-4 w-4" aria-hidden />
+                Original source PDF
+              </a>
+            ) : null}
           </div>
         </Reveal>
       </section>
 
-      {report.imageSrc ? (
-        <div className="bg-bg-surface px-4 py-6 lg:px-6">
-          <div className="relative mx-auto aspect-[21/9] max-w-6xl overflow-hidden rounded-[1.75rem] border border-border-default">
-            <Image
-              src={report.imageSrc}
-              alt={report.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1200px) 100vw, 1100px"
-            />
-          </div>
-        </div>
-      ) : null}
-
       <section
         id="report-body"
-        className="scroll-mt-28 bg-bg-base px-4 py-12 lg:px-6 lg:py-16"
+        className="scroll-mt-28 bg-bg-base px-4 py-10 lg:px-6 lg:py-14"
       >
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
           <nav
             aria-label="Report sections"
             className="hidden lg:block lg:sticky lg:top-28 lg:self-start"
@@ -212,7 +242,7 @@ export function ReportDetailView({ report }: { report: PublicNewsItem }) {
                     <h2
                       key={`${block.id}-${index}`}
                       id={block.id}
-                      className="scroll-mt-28 border-l-4 border-brand-sky pl-4 font-display text-2xl font-bold text-brand-navy pt-4"
+                      className="scroll-mt-28 border-l-4 border-brand-sky pl-4 pt-4 font-display text-2xl font-bold text-brand-navy"
                     >
                       {block.text}
                     </h2>
@@ -280,7 +310,7 @@ export function ReportDetailView({ report }: { report: PublicNewsItem }) {
                 return (
                   <p
                     key={`p-${index}`}
-                    className="text-base leading-relaxed text-text-muted whitespace-pre-line"
+                    className="whitespace-pre-line text-base leading-relaxed text-text-muted"
                   >
                     {renderInline(block.text)}
                   </p>
@@ -290,12 +320,12 @@ export function ReportDetailView({ report }: { report: PublicNewsItem }) {
 
             <div className="mt-10 rounded-2xl border border-brand-sky/30 bg-blob-sky/20 p-5">
               <p className="font-display text-lg font-bold text-brand-navy">
-                Download the branded PDF
+                Download Full Report
               </p>
               <p className="mt-2 text-sm text-text-muted">
-                A newly generated Girls Global Initiative PDF — not a copy of the
-                original source layout — with navy, magenta and sky branding for
-                sharing with partners and schools.
+                A newly generated Girls Global Initiative PDF — not a reprint of
+                the original source layout — for sharing with partners and
+                schools.
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
                 <DownloadBrandedPdf
@@ -304,6 +334,7 @@ export function ReportDetailView({ report }: { report: PublicNewsItem }) {
                   publishedOn={report.publishedOn}
                   body={report.body}
                   fileName={`${report.slug}-ggi.pdf`}
+                  label="Download Full Report"
                 />
                 {report.attachmentUrl ? (
                   <a

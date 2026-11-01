@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarPlus } from "lucide-react";
+import { parseFlexibleDate } from "@/lib/date/parse-flexible-date";
 
 type AddToCalendarProps = {
   title: string;
@@ -13,19 +14,6 @@ type AddToCalendarProps = {
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
-}
-
-/** Best-effort parse of human CMS dates like "23 October 2026". */
-function parseFlexibleDate(value: string | null | undefined): Date | null {
-  if (!value?.trim()) return null;
-  const direct = Date.parse(value);
-  if (!Number.isNaN(direct)) return new Date(direct);
-  const match = value
-    .trim()
-    .match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
-  if (!match) return null;
-  const trial = Date.parse(`${match[2]} ${match[1]}, ${match[3]}`);
-  return Number.isNaN(trial) ? null : new Date(trial);
 }
 
 function toIcsDate(date: Date) {

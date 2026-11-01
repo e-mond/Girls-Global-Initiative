@@ -23,6 +23,7 @@
     "db:publish-girl-beyond-map-event": "tsx --env-file=.env.local scripts/publish-girl-beyond-the-map-event.ts",
     "db:publish-programme-reports": "tsx --env-file=.env.local scripts/publish-programme-reports.ts",
     "db:extract-programme-reports": "tsx --env-file=.env.local scripts/extract-programme-reports.ts",
+    "db:publish-poster-content": "tsx --env-file=.env.local scripts/publish-poster-content.ts",
     "announce:site-live": "tsx --env-file=.env.local scripts/announce-site-live.ts"
   },
   "dependencies": {
