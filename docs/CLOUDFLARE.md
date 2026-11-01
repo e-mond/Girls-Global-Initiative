@@ -68,9 +68,15 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/pur
 
 Then hard-refresh the browser (or open a private window).
 
+**After every production deploy**, purge the zone cache. ISR HTML uses
+`s-maxage=120` with a long `stale-while-revalidate`; without a purge, soft
+client navigations can request RSC/webpack chunks from the previous deploy
+and fail with `Cannot read properties of undefined (reading 'call')` until
+the browser loads fresh HTML.
+
 Public routes set `revalidate = 120` so new HTML is not cached for a year
 while limiting SSR regeneration cost (see `docs/ERROR-1102-INVESTIGATION.md`).
-Hashed `/_next/static/*` assets remain immutable.
+Hashed `/_next/static/*` assets remain immutable — old hashes 404 after deploy.
 
 ### Error 1102 (Worker resource limits)
 

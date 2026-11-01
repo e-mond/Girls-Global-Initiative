@@ -20,6 +20,7 @@ import {
   type PillarSlug,
 } from "@/features/content/mock-home";
 import { ADVOCATE_COPY } from "@/content/site-copy";
+import { normalizePublicImageSrc } from "@/lib/media/public-image-src";
 
 export type PublicGalleryItem = {
   id: string;
@@ -210,9 +211,9 @@ export async function getPublicGalleryItems(): Promise<PublicGalleryItem[]> {
   return published.map((item, index) => {
     const fallback = communityStories[index % communityStories.length];
     const imageUrl =
-      typeof item.imageUrl === "string" && item.imageUrl.trim()
-        ? item.imageUrl.trim()
-        : fallback.imageSrc;
+      normalizePublicImageSrc(
+        typeof item.imageUrl === "string" ? item.imageUrl : null,
+      ) ?? normalizePublicImageSrc(fallback.imageSrc)!;
     return {
       id: item.id,
       title: String(item.title ?? "Gallery moment"),
@@ -254,10 +255,9 @@ function mapNewsItem(item: Awaited<
     slug: String(item.slug ?? item.id),
     summary: String(item.summary ?? ""),
     body: String(item.body ?? ""),
-    imageSrc:
-      typeof item.imageUrl === "string" && item.imageUrl.trim()
-        ? item.imageUrl.trim()
-        : null,
+    imageSrc: normalizePublicImageSrc(
+      typeof item.imageUrl === "string" ? item.imageUrl : null,
+    ),
     publishedOn:
       typeof item.publishedOn === "string" && item.publishedOn.trim()
         ? item.publishedOn
@@ -292,10 +292,9 @@ function mapEventItem(item: Awaited<
       typeof item.endsOn === "string" && item.endsOn.trim()
         ? item.endsOn
         : null,
-    imageSrc:
-      typeof item.imageUrl === "string" && item.imageUrl.trim()
-        ? item.imageUrl.trim()
-        : null,
+    imageSrc: normalizePublicImageSrc(
+      typeof item.imageUrl === "string" ? item.imageUrl : null,
+    ),
     hostLabel:
       typeof item.hostLabel === "string" && item.hostLabel.trim()
         ? item.hostLabel.trim()

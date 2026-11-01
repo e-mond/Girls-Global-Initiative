@@ -39,7 +39,9 @@ const nextConfig: NextConfig = {
   // Docker image uses standalone; Cloudflare OpenNext uses default Next output.
   ...(process.env.DOCKER_BUILD === "1" ? { output: "standalone" as const } : {}),
   images: {
-    // Preserve local image support while allowing versioned photo URLs.
+    // Allow local public assets. Omit `search` so `?v=` cache-busters are
+    // permitted by the matcher; runtime mappers still strip search for the
+    // Cloudflare image optimizer when serving CMS imageUrl values.
     localPatterns: [{ pathname: "/**" }],
   },
   async headers() {
