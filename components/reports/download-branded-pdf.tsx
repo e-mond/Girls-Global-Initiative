@@ -10,6 +10,7 @@ type DownloadBrandedPdfProps = {
   body: string;
   fileName?: string;
   className?: string;
+  label?: string;
 };
 
 const NAVY: [number, number, number] = [4, 27, 75];
@@ -45,11 +46,14 @@ export function DownloadBrandedPdf({
   body,
   fileName,
   className,
+  label = "Download branded PDF",
 }: DownloadBrandedPdfProps) {
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function onDownload() {
     setBusy(true);
+    setError(null);
     try {
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF({ unit: "pt", format: "a4" });
@@ -228,23 +232,32 @@ export function DownloadBrandedPdf({
           .replace(/^-|-$/g, "")
           .slice(0, 60) || "ggi-report"}.pdf`;
       doc.save(safeName.endsWith(".pdf") ? safeName : `${safeName}.pdf`);
+    } catch {
+      setError("Could not prepare the PDF. Please try again.");
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => void onDownload()}
-      disabled={busy}
-      className={
-        className ??
-        "inline-flex h-11 items-center gap-2 rounded-full bg-brand-magenta px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-magenta/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky disabled:opacity-60"
-      }
-    >
-      <FileDown className="h-4 w-4" aria-hidden />
-      {busy ? "Preparing PDF…" : "Download branded PDF"}
-    </button>
+    <span className="inline-flex flex-col items-start gap-1">
+      <button
+        type="button"
+        onClick={() => void onDownload()}
+        disabled={busy}
+        className={
+          className ??
+          "inline-flex h-11 items-center gap-2 rounded-full bg-brand-magenta px-5 text-sm font-semibold text-text-on-inverse hover:bg-brand-magenta/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky disabled:opacity-60"
+        }
+      >
+        <FileDown className="h-4 w-4" aria-hidden />
+        {busy ? "Preparing PDF…" : label}
+      </button>
+      {error ? (
+        <span className="text-xs font-medium text-brand-magenta" role="alert">
+          {error}
+        </span>
+      ) : null}
+    </span>
   );
 }

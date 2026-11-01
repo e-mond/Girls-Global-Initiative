@@ -39,7 +39,7 @@ export type PublicNewsItem = {
   body: string;
   imageSrc: string | null;
   publishedOn: string | null;
-  kind: "news" | "report";
+  kind: "news" | "newsletter" | "report";
   attachmentUrl: string | null;
   isPlaceholder: boolean;
 };
@@ -235,10 +235,22 @@ function mapNewsItem(item: Awaited<
   ReturnType<typeof listPublishedContent>
 >[number]): PublicNewsItem {
   const kindRaw = String(item.kind ?? "news").toLowerCase();
-  const kind = kindRaw === "report" ? "report" : "news";
+  const kind =
+    kindRaw === "report"
+      ? "report"
+      : kindRaw === "newsletter"
+        ? "newsletter"
+        : "news";
   return {
     id: item.id,
-    title: String(item.title ?? (kind === "report" ? "Report" : "News")),
+    title: String(
+      item.title ??
+        (kind === "report"
+          ? "Report"
+          : kind === "newsletter"
+            ? "Newsletter"
+            : "News"),
+    ),
     slug: String(item.slug ?? item.id),
     summary: String(item.summary ?? ""),
     body: String(item.body ?? ""),
@@ -301,6 +313,31 @@ export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
     return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
   }
   return limit ? newsOnly.slice(0, limit) : newsOnly;
+}
+
+/** Published commemorative / campaign newsletter posts. */
+export async function getPublicNewsletters(
+  limit?: number,
+): Promise<PublicNewsItem[]> {
+  const published = await listPublishedContent("news_posts");
+  const newsletters = published
+    .map(mapNewsItem)
+    .filter((item) => item.kind === "newsletter");
+  return limit ? newsletters.slice(0, limit) : newsletters;
+}
+
+/** News + newsletter posts for static params and shared listings. */
+export async function getPublicNewsFeed(
+  limit?: number,
+): Promise<PublicNewsItem[]> {
+  const published = await listPublishedContent("news_posts");
+  const feed = published
+    .map(mapNewsItem)
+    .filter((item) => item.kind === "news" || item.kind === "newsletter");
+  if (feed.length === 0) {
+    return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
+  }
+  return limit ? feed.slice(0, limit) : feed;
 }
 
 /** Published programme/activity reports. */

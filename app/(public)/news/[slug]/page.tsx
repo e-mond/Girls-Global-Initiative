@@ -10,15 +10,15 @@ import {
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { ShareButtons } from "@/components/news/share-buttons";
 import {
-  getPublicNews,
   getPublicNewsBySlug,
+  getPublicNewsFeed,
 } from "@/features/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 type PageParams = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const items = await getPublicNews();
+  const items = await getPublicNewsFeed();
   return items
     .filter((item) => !item.isPlaceholder)
     .map((item) => ({ slug: item.slug }));
@@ -71,7 +71,7 @@ export default async function NewsDetailPage({ params }: PageParams) {
     <>
       <PageHeroEditorial
         breadcrumb="News"
-        badge="Update"
+        badge={post.kind === "newsletter" ? "Newsletter" : "Update"}
         meta={post.publishedOn ?? "GGI news"}
         title={post.title}
         description={post.summary}

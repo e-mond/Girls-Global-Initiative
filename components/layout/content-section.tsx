@@ -19,6 +19,7 @@ export function ContentSection({
   children,
   tone = "base",
   narrow = false,
+  id,
 }: {
   eyebrow?: string;
   title?: string;
@@ -26,6 +27,7 @@ export function ContentSection({
   children?: ReactNode;
   tone?: ContentTone;
   narrow?: boolean;
+  id?: string;
 }) {
   const toneClass =
     tone === "surface"
@@ -41,7 +43,14 @@ export function ContentSection({
               : "bg-bg-base text-brand-navy";
 
   return (
-    <section className={cn("px-4 py-14 lg:px-6 lg:py-20", toneClass)}>
+    <section
+      id={id}
+      className={cn(
+        "px-4 py-14 lg:px-6 lg:py-20",
+        id ? "scroll-mt-28" : null,
+        toneClass,
+      )}
+    >
       <Reveal className="mx-auto max-w-6xl">
         {eyebrow ? (
           <p

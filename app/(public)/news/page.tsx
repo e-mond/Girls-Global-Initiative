@@ -24,14 +24,89 @@ import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import {
   getPublicEvents,
   getPublicNews,
+  getPublicNewsletters,
 } from "@/features/content/public-content";
+import type { PublicNewsItem } from "@/features/content/public-content";
+
+function NewsCardGrid({
+  items,
+  emptyHint,
+  ctaLabel,
+}: {
+  items: PublicNewsItem[];
+  emptyHint: string;
+  ctaLabel: string;
+}) {
+  if (items.length === 0) {
+    return <p className="text-sm text-text-muted">{emptyHint}</p>;
+  }
+
+  return (
+    <Stagger className="grid gap-6 lg:grid-cols-2">
+      {items.map((item) => {
+        const href = item.isPlaceholder ? "/news" : `/news/${item.slug}`;
+        return (
+          <StaggerItem key={item.id}>
+            <article className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base transition hover:border-brand-sky/40">
+              <Link
+                href={href}
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                aria-label={item.title}
+              >
+                <div className="relative h-52 bg-blob-sky/30">
+                  {item.imageSrc ? (
+                    <Image
+                      src={item.imageSrc}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  ) : null}
+                </div>
+                <div className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                    {item.kind === "newsletter" ? "Newsletter" : "News"}
+                    {item.publishedOn ? ` · ${item.publishedOn}` : ""}
+                  </p>
+                  <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
+                    {item.title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-text-muted">
+                    {item.summary}
+                  </p>
+                  {!item.isPlaceholder ? (
+                    <span className="mt-4 inline-flex text-sm font-semibold text-brand-sky">
+                      {ctaLabel}
+                    </span>
+                  ) : null}
+                </div>
+              </Link>
+              {!item.isPlaceholder ? (
+                <div className="px-6 pb-6">
+                  <ShareButtons
+                    title={item.title}
+                    summary={item.summary}
+                    url={`/news/${item.slug}`}
+                  />
+                </div>
+              ) : null}
+            </article>
+          </StaggerItem>
+        );
+      })}
+    </Stagger>
+  );
+}
 
 export default async function NewsPage() {
-  const [items, events] = await Promise.all([
+  const [items, newsletters, events] = await Promise.all([
     getPublicNews(),
+    getPublicNewsletters(),
     getPublicEvents(),
   ]);
   const showingPlaceholders = items.every((item) => item.isPlaceholder);
+  const liveNews = showingPlaceholders ? [] : items;
   const liveEvents = events.filter((item) => !item.isPlaceholder);
 
   return (
@@ -44,7 +119,7 @@ export default async function NewsPage() {
         description="School outreach, community work, partnership updates, and upcoming events."
         tone="sky"
         ctas={[
-          { href: "/reports", label: "Programme reports", variant: "secondary" },
+          { href: "#newsletter-notes", label: "Newsletter notes", variant: "secondary" },
           { href: "/events", label: "See events" },
         ]}
       />
@@ -58,7 +133,7 @@ export default async function NewsPage() {
         }}
         right={{
           label: "How it grows",
-          body: "Staff publish news and events from the CMS as programmes and reports are confirmed.",
+          body: "Staff publish news and newsletter notes from the CMS as programmes and observances are confirmed.",
           icon: Radio,
           tone: "pink",
         }}
@@ -126,67 +201,31 @@ export default async function NewsPage() {
         eyebrow="Latest"
         title="What we are sharing right now."
         description={
-          showingPlaceholders
+          liveNews.length === 0
             ? "Programme updates will appear here when published."
-            : "Open a story for the full report and download."
+            : "Open a story for the full update."
         }
         tone="surface"
       >
-        <Stagger className="grid gap-6 lg:grid-cols-2">
-          {items.map((item) => {
-            const href = item.isPlaceholder ? "/news" : `/news/${item.slug}`;
-            return (
-              <StaggerItem key={item.id}>
-                <article className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base transition hover:border-brand-sky/40">
-                  <Link
-                    href={href}
-                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
-                    aria-label={item.title}
-                  >
-                    <div className="relative h-52 bg-blob-sky/30">
-                      {item.imageSrc ? (
-                        <Image
-                          src={item.imageSrc}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                      ) : null}
-                    </div>
-                    <div className="p-6">
-                      {item.publishedOn ? (
-                        <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
-                          {item.publishedOn}
-                        </p>
-                      ) : null}
-                      <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
-                        {item.title}
-                      </h2>
-                      <p className="mt-3 text-sm leading-relaxed text-text-muted">
-                        {item.summary}
-                      </p>
-                      {!item.isPlaceholder ? (
-                        <span className="mt-4 inline-flex text-sm font-semibold text-brand-sky">
-                          Read full update
-                        </span>
-                      ) : null}
-                    </div>
-                  </Link>
-                  {!item.isPlaceholder ? (
-                    <div className="px-6 pb-6">
-                      <ShareButtons
-                        title={item.title}
-                        summary={item.summary}
-                        url={`/news/${item.slug}`}
-                      />
-                    </div>
-                  ) : null}
-                </article>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+        <NewsCardGrid
+          items={liveNews}
+          emptyHint="Programme updates will appear here when published."
+          ctaLabel="Read full update"
+        />
+      </ContentSection>
+
+      <ContentSection
+        id="newsletter-notes"
+        eyebrow="Newsletter"
+        title="Observances and campaign notes."
+        description="Commemorative messages and awareness notes from GGI — not always programme events."
+        tone="cream"
+      >
+        <NewsCardGrid
+          items={newsletters}
+          emptyHint="Newsletter notes will appear here when published."
+          ctaLabel="Read note"
+        />
       </ContentSection>
 
       <PhotoBand src="/our-story/values.jpg?v=20261026" alt="Two schoolgirls reading a book together outdoors in Ghana" />
@@ -194,7 +233,7 @@ export default async function NewsPage() {
       <CtaBand
         title="Stay closer to the work."
         description="Subscribe on the homepage or follow GGI on social channels."
-        primary={{ href: "/#newsletter", label: "Newsletter" }}
+        primary={{ href: "/#newsletter", label: "Newsletter signup" }}
         secondary={{ href: "/contact", label: "Contact us" }}
       />
     </>

@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { ContentEntityManager } from "@/components/admin/content-entity-manager";
 
 export default function AdminNewsPage() {
-  const onlyNews = useCallback(
+  const onlyNewsAndNewsletters = useCallback(
     (item: { [key: string]: unknown }) =>
       String(item.kind ?? "news") !== "report",
     [],
@@ -13,12 +13,17 @@ export default function AdminNewsPage() {
   return (
     <ContentEntityManager
       entity="news_posts"
-      title="News"
-      description="Publish news stories for the public News page and homepage news section. Programme reports live under Content → Reports."
-      filterItems={onlyNews}
+      title="News & newsletter"
+      description="Publish news stories and commemorative newsletter notes for the public News page. Programme reports live under Content → Reports. Set kind to news or newsletter."
+      filterItems={onlyNewsAndNewsletters}
       fields={[
         { name: "title", label: "Title", required: true },
         { name: "slug", label: "Slug", required: true },
+        {
+          name: "kind",
+          label: "Kind (news or newsletter)",
+          required: true,
+        },
         { name: "summary", label: "Summary", type: "textarea", required: true },
         { name: "body", label: "Body", type: "textarea" },
         { name: "imageUrl", label: "Image", type: "image" },

@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Event & report detail revamp + PDF extraction → branded reports**
-* **Status:** Validated — shipping `feature/event-report-detail-revamp`
-* **Previous phase:** Error 1102 + programme reports merge (PR #45)
-* **Current branch:** `feature/event-report-detail-revamp`
+* **Poster assets, event archives, newsletter notes & report/events UI**
+* **Status:** Validated — shipping `feature/poster-content-archives-ui`
+* **Previous phase:** Event/report PDF extraction (PR #46)
+* **Current branch:** `feature/poster-content-archives-ui`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** PDF extract → admin review/approve → GGI online report + branded PDF; event detail revamp.
-* **Explicitly deferred:** Automatic OCR for scanned PDFs; re-hosting embedded source PDF images into branded layout; production host migration; Workers Paid upgrade; Paystack recurring billing (Phase 2).
+* **Current objective:** Map posters → update past events; publish newsletter/news posts; fix report bold + headers; Events See Events + past/upcoming.
+* **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Ship event/report UX revamp with PDF content extraction, admin review gates, branded online + downloadable reports.
+Ship poster-backed content updates, past-event archive UX, newsletter kind, and report/events header improvements.
 
 ---
 
@@ -1488,6 +1488,21 @@ Phase 2 recurring billing remains deferred.
 * Removed footer photo credits + visible “Placeholder” labels on news/events.
 * Validation: lint PASS; type-check PASS; Playwright 53 PASS.
 * Live site still needs a deploy for new static assets + UI (Neon content is ready).
+
+### Session Notes — Poster content, archives & UI
+
+* Inspected all 8 files in `assets/Posters/` (no subfolders); mapping in
+  `docs/POSTER-CONTENT-MAPPING.md`.
+* Optimised images → `public/events/*`, `public/news/*` (`?v=20261101p`).
+* Updated events `the-girl-beyond-the-map` and `breast-cancer-awareness-enchi-2026`
+  (poster images, accurate copy, report link); both land in Past via `startsOn`.
+* Extended `news_posts.kind` with `newsletter`; Admin News + `/news` Newsletter section.
+* Published 5 newsletter + 2 news posts via `npm run db:publish-poster-content`.
+* Report: fixed `**Label:**` bold rendering; compact header; **Download Full Report**.
+* Events page: **See Events** → `#events-calendar`; Upcoming / Past split.
+* No schema migration required (text `kind` column).
+* Validation: lint PASS; type-check PASS; focused Playwright 12 PASS;
+  `npm run build` PASS (news/newsletter SSG paths + both event/report slugs).
 
 ### Session Notes — PDF extraction & branded report generation
 

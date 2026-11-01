@@ -20,11 +20,79 @@ import {
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
-import { getPublicEvents } from "@/features/content/public-content";
+import {
+  getPublicEvents,
+  type PublicEventItem,
+} from "@/features/content/public-content";
+import { isPastCalendarDate } from "@/lib/date/parse-flexible-date";
+
+function EventCardList({ items }: { items: PublicEventItem[] }) {
+  return (
+    <Stagger className="space-y-5">
+      {items.map((item) => {
+        const href = item.isPlaceholder ? undefined : `/events/${item.slug}`;
+        const card = (
+          <article className="grid h-full overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 md:grid-cols-[220px_1fr]">
+            <div className="relative min-h-[160px] bg-blob-sky/40">
+              {item.imageSrc ? (
+                <Image
+                  src={item.imageSrc}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes="220px"
+                />
+              ) : null}
+            </div>
+            <div className="p-6">
+              {item.startsOn ? (
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                  {item.startsOn}
+                </p>
+              ) : null}
+              <h2 className="mt-1 font-display text-xl font-bold text-brand-navy">
+                {item.title}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-text-muted">
+                {item.summary}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-brand-navy">
+                {item.endsOn ? <span>{item.endsOn}</span> : null}
+                {item.location ? <span>{item.location}</span> : null}
+              </div>
+              <span className="mt-5 inline-flex text-sm font-semibold text-brand-sky">
+                {href ? "Details & add to calendar" : "Invite GGI via Partner"}
+              </span>
+            </div>
+          </article>
+        );
+
+        return (
+          <StaggerItem key={item.id}>
+            {href ? (
+              <Link
+                href={href}
+                className="block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                aria-label={`View details for ${item.title}`}
+              >
+                {card}
+              </Link>
+            ) : (
+              card
+            )}
+          </StaggerItem>
+        );
+      })}
+    </Stagger>
+  );
+}
 
 export default async function EventsPage() {
   const items = await getPublicEvents();
   const showingPlaceholders = items.every((item) => item.isPlaceholder);
+  const live = showingPlaceholders ? [] : items;
+  const upcoming = live.filter((item) => !isPastCalendarDate(item.startsOn));
+  const past = live.filter((item) => isPastCalendarDate(item.startsOn));
 
   return (
     <>
@@ -36,8 +104,8 @@ export default async function EventsPage() {
         description="Outreach, gatherings, and invitations — published only when confirmed."
         tone="blush"
         ctas={[
-          { href: "/partner", label: "Invite GGI" },
-          { href: "/news", label: "Read news", variant: "secondary" },
+          { href: "#events-calendar", label: "See Events" },
+          { href: "/partner", label: "Invite GGI", variant: "secondary" },
         ]}
       />
 
@@ -90,73 +158,51 @@ export default async function EventsPage() {
       />
 
       <ContentSection
+        id="events-calendar"
         eyebrow="Calendar"
         title="Where girls and communities can meet the work."
         description={
           showingPlaceholders
             ? "Confirmed gatherings will appear here when published."
-            : "Select an event to read the full details and add it to your calendar."
+            : "Upcoming invitations appear first. Past programmes stay available in the archive."
         }
         tone="cream"
       >
-        <Stagger className="space-y-5">
-          {items.map((item) => {
-            const href = item.isPlaceholder
-              ? undefined
-              : `/events/${item.slug}`;
-            const card = (
-              <article className="grid h-full overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 md:grid-cols-[220px_1fr]">
-                <div className="relative min-h-[160px] bg-blob-sky/40">
-                  {item.imageSrc ? (
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="220px"
-                    />
-                  ) : null}
-                </div>
-                <div className="p-6">
-                  {item.startsOn ? (
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
-                      {item.startsOn}
-                    </p>
-                  ) : null}
-                  <h2 className="mt-1 font-display text-xl font-bold text-brand-navy">
-                    {item.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-text-muted">
-                    {item.summary}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-brand-navy">
-                    {item.endsOn ? <span>{item.endsOn}</span> : null}
-                    {item.location ? <span>{item.location}</span> : null}
-                  </div>
-                  <span className="mt-5 inline-flex text-sm font-semibold text-brand-sky">
-                    {href ? "Details & add to calendar" : "Invite GGI via Partner"}
-                  </span>
-                </div>
-              </article>
-            );
-
-            return (
-              <StaggerItem key={item.id}>
-                {href ? (
-                  <Link
-                    href={href}
-                    className="block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
-                    aria-label={`View details for ${item.title}`}
-                  >
-                    {card}
-                  </Link>
+        {showingPlaceholders ? (
+          <EventCardList items={items} />
+        ) : (
+          <div className="space-y-12">
+            <div>
+              <h3 className="font-display text-lg font-bold text-brand-navy">
+                Upcoming
+              </h3>
+              <div className="mt-4">
+                {upcoming.length > 0 ? (
+                  <EventCardList items={upcoming} />
                 ) : (
-                  card
+                  <p className="text-sm text-text-muted">
+                    No upcoming events are published right now. Browse past
+                    programmes below or invite GGI to your community.
+                  </p>
                 )}
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-display text-lg font-bold text-brand-navy">
+                Past events
+              </h3>
+              <div className="mt-4">
+                {past.length > 0 ? (
+                  <EventCardList items={past} />
+                ) : (
+                  <p className="text-sm text-text-muted">
+                    Past programmes will appear here after their event date.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </ContentSection>
 
       <CtaBand
