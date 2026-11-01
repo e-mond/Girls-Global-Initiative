@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Programme reports, gallery, calendar & CMS preview**
-* **Status:** In progress on `feature/error-1102-investigation-and-portability`
-* **Previous phase:** Error 1102 investigation & portability (same branch)
-* **Current branch:** `feature/error-1102-investigation-and-portability`
+* **Event & report detail revamp + PDF extraction → branded reports**
+* **Status:** Validated — shipping `feature/event-report-detail-revamp`
+* **Previous phase:** Error 1102 + programme reports merge (PR #45)
+* **Current branch:** `feature/event-report-detail-revamp`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Publish Pages of Hope + Breast Cancer reports as backdated news; seed gallery; event add-to-calendar; admin preview-before-publish; remove photo credits / “Placeholder” UI.
-* **Explicitly deferred:** Production host migration; Workers Paid upgrade; Paystack recurring billing (Phase 2).
+* **Current objective:** PDF extract → admin review/approve → GGI online report + branded PDF; event detail revamp.
+* **Explicitly deferred:** Automatic OCR for scanned PDFs; re-hosting embedded source PDF images into branded layout; production host migration; Workers Paid upgrade; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Ship programme report news + gallery assets, improve events/news/admin preview UX, and keep 1102 mitigations on the same branch pending deploy approval.
+Ship event/report UX revamp with PDF content extraction, admin review gates, branded online + downloadable reports.
 
 ---
 
@@ -1466,6 +1466,16 @@ Phase 2 recurring billing remains deferred.
 * Go-live checklist expanded in `docs/DEPLOYMENT-RUNBOOK.md`.
 * Phase 2 recurring Paystack billing remains deferred (not implemented).
 
+### Session Notes — Event/report detail revamp
+
+* Event detail: full-bleed hero, featured image, navy “what stands out”
+  (date/time/place), host card, timeline, calendar CTA.
+* Reports: `/reports` + `/reports/[slug]`; proofread bodies from PDFs;
+  client branded PDF via `jspdf`; original source PDF link retained.
+* Admin → Content → Reports (+ dashboard quick action); `news_posts.kind`
+  + `attachment_url`; events `host_label` (migration `0012`).
+* Validation: lint PASS; type-check PASS; Playwright 53 PASS.
+
 ### Session Notes — Programme reports, gallery, calendar, preview
 
 * Read Pages of Hope (March 2026) + Breast Cancer Awareness (23 Oct 2026) PDFs;
@@ -1478,6 +1488,26 @@ Phase 2 recurring billing remains deferred.
 * Removed footer photo credits + visible “Placeholder” labels on news/events.
 * Validation: lint PASS; type-check PASS; Playwright 53 PASS.
 * Live site still needs a deploy for new static assets + UI (Neon content is ready).
+
+### Session Notes — PDF extraction & branded report generation
+
+* Source PDFs are content inputs only; published presentation is GGI-branded.
+* Migration `0013_report_extraction` (`extraction_status`, `extraction_notes`,
+  `extracted_raw`); `kind`/`attachment_url` via `0012`.
+* Pipeline: `pdf-parse` v2 → `structure-from-text` → admin Reports workspace →
+  approve → publish gate on content PATCH.
+* Public `/reports` + `/reports/[slug]` with TOC, source PDF link, jspdf branded
+  download (not a reprint of the source layout).
+* Seeded Breast Cancer (5 pages) + Pages of Hope (18 pages) via
+  `npm run db:extract-programme-reports`; compared breast-cancer extract against
+  all source section headings and key facts (attendance, venue, team, challenges).
+* Docs: `docs/REPORT-PDF-EXTRACTION.md`. Unit test: `tests/unit/report-structure.spec.ts`.
+* Limitations: no automatic OCR; embedded source images not re-hosted into branded
+  PDF; extraction must run on Node (admin/scripts).
+* Validation: lint PASS; type-check PASS; report-structure + mobile-a11y PASS;
+  full Playwright 50 passed / 1 flaky-timeout failure on mobile overflow under
+  load (re-run PASS); `npm run build` PASS (reports SSG for both programme
+  slugs).
 
 ### Session Notes — Error 1102 investigation & portability
 

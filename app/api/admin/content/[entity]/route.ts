@@ -139,6 +139,40 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   const { id, ...rest } = parsed.data;
+
+  // Programme reports must be approved before publish (PDF extraction workflow).
+  if (
+    entity.data === "news_posts" &&
+    rest.status === "published"
+  ) {
+    const existing = await getContent(entity.data, id);
+    const kind = String(
+      (rest.kind as string | undefined) ?? existing?.kind ?? "news",
+    );
+    if (kind === "report") {
+      const extractionStatus = String(
+        (rest.extractionStatus as string | undefined) ??
+          existing?.extractionStatus ??
+          "none",
+      );
+      if (extractionStatus !== "approved" && extractionStatus !== "none") {
+        return NextResponse.json(
+          {
+            error: {
+              message:
+                "Approve this report extraction before publishing. Use Reports → Approve.",
+            },
+          },
+          { status: 400 },
+        );
+      }
+      // Manual reports with status none become approved on first intentional publish.
+      if (extractionStatus === "none") {
+        rest.extractionStatus = "approved";
+      }
+    }
+  }
+
   const updated = await updateContent(entity.data, id, rest, access.user.id);
   if (!updated) {
     return NextResponse.json(

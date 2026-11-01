@@ -39,6 +39,8 @@ export type PublicNewsItem = {
   body: string;
   imageSrc: string | null;
   publishedOn: string | null;
+  kind: "news" | "report";
+  attachmentUrl: string | null;
   isPlaceholder: boolean;
 };
 
@@ -52,6 +54,7 @@ export type PublicEventItem = {
   startsOn: string | null;
   endsOn: string | null;
   imageSrc: string | null;
+  hostLabel: string | null;
   isPlaceholder: boolean;
 };
 
@@ -110,6 +113,8 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     body: "",
     imageSrc: "/home/community-1.jpg?v=20261026",
     publishedOn: null,
+    kind: "news",
+    attachmentUrl: null,
     isPlaceholder: true,
   },
   {
@@ -121,6 +126,8 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     body: "",
     imageSrc: "/home/community-2.jpg?v=20261026",
     publishedOn: null,
+    kind: "news",
+    attachmentUrl: null,
     isPlaceholder: true,
   },
 ];
@@ -137,6 +144,7 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     startsOn: null,
     endsOn: null,
     imageSrc: "/home/community-3.jpg?v=20261026",
+    hostLabel: "Girls Global Initiative",
     isPlaceholder: true,
   },
   {
@@ -150,6 +158,7 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     startsOn: null,
     endsOn: null,
     imageSrc: "/home/community-1.jpg?v=20261026",
+    hostLabel: "Girls Global Initiative",
     isPlaceholder: true,
   },
 ];
@@ -225,9 +234,11 @@ export async function getPublicGalleryItems(): Promise<PublicGalleryItem[]> {
 function mapNewsItem(item: Awaited<
   ReturnType<typeof listPublishedContent>
 >[number]): PublicNewsItem {
+  const kindRaw = String(item.kind ?? "news").toLowerCase();
+  const kind = kindRaw === "report" ? "report" : "news";
   return {
     id: item.id,
-    title: String(item.title ?? "News"),
+    title: String(item.title ?? (kind === "report" ? "Report" : "News")),
     slug: String(item.slug ?? item.id),
     summary: String(item.summary ?? ""),
     body: String(item.body ?? ""),
@@ -238,6 +249,11 @@ function mapNewsItem(item: Awaited<
     publishedOn:
       typeof item.publishedOn === "string" && item.publishedOn.trim()
         ? item.publishedOn
+        : null,
+    kind,
+    attachmentUrl:
+      typeof item.attachmentUrl === "string" && item.attachmentUrl.trim()
+        ? item.attachmentUrl.trim()
         : null,
     isPlaceholder: false,
   };
@@ -268,25 +284,51 @@ function mapEventItem(item: Awaited<
       typeof item.imageUrl === "string" && item.imageUrl.trim()
         ? item.imageUrl.trim()
         : null,
+    hostLabel:
+      typeof item.hostLabel === "string" && item.hostLabel.trim()
+        ? item.hostLabel.trim()
+        : null,
     isPlaceholder: false,
   };
 }
 
 export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
-  const published = await listPublishedContent("news_posts", { limit });
-  if (published.length === 0) {
+  const published = await listPublishedContent("news_posts");
+  const newsOnly = published
+    .map(mapNewsItem)
+    .filter((item) => item.kind === "news");
+  if (newsOnly.length === 0) {
     return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
   }
-  return published.map(mapNewsItem);
+  return limit ? newsOnly.slice(0, limit) : newsOnly;
 }
 
-/** Single published news post by slug. */
+/** Published programme/activity reports. */
+export async function getPublicReports(
+  limit?: number,
+): Promise<PublicNewsItem[]> {
+  const published = await listPublishedContent("news_posts");
+  const reports = published
+    .map(mapNewsItem)
+    .filter((item) => item.kind === "report");
+  return limit ? reports.slice(0, limit) : reports;
+}
+
+/** Single published news or report by slug. */
 export async function getPublicNewsBySlug(
   slug: string,
 ): Promise<PublicNewsItem | null> {
   const item = await getPublishedNewsBySlug(slug);
   if (!item) return null;
   return mapNewsItem(item);
+}
+
+export async function getPublicReportBySlug(
+  slug: string,
+): Promise<PublicNewsItem | null> {
+  const item = await getPublicNewsBySlug(slug);
+  if (!item || item.kind !== "report") return null;
+  return item;
 }
 
 export async function getPublicEvents(

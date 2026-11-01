@@ -3,6 +3,7 @@ import {
   getPublicEvents,
   getPublicNews,
   getPublicPillars,
+  getPublicReports,
 } from "@/features/content/public-content";
 import { getSiteOrigin } from "@/lib/seo/site-origin";
 
@@ -20,6 +21,7 @@ const STATIC_PATHS = [
   "/impact",
   "/gallery",
   "/news",
+  "/reports",
   "/events",
   "/founder",
   "/team",
@@ -62,10 +64,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "/" ? 1 : path.startsWith("/get-involved") ? 0.8 : 0.7,
   }));
 
-  const [pillars, events, news] = await Promise.all([
+  const [pillars, events, news, reports] = await Promise.all([
     getPublicPillars(),
     getPublicEvents(),
     getPublicNews(),
+    getPublicReports(),
   ]);
   const pillarEntries: MetadataRoute.Sitemap = pillars.map((pillar) => ({
     url: absoluteUrl(origin, `/what-we-do/${pillar.slug}`),
@@ -89,6 +92,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.65,
     }));
+  const reportEntries: MetadataRoute.Sitemap = reports.map((item) => ({
+    url: absoluteUrl(origin, `/reports/${item.slug}`),
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.65,
+  }));
 
-  return [...staticEntries, ...pillarEntries, ...eventEntries, ...newsEntries];
+  return [
+    ...staticEntries,
+    ...pillarEntries,
+    ...eventEntries,
+    ...newsEntries,
+    ...reportEntries,
+  ];
 }
