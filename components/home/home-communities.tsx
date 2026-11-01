@@ -64,13 +64,6 @@ export function HomeCommunities({
           ))}
         </Stagger>
 
-        <p className="mt-4 text-sm text-text-muted">
-          Illustrative photography of education and community life in Ghana.{" "}
-          <a href="#photo-credits" className="underline underline-offset-2">
-            Photo credits
-          </a>
-        </p>
-
         <Reveal
           delay={0.08}
           className="mt-10 flex flex-col gap-5 rounded-[1.5rem] bg-[#edf2f7] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-8 sm:py-6"

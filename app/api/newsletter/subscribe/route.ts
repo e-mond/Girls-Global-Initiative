@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import { newsletterConfirmEmail } from "@/features/email/branded";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
+import { queueAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { subscribeSchema } from "@/features/newsletter/schemas";
 import {
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   const confirmUrl = `${siteOrigin()}/newsletter/confirm?token=${confirmToken}`;
   const unsubscribeUrl = `${siteOrigin()}/newsletter/unsubscribe?token=${record.unsubscribeToken}`;
   const mail = newsletterConfirmEmail({ confirmUrl, unsubscribeUrl });
-  const emailResult = await sendAcknowledgementEmail({
+  queueAcknowledgementEmail({
     to: record.email,
     subject: mail.subject,
     text: mail.text,
@@ -72,14 +72,14 @@ export async function POST(request: Request) {
     entityType: "newsletter_subscriber",
     entityId: record.id,
     summary: "Newsletter signup requested",
-    metadata: { emailSent: emailResult.sent },
+    metadata: { emailQueued: true },
   });
 
   return NextResponse.json({
     data: {
       message:
         "Check your inbox for a confirmation link to finish subscribing.",
-      emailSent: emailResult.sent,
+      emailSent: true,
     },
   });
 }

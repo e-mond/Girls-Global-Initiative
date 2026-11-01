@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import {
   getPublicEvents,
+  getPublicNews,
   getPublicPillars,
 } from "@/features/content/public-content";
 import { getSiteOrigin } from "@/lib/seo/site-origin";
@@ -61,9 +62,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "/" ? 1 : path.startsWith("/get-involved") ? 0.8 : 0.7,
   }));
 
-  const [pillars, events] = await Promise.all([
+  const [pillars, events, news] = await Promise.all([
     getPublicPillars(),
     getPublicEvents(),
+    getPublicNews(),
   ]);
   const pillarEntries: MetadataRoute.Sitemap = pillars.map((pillar) => ({
     url: absoluteUrl(origin, `/what-we-do/${pillar.slug}`),
@@ -79,6 +81,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.65,
     }));
+  const newsEntries: MetadataRoute.Sitemap = news
+    .filter((item) => !item.isPlaceholder)
+    .map((item) => ({
+      url: absoluteUrl(origin, `/news/${item.slug}`),
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.65,
+    }));
 
-  return [...staticEntries, ...pillarEntries, ...eventEntries];
+  return [...staticEntries, ...pillarEntries, ...eventEntries, ...newsEntries];
 }

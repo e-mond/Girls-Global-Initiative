@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **CMS public wiring + Phase-1 gaps**
-* **Status:** In progress on `feature/cms-public-wiring-and-gaps`
-* **Previous phase:** Cloudflare runtime recovery (PR #41) + real photography (PR #40)
-* **Current branch:** `feature/cms-public-wiring-and-gaps`
+* **Programme reports, gallery, calendar & CMS preview**
+* **Status:** In progress on `feature/error-1102-investigation-and-portability`
+* **Previous phase:** Error 1102 investigation & portability (same branch)
+* **Current branch:** `feature/error-1102-investigation-and-portability`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Wire published CMS to public Team/Founder/Pillars/Tags/Testimonials/Advocacy; staff notify email; newsletter broadcast batches; BR-23 privacy tools; provider-agnostic video embed settings; go-live checklist.
-* **Explicitly deferred:** Paystack recurring billing (Phase 2).
+* **Current objective:** Publish Pages of Hope + Breast Cancer reports as backdated news; seed gallery; event add-to-calendar; admin preview-before-publish; remove photo credits / “Placeholder” UI.
+* **Explicitly deferred:** Production host migration; Workers Paid upgrade; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Close remaining Phase-1 product gaps from the remaining-work audit (CMS→public wiring, broadcast, privacy tools, video settings, ops checklist). Recurring donations stay Phase 2.
+Ship programme report news + gallery assets, improve events/news/admin preview UX, and keep 1102 mitigations on the same branch pending deploy approval.
 
 ---
 
@@ -1465,6 +1465,37 @@ Phase 2 recurring billing remains deferred.
 * Privacy tools: Admin `/admin/privacy` data-subject export JSON + erase/anonymise.
 * Go-live checklist expanded in `docs/DEPLOYMENT-RUNBOOK.md`.
 * Phase 2 recurring Paystack billing remains deferred (not implemented).
+
+### Session Notes — Programme reports, gallery, calendar, preview
+
+* Read Pages of Hope (March 2026) + Breast Cancer Awareness (23 Oct 2026) PDFs;
+  published as news with backdated `publishedOn`; PDFs at `/reports/*.pdf`.
+* Seeded 25 gallery images from `assets/Mobile Devices` →
+  `public/gallery/programme/` via `npm run db:publish-programme-reports`.
+* Created Enchi breast-cancer event with add-to-calendar (ICS + Google).
+* News detail routes `/news/[slug]`; admin Preview draft / Preview & publish;
+  dashboard quick links for news/events.
+* Removed footer photo credits + visible “Placeholder” labels on news/events.
+* Validation: lint PASS; type-check PASS; Playwright 53 PASS.
+* Live site still needs a deploy for new static assets + UI (Neon content is ready).
+
+### Session Notes — Error 1102 investigation & portability
+
+* Live probes: `/api/ready` **200**; `/` usually **200**; one intermittent
+  **503** on `HEAD /` (17-byte Cloudflare plain body) — metrics still unavailable.
+* Confirmed wasteful paths: full-table `listPublishedContent` + in-memory filter;
+  duplicate `getSiteSettings` reads; blocking Nodemailer on public POSTs.
+* Mitigations: SQL published filter + LIMIT; founder/event slug queries;
+  `React.cache(getSiteSettings)`; `queueAcknowledgementEmail` via `after()`;
+  public `revalidate = 120`; migration `0011_content_status_indexes`.
+* Docs: `docs/ERROR-1102-INVESTIGATION.md`, `docs/NODE-DEPLOYMENT.md`;
+  ADR-007; README / CLOUDFLARE / DEPLOYMENT-RUNBOOK updates.
+* Validation this branch: lint PASS; type-check PASS; Playwright **53** PASS;
+  `npm run build` PASS (public revalidate **2m**). Cypress e2e not re-run.
+* **Not done:** production cutover, Vercel preview deploy, apply `0011` on Neon,
+  CF Paid upgrade. Do not claim production fixed until staged deploy verified.
+* Hosting recommendation: prefer Node (Vercel/Docker) after preview; retain CF
+  only if Paid + mitigations show headroom in metrics.
 
 ---
 

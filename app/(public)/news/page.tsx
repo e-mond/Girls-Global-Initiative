@@ -58,7 +58,7 @@ export default async function NewsPage() {
         }}
         right={{
           label: "How it grows",
-          body: "Staff publish news and events from the CMS. Placeholders stay clearly labelled until then.",
+          body: "Staff publish news and events from the CMS as programmes and reports are confirmed.",
           icon: Radio,
           tone: "pink",
         }}
@@ -127,57 +127,65 @@ export default async function NewsPage() {
         title="What we are sharing right now."
         description={
           showingPlaceholders
-            ? "Placeholder updates only. Publish news_posts in Admin for live stories."
-            : undefined
+            ? "Programme updates will appear here when published."
+            : "Open a story for the full report and download."
         }
         tone="surface"
       >
         <Stagger className="grid gap-6 lg:grid-cols-2">
-          {items.map((item) => (
-            <StaggerItem key={item.id}>
-              <article
-                id={item.isPlaceholder ? undefined : item.slug}
-                className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base scroll-mt-24"
-              >
-                {item.imageSrc ? (
-                  <div className="relative h-48">
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                  </div>
-                ) : null}
-                <div className="p-6">
-                  {item.publishedOn ? (
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
-                      {item.publishedOn}
-                    </p>
-                  ) : item.isPlaceholder ? (
-                    <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">
-                      Placeholder
-                    </p>
-                  ) : null}
-                  <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
-                    {item.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-text-muted">
-                    {item.summary}
-                  </p>
+          {items.map((item) => {
+            const href = item.isPlaceholder ? "/news" : `/news/${item.slug}`;
+            return (
+              <StaggerItem key={item.id}>
+                <article className="overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-base transition hover:border-brand-sky/40">
+                  <Link
+                    href={href}
+                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                    aria-label={item.title}
+                  >
+                    <div className="relative h-52 bg-blob-sky/30">
+                      {item.imageSrc ? (
+                        <Image
+                          src={item.imageSrc}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="p-6">
+                      {item.publishedOn ? (
+                        <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                          {item.publishedOn}
+                        </p>
+                      ) : null}
+                      <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
+                        {item.title}
+                      </h2>
+                      <p className="mt-3 text-sm leading-relaxed text-text-muted">
+                        {item.summary}
+                      </p>
+                      {!item.isPlaceholder ? (
+                        <span className="mt-4 inline-flex text-sm font-semibold text-brand-sky">
+                          Read full update
+                        </span>
+                      ) : null}
+                    </div>
+                  </Link>
                   {!item.isPlaceholder ? (
-                    <ShareButtons
-                      className="mt-5"
-                      title={item.title}
-                      summary={item.summary}
-                      url={`/news#${item.slug}`}
-                    />
+                    <div className="px-6 pb-6">
+                      <ShareButtons
+                        title={item.title}
+                        summary={item.summary}
+                        url={`/news/${item.slug}`}
+                      />
+                    </div>
                   ) : null}
-                </div>
-              </article>
-            </StaggerItem>
-          ))}
+                </article>
+              </StaggerItem>
+            );
+          })}
         </Stagger>
       </ContentSection>
 

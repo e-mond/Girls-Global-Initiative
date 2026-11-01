@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { siteSettings } from "@/db/schema";
@@ -54,7 +55,8 @@ function serialize(row: {
   };
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+/** Per-request memo — root layout, footer, and pages share one DB round-trip. */
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const db = getDb();
   if (!db) return { ...memory().value };
 
@@ -70,7 +72,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   } catch {
     return { ...SITE_SETTINGS_DEFAULTS };
   }
-}
+});
 
 export async function upsertSiteSettings(
   input: SiteSettings,

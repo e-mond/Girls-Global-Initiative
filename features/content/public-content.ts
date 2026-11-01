@@ -3,7 +3,12 @@
  * Fallback copy is clearly placeholder until staff publish real items.
  */
 
-import { listPublishedContent } from "@/features/content/content-service";
+import {
+  getPublishedEventBySlug,
+  getPublishedFounder,
+  getPublishedNewsBySlug,
+  listPublishedContent,
+} from "@/features/content/content-service";
 import { getMedia } from "@/features/content/media-service";
 import {
   challengeTags as mockChallengeTags,
@@ -112,7 +117,7 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     title: "Community hygiene support moments",
     slug: "community-hygiene-support",
     summary:
-      "Hygiene education and practical support remain part of GGI's community work. Publish a news item from Admin to replace this placeholder.",
+      "Hygiene education and practical support remain part of GGI's community work. Full updates will appear here when published.",
     body: "",
     imageSrc: "/home/community-2.jpg?v=20261026",
     publishedOn: null,
@@ -139,7 +144,7 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     title: "School tours and girls' empowerment conversations",
     slug: "school-tours-outreach",
     summary:
-      "GGI conducts educational school tours to engage young girls, promote the organisation's mission and provide resources that support wellbeing and development. Publish a dated event from Admin to replace this placeholder.",
+      "GGI conducts educational school tours to engage young girls, promote the organisation's mission and provide resources that support wellbeing and development. Confirmed dates will appear here when published.",
     body: "",
     location: null,
     startsOn: null,
@@ -217,12 +222,10 @@ export async function getPublicGalleryItems(): Promise<PublicGalleryItem[]> {
   });
 }
 
-export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
-  const published = await listPublishedContent("news_posts");
-  if (published.length === 0) {
-    return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
-  }
-  const items = published.map((item) => ({
+function mapNewsItem(item: Awaited<
+  ReturnType<typeof listPublishedContent>
+>[number]): PublicNewsItem {
+  return {
     id: item.id,
     title: String(item.title ?? "News"),
     slug: String(item.slug ?? item.id),
@@ -237,18 +240,13 @@ export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
         ? item.publishedOn
         : null,
     isPlaceholder: false,
-  }));
-  return limit ? items.slice(0, limit) : items;
+  };
 }
 
-export async function getPublicEvents(
-  limit?: number,
-): Promise<PublicEventItem[]> {
-  const published = await listPublishedContent("events");
-  if (published.length === 0) {
-    return limit ? EVENT_PLACEHOLDERS.slice(0, limit) : EVENT_PLACEHOLDERS;
-  }
-  const items = published.map((item) => ({
+function mapEventItem(item: Awaited<
+  ReturnType<typeof listPublishedContent>
+>[number]): PublicEventItem {
+  return {
     id: item.id,
     title: String(item.title ?? "Event"),
     slug: String(item.slug ?? item.id),
@@ -271,21 +269,42 @@ export async function getPublicEvents(
         ? item.imageUrl.trim()
         : null,
     isPlaceholder: false,
-  }));
-  return limit ? items.slice(0, limit) : items;
+  };
+}
+
+export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
+  const published = await listPublishedContent("news_posts", { limit });
+  if (published.length === 0) {
+    return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
+  }
+  return published.map(mapNewsItem);
+}
+
+/** Single published news post by slug. */
+export async function getPublicNewsBySlug(
+  slug: string,
+): Promise<PublicNewsItem | null> {
+  const item = await getPublishedNewsBySlug(slug);
+  if (!item) return null;
+  return mapNewsItem(item);
+}
+
+export async function getPublicEvents(
+  limit?: number,
+): Promise<PublicEventItem[]> {
+  const published = await listPublishedContent("events", { limit });
+  if (published.length === 0) {
+    return limit ? EVENT_PLACEHOLDERS.slice(0, limit) : EVENT_PLACEHOLDERS;
+  }
+  return published.map(mapEventItem);
 }
 
 export async function getPublicEventBySlug(
   slug: string,
 ): Promise<PublicEventItem | null> {
-  const needle = slug.trim().toLowerCase();
-  if (!needle) return null;
-  const items = await getPublicEvents();
-  return (
-    items.find(
-      (item) => !item.isPlaceholder && item.slug.toLowerCase() === needle,
-    ) ?? null
-  );
+  const item = await getPublishedEventBySlug(slug);
+  if (!item) return null;
+  return mapEventItem(item);
 }
 
 export async function getPublicTeamMembers(): Promise<PublicTeamMember[]> {
@@ -322,8 +341,7 @@ export async function getPublicTeamMembers(): Promise<PublicTeamMember[]> {
 }
 
 export async function getPublicFounderSpotlight(): Promise<PublicFounderSpotlight> {
-  const published = await listPublishedContent("team_members");
-  const founder = published.find((item) => Boolean(item.isFounder)) ?? null;
+  const founder = await getPublishedFounder();
 
   if (!founder) {
     return {
@@ -423,11 +441,11 @@ export async function getPublicChallengeTags(): Promise<PublicChallengeTag[]> {
 export async function getPublicTestimonials(
   limit?: number,
 ): Promise<PublicTestimonial[]> {
-  const published = await listPublishedContent("testimonials");
+  const published = await listPublishedContent("testimonials", { limit });
   if (published.length === 0) {
     return [];
   }
-  const items = published.map((item) => ({
+  return published.map((item) => ({
     id: item.id,
     quote: String(item.quote ?? ""),
     attribution: String(item.attribution ?? ""),
@@ -437,7 +455,6 @@ export async function getPublicTestimonials(
         : null,
     isPlaceholder: false,
   }));
-  return limit ? items.slice(0, limit) : items;
 }
 
 export async function getPublicAdvocacyItems(): Promise<PublicAdvocacyItem[]> {

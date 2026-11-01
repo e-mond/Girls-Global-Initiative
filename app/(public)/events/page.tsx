@@ -94,8 +94,8 @@ export default async function EventsPage() {
         title="Where girls and communities can meet the work."
         description={
           showingPlaceholders
-            ? "Placeholder invitation only until events are published in Admin."
-            : "Select an event to read the full details."
+            ? "Confirmed gatherings will appear here when published."
+            : "Select an event to read the full details and add it to your calendar."
         }
         tone="cream"
       >
@@ -118,9 +118,9 @@ export default async function EventsPage() {
                   ) : null}
                 </div>
                 <div className="p-6">
-                  {item.isPlaceholder ? (
-                    <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">
-                      Placeholder
+                  {item.startsOn ? (
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                      {item.startsOn}
                     </p>
                   ) : null}
                   <h2 className="mt-1 font-display text-xl font-bold text-brand-navy">
@@ -130,12 +130,11 @@ export default async function EventsPage() {
                     {item.summary}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-brand-navy">
-                    {item.startsOn ? <span>Starts: {item.startsOn}</span> : null}
-                    {item.endsOn ? <span>Ends: {item.endsOn}</span> : null}
+                    {item.endsOn ? <span>{item.endsOn}</span> : null}
                     {item.location ? <span>{item.location}</span> : null}
                   </div>
                   <span className="mt-5 inline-flex text-sm font-semibold text-brand-sky">
-                    {href ? "View details" : "Invite GGI via Partner"}
+                    {href ? "Details & add to calendar" : "Invite GGI via Partner"}
                   </span>
                 </div>
               </article>

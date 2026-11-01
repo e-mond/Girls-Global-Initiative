@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import {
   advocacyContent,
@@ -311,11 +311,117 @@ export async function deleteContent(
 /** Published rows only, for public surfaces. Soft-fails offline/unreachable DB. */
 export async function listPublishedContent(
   entity: ContentEntity,
+  options?: { limit?: number },
 ): Promise<ContentRecord[]> {
   try {
-    const items = await listContent(entity);
-    return items.filter((item) => item.status === "published");
+    const limit =
+      typeof options?.limit === "number" && options.limit > 0
+        ? Math.floor(options.limit)
+        : undefined;
+
+    const db = getDb();
+    if (!db) {
+      const items = [...store()[entity]]
+        .filter((item) => item.status === "published")
+        .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0));
+      return limit ? items.slice(0, limit) : items;
+    }
+
+    const table = tableFor(entity);
+    const base = db
+      .select()
+      .from(table)
+      .where(eq(table.status, "published"))
+      .orderBy(asc(table.sortOrder));
+    const rows = limit ? await base.limit(limit) : await base;
+    return rows.map((row) => serializeRow(row as Record<string, unknown>));
   } catch {
     return [];
+  }
+}
+
+/** Single published news post by slug. */
+export async function getPublishedNewsBySlug(
+  slug: string,
+): Promise<ContentRecord | null> {
+  const needle = slug.trim();
+  if (!needle) return null;
+
+  try {
+    const db = getDb();
+    if (!db) {
+      return (
+        store().news_posts.find(
+          (item) =>
+            item.status === "published" &&
+            String(item.slug ?? "").toLowerCase() === needle.toLowerCase(),
+        ) ?? null
+      );
+    }
+
+    const [row] = await db
+      .select()
+      .from(newsPosts)
+      .where(and(eq(newsPosts.slug, needle), eq(newsPosts.status, "published")))
+      .limit(1);
+    return row ? serializeRow(row as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Single published event by slug (avoids loading the full events table). */
+export async function getPublishedEventBySlug(
+  slug: string,
+): Promise<ContentRecord | null> {
+  const needle = slug.trim();
+  if (!needle) return null;
+
+  try {
+    const db = getDb();
+    if (!db) {
+      return (
+        store().events.find(
+          (item) =>
+            item.status === "published" &&
+            String(item.slug ?? "").toLowerCase() === needle.toLowerCase(),
+        ) ?? null
+      );
+    }
+
+    const [row] = await db
+      .select()
+      .from(events)
+      .where(and(eq(events.slug, needle), eq(events.status, "published")))
+      .limit(1);
+    return row ? serializeRow(row as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Published founder row only (avoids loading the full team table). */
+export async function getPublishedFounder(): Promise<ContentRecord | null> {
+  try {
+    const db = getDb();
+    if (!db) {
+      return (
+        store().team_members.find(
+          (item) => item.status === "published" && Boolean(item.isFounder),
+        ) ?? null
+      );
+    }
+
+    const [row] = await db
+      .select()
+      .from(teamMembers)
+      .where(
+        and(eq(teamMembers.status, "published"), eq(teamMembers.isFounder, true)),
+      )
+      .orderBy(asc(teamMembers.sortOrder))
+      .limit(1);
+    return row ? serializeRow(row as Record<string, unknown>) : null;
+  } catch {
+    return null;
   }
 }

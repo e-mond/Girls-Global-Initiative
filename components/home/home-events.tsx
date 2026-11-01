@@ -66,13 +66,11 @@ export async function HomeEvents() {
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
                       {item.summary}
                     </p>
-                    {item.isPlaceholder ? (
-                      <p className="mt-3 text-xs text-text-muted">Placeholder</p>
-                    ) : (
+                    {!item.isPlaceholder ? (
                       <span className="mt-4 inline-flex text-sm font-semibold text-brand-magenta">
                         View details
                       </span>
-                    )}
+                    ) : null}
                   </div>
                 </Link>
               </StaggerItem>

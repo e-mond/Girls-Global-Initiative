@@ -297,6 +297,12 @@ npm run build         # Production build
 6. Verify `/api/health` and `/api/ready`; confirm Paystack webhook and SMTP if those features are live
 7. Ensure MSW is disabled in production (`NEXT_PUBLIC_ENABLE_MSW=false`)
 
+**Current production host:** Cloudflare Workers via OpenNext — see `docs/CLOUDFLARE.md`.
+
+**Standard Node / Vercel / Docker (portable path):** `npm run build` + `npm run start` (or Docker with `DOCKER_BUILD=1`). Do not use static export. Preview and cutover steps: `docs/NODE-DEPLOYMENT.md`.
+
+**Error 1102 (Worker resource limits):** investigation and mitigations in `docs/ERROR-1102-INVESTIGATION.md`. Do not raise hosting limits or migrate production without evidence and owner approval.
+
 Docker files (`Dockerfile`, `docker-compose.yml`) are included for containerised deployment. Confirm the target host with GGI before go-live.
 
 ---

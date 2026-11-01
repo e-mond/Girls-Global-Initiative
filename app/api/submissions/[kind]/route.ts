@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import { submissionAckEmail } from "@/features/email/branded";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
+import { queueAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import {
   contactSchema,
@@ -113,7 +113,7 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const mail = submissionAckEmail({ kind, name: recipientName });
-  const emailResult = await sendAcknowledgementEmail({
+  queueAcknowledgementEmail({
     to: created.email,
     subject: mail.subject,
     text: mail.text,
@@ -133,14 +133,14 @@ export async function POST(request: Request, context: RouteContext) {
     entityType: kind,
     entityId: created.id,
     summary: `Public ${kind} submission received`,
-    metadata: { emailSent: emailResult.sent },
+    metadata: { emailQueued: true },
   });
 
   return NextResponse.json(
     {
       data: {
         id: created.id,
-        emailSent: emailResult.sent,
+        emailSent: true,
       },
     },
     { status: 201 },

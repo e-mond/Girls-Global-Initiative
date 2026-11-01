@@ -10,7 +10,7 @@ export function PageStub({
 }) {
   return (
     <section className="mx-auto max-w-3xl px-4 py-16">
-      <p className="mb-2 text-sm font-medium text-brand-sky">Placeholder</p>
+      <p className="mb-2 text-sm font-medium text-brand-sky">Coming soon</p>
       <h1 className="font-display text-3xl font-bold text-brand-navy sm:text-4xl">
         {title}
       </h1>
