@@ -275,6 +275,19 @@ export async function getPublicEvents(
   return limit ? items.slice(0, limit) : items;
 }
 
+export async function getPublicEventBySlug(
+  slug: string,
+): Promise<PublicEventItem | null> {
+  const needle = slug.trim().toLowerCase();
+  if (!needle) return null;
+  const items = await getPublicEvents();
+  return (
+    items.find(
+      (item) => !item.isPlaceholder && item.slug.toLowerCase() === needle,
+    ) ?? null
+  );
+}
+
 export async function getPublicTeamMembers(): Promise<PublicTeamMember[]> {
   const published = await listPublishedContent("team_members");
   if (published.length === 0) {

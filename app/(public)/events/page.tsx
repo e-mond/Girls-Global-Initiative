@@ -95,14 +95,17 @@ export default async function EventsPage() {
         description={
           showingPlaceholders
             ? "Placeholder invitation only until events are published in Admin."
-            : undefined
+            : "Select an event to read the full details."
         }
         tone="cream"
       >
         <Stagger className="space-y-5">
-          {items.map((item) => (
-            <StaggerItem key={item.id}>
-              <article className="grid overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface md:grid-cols-[220px_1fr]">
+          {items.map((item) => {
+            const href = item.isPlaceholder
+              ? undefined
+              : `/events/${item.slug}`;
+            const card = (
+              <article className="grid h-full overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 md:grid-cols-[220px_1fr]">
                 <div className="relative min-h-[160px] bg-blob-sky/40">
                   {item.imageSrc ? (
                     <Image
@@ -131,16 +134,29 @@ export default async function EventsPage() {
                     {item.endsOn ? <span>Ends: {item.endsOn}</span> : null}
                     {item.location ? <span>{item.location}</span> : null}
                   </div>
-                  <Link
-                    href="/partner"
-                    className="mt-5 inline-flex text-sm font-semibold text-brand-sky hover:underline"
-                  >
-                    Request a conversation
-                  </Link>
+                  <span className="mt-5 inline-flex text-sm font-semibold text-brand-sky">
+                    {href ? "View details" : "Invite GGI via Partner"}
+                  </span>
                 </div>
               </article>
-            </StaggerItem>
-          ))}
+            );
+
+            return (
+              <StaggerItem key={item.id}>
+                {href ? (
+                  <Link
+                    href={href}
+                    className="block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                    aria-label={`View details for ${item.title}`}
+                  >
+                    {card}
+                  </Link>
+                ) : (
+                  card
+                )}
+              </StaggerItem>
+            );
+          })}
         </Stagger>
       </ContentSection>
 
