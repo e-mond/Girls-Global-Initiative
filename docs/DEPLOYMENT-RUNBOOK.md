@@ -88,12 +88,18 @@ docker compose up --build
 
 The app service healthcheck probes `/api/health`. Postgres has its own `pg_isready` check.
 
-## Cloudflare Workers (production host)
+## Cloudflare Workers (current production host)
 
 Canonical URL: **https://girlsglobalinitiative.org**
 
 See `docs/CLOUDFLARE.md` for the required dashboard build/deploy commands.
 Do **not** use `npx wrangler preview` as the production deploy command.
+
+Error 1102 / resource limits: `docs/ERROR-1102-INVESTIGATION.md`.  
+Standard Node / Vercel / Docker alternative (preview first): `docs/NODE-DEPLOYMENT.md`.
+
+Apply migration `0011_content_status_indexes` (`npm run db:migrate`) so public
+published-content queries can use status indexes.
 
 Required production vars include:
 

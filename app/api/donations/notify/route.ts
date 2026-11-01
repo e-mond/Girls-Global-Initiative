@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import { manualDonationNotifyEmail } from "@/features/email/branded";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
+import { queueAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { manualDonationNotifySchema } from "@/features/donations/schemas";
 import {
@@ -88,17 +88,22 @@ export async function POST(request: Request) {
       amountLabel,
       reference: record.reference,
     });
-    const sent = await sendAcknowledgementEmail({
-      to: parsed.data.donorEmail,
-      subject: mail.subject,
-      text: mail.text,
-      html: mail.html,
-    });
-    await markDonationEmailResult({
-      id: record.id,
-      sent: sent.sent,
-      error: sent.reason,
-    });
+    const donationId = record.id;
+    queueAcknowledgementEmail(
+      {
+        to: parsed.data.donorEmail,
+        subject: mail.subject,
+        text: mail.text,
+        html: mail.html,
+      },
+      async (sent) => {
+        await markDonationEmailResult({
+          id: donationId,
+          sent: sent.sent,
+          error: sent.reason,
+        });
+      },
+    );
   }
 
   await writeAuditLog({

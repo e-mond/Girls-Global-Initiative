@@ -68,8 +68,17 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/pur
 
 Then hard-refresh the browser (or open a private window).
 
-Public routes set `revalidate = 60` so new HTML is not cached for a year.
+Public routes set `revalidate = 120` so new HTML is not cached for a year
+while limiting SSR regeneration cost (see `docs/ERROR-1102-INVESTIGATION.md`).
 Hashed `/_next/static/*` assets remain immutable.
+
+### Error 1102 (Worker resource limits)
+
+If the zone shows **Error 1102**, read `docs/ERROR-1102-INVESTIGATION.md` before
+raising plan limits or migrating. Prefer deploying the SMTP/`after()` and
+published-query mitigations, then check Workers metrics (CPU vs memory).
+Paid `cpu_ms` does not fix memory exhaustion. Standard Node hosting options:
+`docs/NODE-DEPLOYMENT.md`.
 
 ## Required Worker secrets / vars
 

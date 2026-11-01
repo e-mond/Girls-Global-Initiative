@@ -1,10 +1,12 @@
 import Link from "next/link";
 import {
+  CalendarDays,
   FileText,
   HandCoins,
   Images,
   Inbox,
   Mail,
+  Newspaper,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { listAttentionItems } from "@/features/admin/attention";
@@ -85,6 +87,8 @@ export default async function AdminDashboardPage() {
 
   const quickActions: { href: string; label: string; icon: LucideIcon }[] = [
     { href: "/admin/submissions", label: "Review submissions", icon: Inbox },
+    { href: "/admin/content/news", label: "Preview & publish news", icon: Newspaper },
+    { href: "/admin/content/events", label: "Preview & publish events", icon: CalendarDays },
     { href: "/admin/content", label: "Manage content", icon: FileText },
     { href: "/admin/content/media", label: "Open media library", icon: Images },
     { href: "/admin/subscribers", label: "View subscribers", icon: Mail },

@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import nodemailer from "nodemailer";
 
 export type SendEmailInput = {
@@ -13,6 +14,23 @@ export type SendEmailInput = {
    */
   listUnsubscribeUrl?: string;
 };
+
+/**
+ * Queue SMTP after the HTTP response so Workers free CPU sooner (Error 1102).
+ * Use on public request paths; keep await for admin flows that need send status.
+ */
+export function queueAcknowledgementEmail(
+  input: SendEmailInput,
+  onSettled?: (result: { sent: boolean; reason?: string }) => void | Promise<void>,
+): void {
+  after(() => {
+    void sendAcknowledgementEmail(input)
+      .then((result) => onSettled?.(result))
+      .catch((error) => {
+        console.error("[email] queued send failed", error);
+      });
+  });
+}
 
 function mailboxFromAddress(from: string): string | undefined {
   const angle = from.match(/<([^>]+)>/);

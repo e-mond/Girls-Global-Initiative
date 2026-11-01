@@ -8,7 +8,7 @@ import {
   staffInviteEmail,
 } from "@/features/email/branded";
 import { emailSiteOrigin } from "@/features/email/site-origin";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
+import { queueAcknowledgementEmail } from "@/features/submissions/email";
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
@@ -62,7 +62,7 @@ export async function requestStaffPasswordReset(
       row.status === "invited"
         ? staffInviteEmail({ name: row.name, inviteUrl: `${resetUrl}&invite=1` })
         : passwordResetEmail({ name: row.name, resetUrl });
-    await sendAcknowledgementEmail({
+    queueAcknowledgementEmail({
       to: row.email,
       subject: mail.subject,
       text: mail.text,

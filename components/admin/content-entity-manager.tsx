@@ -42,6 +42,8 @@ export function ContentEntityManager({
     {},
   );
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [previewItem, setPreviewItem] = useState<ContentItem | null>(null);
+  const [previewingForm, setPreviewingForm] = useState(false);
 
   function primaryLabel(item: ContentItem): string {
     return String(
@@ -238,7 +240,14 @@ export function ContentEntityManager({
       setError(json?.error?.message ?? "Could not update status.");
       return;
     }
+    setPreviewItem(null);
     await load();
+  }
+
+  function previewLabel(source: Record<string, unknown>): string {
+    return String(
+      source.title ?? source.label ?? source.name ?? source.attribution ?? "Untitled",
+    );
   }
 
   async function remove(id: string) {
@@ -380,14 +389,130 @@ export function ContentEntityManager({
             </label>
           ))}
         </div>
-        <Button type="submit" disabled={saving || Boolean(uploadingField)}>
-          {saving
-            ? "Saving…"
-            : editingId
-              ? "Save changes"
-              : "Save draft"}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit" disabled={saving || Boolean(uploadingField)}>
+            {saving
+              ? "Saving…"
+              : editingId
+                ? "Save changes"
+                : "Save draft"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={saving || Boolean(uploadingField)}
+            onClick={() => setPreviewingForm(true)}
+          >
+            Preview draft
+          </Button>
+        </div>
       </form>
+
+      {previewingForm ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Draft preview"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/50 p-4 sm:items-center"
+        >
+          <div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-bg-surface p-5 shadow-xl">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              Preview before publishing
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-bold text-brand-navy">
+              {previewLabel(form)}
+            </h2>
+            {imagePreviews.imageUrl || form.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={imagePreviews.imageUrl || form.imageUrl}
+                alt=""
+                className="mt-4 max-h-56 w-full rounded-xl object-cover"
+              />
+            ) : null}
+            <dl className="mt-4 space-y-3 text-sm">
+              {fields.map((field) => {
+                const value = form[field.name]?.trim();
+                if (!value || field.type === "image") return null;
+                return (
+                  <div key={field.name}>
+                    <dt className="font-semibold text-brand-navy">
+                      {field.label}
+                    </dt>
+                    <dd className="mt-1 whitespace-pre-wrap text-text-muted">
+                      {value}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button type="button" onClick={() => setPreviewingForm(false)}>
+                Close preview
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {previewItem ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Publish preview"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-brand-navy/50 p-4 sm:items-center"
+        >
+          <div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-bg-surface p-5 shadow-xl">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              Review before publish
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-bold text-brand-navy">
+              {previewLabel(previewItem)}
+            </h2>
+            {typeof previewItem.imageUrl === "string" && previewItem.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={previewItem.imageUrl}
+                alt=""
+                className="mt-4 max-h-56 w-full rounded-xl object-cover"
+              />
+            ) : null}
+            <dl className="mt-4 space-y-3 text-sm">
+              {fields.map((field) => {
+                const value = previewItem[field.name];
+                if (value == null || value === "" || field.type === "image") {
+                  return null;
+                }
+                return (
+                  <div key={field.name}>
+                    <dt className="font-semibold text-brand-navy">
+                      {field.label}
+                    </dt>
+                    <dd className="mt-1 whitespace-pre-wrap text-text-muted">
+                      {String(value)}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button
+                type="button"
+                onClick={() => void setStatus(previewItem.id, "published")}
+              >
+                Confirm publish
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setPreviewItem(null)}
+              >
+                Keep as draft
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {error ? (
         <p className="text-sm text-brand-magenta" role="alert">
@@ -450,9 +575,9 @@ export function ContentEntityManager({
                     type="button"
                     size="sm"
                     variant="secondary"
-                    onClick={() => void setStatus(item.id, "published")}
+                    onClick={() => setPreviewItem(item)}
                   >
-                    Publish
+                    Preview & publish
                   </Button>
                 ) : (
                   <Button

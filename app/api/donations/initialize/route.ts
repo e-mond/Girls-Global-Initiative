@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import { monthlyIntentEmail } from "@/features/email/branded";
-import { sendAcknowledgementEmail } from "@/features/submissions/email";
+import { queueAcknowledgementEmail } from "@/features/submissions/email";
 import { checkRateLimit, clientIp } from "@/features/submissions/rate-limit";
 import { initializeDonationSchema } from "@/features/donations/schemas";
 import {
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
         donorName,
         amountLabel,
       });
-      await sendAcknowledgementEmail({
+      queueAcknowledgementEmail({
         to: parsed.data.donorEmail,
         subject: mail.subject,
         text: mail.text,

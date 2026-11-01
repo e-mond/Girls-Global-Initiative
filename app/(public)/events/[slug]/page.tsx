@@ -8,6 +8,7 @@ import {
   Prose,
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { AddToCalendar } from "@/components/events/add-to-calendar";
 import { ShareButtons } from "@/components/news/share-buttons";
 import {
   getPublicEventBySlug,
@@ -108,8 +109,17 @@ export default async function EventDetailPage({ params }: PageParams) {
           </p>
         )}
 
+        <AddToCalendar
+          title={event.title}
+          summary={event.summary}
+          location={event.location}
+          startsOn={event.startsOn}
+          endsOn={event.endsOn}
+          url={`/events/${event.slug}`}
+        />
+
         <ShareButtons
-          className="mt-8"
+          className="mt-6"
           title={event.title}
           summary={event.summary}
           url={`/events/${event.slug}`}

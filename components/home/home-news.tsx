@@ -31,35 +31,44 @@ export async function HomeNews() {
           {items.map((item) => (
             <StaggerItem key={item.id}>
               <article className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-base">
-                {item.imageSrc ? (
-                  <div className="relative h-44">
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                <Link
+                  href={item.isPlaceholder ? "/news" : `/news/${item.slug}`}
+                  className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                >
+                  {item.imageSrc ? (
+                    <div className="relative h-44">
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-display text-xl font-bold text-brand-navy">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
+                      {item.summary}
+                    </p>
+                    {!item.isPlaceholder ? (
+                      <span className="mt-3 text-sm font-semibold text-brand-sky">
+                        Read update
+                      </span>
+                    ) : null}
+                  </div>
+                </Link>
+                {!item.isPlaceholder ? (
+                  <div className="px-5 pb-5">
+                    <ShareButtons
+                      title={item.title}
+                      summary={item.summary}
+                      url={`/news/${item.slug}`}
                     />
                   </div>
                 ) : null}
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-xl font-bold text-brand-navy">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
-                    {item.summary}
-                  </p>
-                  {item.isPlaceholder ? (
-                    <p className="mt-3 text-xs text-text-muted">Placeholder</p>
-                  ) : (
-                    <ShareButtons
-                      className="mt-4"
-                      title={item.title}
-                      summary={item.summary}
-                      url={`/news#${item.slug}`}
-                    />
-                  )}
-                </div>
               </article>
             </StaggerItem>
           ))}

@@ -72,8 +72,8 @@ export default async function GalleryPage() {
         title="A living gallery of GGI's community work."
         description={
           showingPlaceholders
-            ? "Showing identifiable placeholder imagery until gallery items are published in Admin."
-            : "Published gallery items from the CMS."
+            ? "Programme photographs will appear here as they are published."
+            : "Moments from GGI school visits, health programmes and community gatherings."
         }
         tone="cream"
       >

@@ -188,6 +188,32 @@ Decisions also summarised in `progress-tracker.md`. Prefer updating this file fo
 
 ---
 
+## ADR-007 — Hosting portability after Error 1102
+
+**DECISION:** Keep Cloudflare Workers + OpenNext as the *current* production host until a verified Node preview exists and the owner approves cutover. Treat standard Node (`next build` / `next start`), Vercel, and Docker standalone as first-class alternatives. Optimise request-path cost (published SQL filters, settings memoisation, deferred SMTP) before raising Workers limits or migrating.
+
+**CONTEXT:** Intermittent Cloudflare Error 1102 on girlsglobalinitiative.org; Free Workers cannot set `cpu_ms`; Nodemailer + multi-query SSR are expensive in isolates.
+
+**PROBLEM:** Blanking the public site under resource limits without inventing a root cause or forcing an untested migration.
+
+**OPTIONS CONSIDERED:**
+1. Stay on CF Free and hope
+2. Workers Paid CPU limit only
+3. Optimise app + retain CF until evidence justifies host change
+4. Immediate cutover to Vercel/Docker
+
+**SELECTED APPROACH:** Option 3 now; prepare Option 4 docs (`docs/NODE-DEPLOYMENT.md`) without live cutover.
+
+**RATIONALE:** Evidence session could not reproduce 1102 or access CF metrics; code paths clearly waste Worker budget. Paid CPU does not fix memory. Application logic must stay host-agnostic.
+
+**TRADE-OFFS:** Two deploy paths until cutover; CF remains operationally fragile on Free.
+
+**IMPACT:** Migration `0011` indexes; `queueAcknowledgementEmail`; portable Node docs; no production DNS change in this unit.
+
+**Source:** `docs/ERROR-1102-INVESTIGATION.md`.
+
+---
+
 ## Pending decisions (not yet ADRs)
 
-See `docs/PROJECT-UNDERSTANDING.md` §Q and `progress-tracker.md` → Open Questions (SMTP details, video hosting, DNS, Paystack credentials, object storage provider, doc/filename hygiene, Git init).
+See `docs/PROJECT-UNDERSTANDING.md` §Q and `progress-tracker.md` → Open Questions (SMTP details, video hosting, DNS, Paystack credentials, object storage provider, doc/filename hygiene, Git init). Owner decision: retain Cloudflare (Paid + mitigations) vs migrate to Vercel/Docker after preview verification.
