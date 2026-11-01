@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Poster assets, event archives, newsletter notes & report/events UI**
-* **Status:** Validated — shipping `feature/poster-content-archives-ui`
-* **Previous phase:** Event/report PDF extraction (PR #46)
-* **Current branch:** `feature/poster-content-archives-ui`
+* **Reports design system, news media, Markdown & status management**
+* **Status:** Validated locally — `feature/content-status-report-design-system` (awaiting commit/PR/deploy)
+* **Previous phase:** Poster content archives (PR #47) / RSC stale-chunk (PR #48)
+* **Current branch:** `feature/content-status-report-design-system`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Map posters → update past events; publish newsletter/news posts; fix report bold + headers; Events See Events + past/upcoming.
+* **Current objective:** Shared report UI (no public source PDF); contain-fit news images; news/event status groupings + admin controls; safe Markdown; migrate `0014`.
 * **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Ship poster-backed content updates, past-event archive UX, newsletter kind, and report/events header improvements.
+Ship system-wide report presentation, news image handling, Markdown/link fixes, and news/event status management so all future CMS content follows the same rules.
 
 ---
 
@@ -1541,6 +1541,29 @@ Phase 2 recurring billing remains deferred.
   CF Paid upgrade. Do not claim production fixed until staged deploy verified.
 * Hosting recommendation: prefer Node (Vercel/Docker) after preview; retain CF
   only if Paid + mitigations show headroom in metrics.
+
+### Session Notes — Reports design, media, Markdown & statuses
+
+* **Implemented (this branch, awaiting full validation/ship):**
+  * Shared report components (`ReportHeader`, `ReportContent`,
+    `ReportDownloadButton`); removed public Original source PDF links;
+    official download wording; source PDF remains admin-only (`attachment_url`).
+  * Safe Markdown (`lib/content/safe-markdown.tsx`) wired into reports, news
+    detail, events detail; strips escaped links and source-PDF download lines.
+  * `ContainImage` for news cards/detail/home (object-contain, aspect frame).
+  * Migration `0014_content_programme_status`: content_status +scheduled/archived;
+    events `programme_status`, `timezone`, `revised_starts_on`, `status_note`.
+  * Public Events groups: Upcoming / Postponed / Cancelled / Past (Accra TZ).
+  * Public News: published + newsletter + archive; cancelled/postponed notices
+    link to events.
+  * Admin news/events: status filters, search, badges, schedule/archive actions,
+    programme status select + confirmation for cancel/postpone.
+  * Docs: REPORT-PDF-EXTRACTION, ADR-008/009; script `db:fix-cms-markdown`.
+* **Validation:** lint PASS; type-check PASS; Playwright **61** PASS (incl. new
+  safe-markdown / status tests); `npm run build` PASS; migration `0014` applied
+  on Neon; `db:fix-cms-markdown` updated 1 news body.
+* **Status:** Implemented + tested locally; awaiting commit, PR, and production deploy.
+* **Not yet:** git commit/PR/merge; Cloudflare/production publish; owner visual sign-off.
 
 ---
 

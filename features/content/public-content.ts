@@ -7,6 +7,7 @@ import {
   getPublishedEventBySlug,
   getPublishedFounder,
   getPublishedNewsBySlug,
+  listArchivedContent,
   listPublishedContent,
 } from "@/features/content/content-service";
 import { getMedia } from "@/features/content/media-service";
@@ -20,6 +21,12 @@ import {
   type PillarSlug,
 } from "@/features/content/mock-home";
 import { ADVOCATE_COPY } from "@/content/site-copy";
+import {
+  resolveEventDisplayStatus,
+  type EventDisplayStatus,
+  type ProgrammeStatus,
+  normalizeProgrammeStatus,
+} from "@/lib/events/programme-status";
 import { normalizePublicImageSrc } from "@/lib/media/public-image-src";
 
 export type PublicGalleryItem = {
@@ -41,7 +48,9 @@ export type PublicNewsItem = {
   imageSrc: string | null;
   publishedOn: string | null;
   kind: "news" | "newsletter" | "report";
-  attachmentUrl: string | null;
+  /** Never expose original source PDFs on public surfaces. */
+  attachmentUrl: null;
+  contentStatus: "published" | "scheduled" | "archived" | "draft";
   isPlaceholder: boolean;
 };
 
@@ -56,6 +65,11 @@ export type PublicEventItem = {
   endsOn: string | null;
   imageSrc: string | null;
   hostLabel: string | null;
+  programmeStatus: ProgrammeStatus;
+  timezone: string;
+  revisedStartsOn: string | null;
+  statusNote: string | null;
+  displayStatus: EventDisplayStatus;
   isPlaceholder: boolean;
 };
 
@@ -116,6 +130,7 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     publishedOn: null,
     kind: "news",
     attachmentUrl: null,
+    contentStatus: "published",
     isPlaceholder: true,
   },
   {
@@ -129,6 +144,7 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     publishedOn: null,
     kind: "news",
     attachmentUrl: null,
+    contentStatus: "published",
     isPlaceholder: true,
   },
 ];
@@ -146,6 +162,11 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     endsOn: null,
     imageSrc: "/home/community-3.jpg?v=20261026",
     hostLabel: "Girls Global Initiative",
+    programmeStatus: "scheduled",
+    timezone: "Africa/Accra",
+    revisedStartsOn: null,
+    statusNote: null,
+    displayStatus: "upcoming",
     isPlaceholder: true,
   },
   {
@@ -160,6 +181,11 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     endsOn: null,
     imageSrc: "/home/community-1.jpg?v=20261026",
     hostLabel: "Girls Global Initiative",
+    programmeStatus: "scheduled",
+    timezone: "Africa/Accra",
+    revisedStartsOn: null,
+    statusNote: null,
+    displayStatus: "upcoming",
     isPlaceholder: true,
   },
 ];
@@ -263,10 +289,14 @@ function mapNewsItem(item: Awaited<
         ? item.publishedOn
         : null,
     kind,
-    attachmentUrl:
-      typeof item.attachmentUrl === "string" && item.attachmentUrl.trim()
-        ? item.attachmentUrl.trim()
-        : null,
+    attachmentUrl: null,
+    contentStatus:
+      item.status === "archived" ||
+      item.status === "scheduled" ||
+      item.status === "published" ||
+      item.status === "draft"
+        ? item.status
+        : "published",
     isPlaceholder: false,
   };
 }
@@ -274,6 +304,19 @@ function mapNewsItem(item: Awaited<
 function mapEventItem(item: Awaited<
   ReturnType<typeof listPublishedContent>
 >[number]): PublicEventItem {
+  const startsOn =
+    typeof item.startsOn === "string" && item.startsOn.trim()
+      ? item.startsOn
+      : null;
+  const revisedStartsOn =
+    typeof item.revisedStartsOn === "string" && item.revisedStartsOn.trim()
+      ? item.revisedStartsOn.trim()
+      : null;
+  const timezone =
+    typeof item.timezone === "string" && item.timezone.trim()
+      ? item.timezone.trim()
+      : "Africa/Accra";
+  const programmeStatus = normalizeProgrammeStatus(item.programmeStatus);
   return {
     id: item.id,
     title: String(item.title ?? "Event"),
@@ -284,10 +327,7 @@ function mapEventItem(item: Awaited<
       typeof item.location === "string" && item.location.trim()
         ? item.location
         : null,
-    startsOn:
-      typeof item.startsOn === "string" && item.startsOn.trim()
-        ? item.startsOn
-        : null,
+    startsOn,
     endsOn:
       typeof item.endsOn === "string" && item.endsOn.trim()
         ? item.endsOn
@@ -299,6 +339,19 @@ function mapEventItem(item: Awaited<
       typeof item.hostLabel === "string" && item.hostLabel.trim()
         ? item.hostLabel.trim()
         : null,
+    programmeStatus,
+    timezone,
+    revisedStartsOn,
+    statusNote:
+      typeof item.statusNote === "string" && item.statusNote.trim()
+        ? item.statusNote.trim()
+        : null,
+    displayStatus: resolveEventDisplayStatus({
+      programmeStatus,
+      startsOn,
+      revisedStartsOn,
+      timezone,
+    }),
     isPlaceholder: false,
   };
 }
@@ -307,7 +360,9 @@ export async function getPublicNews(limit?: number): Promise<PublicNewsItem[]> {
   const published = await listPublishedContent("news_posts");
   const newsOnly = published
     .map(mapNewsItem)
-    .filter((item) => item.kind === "news");
+    .filter(
+      (item) => item.kind === "news" && item.contentStatus !== "archived",
+    );
   if (newsOnly.length === 0) {
     return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
   }
@@ -321,8 +376,22 @@ export async function getPublicNewsletters(
   const published = await listPublishedContent("news_posts");
   const newsletters = published
     .map(mapNewsItem)
-    .filter((item) => item.kind === "newsletter");
+    .filter(
+      (item) =>
+        item.kind === "newsletter" && item.contentStatus !== "archived",
+    );
   return limit ? newsletters.slice(0, limit) : newsletters;
+}
+
+/** Archived news (and newsletter) posts for the public archive section. */
+export async function getArchivedNews(
+  limit?: number,
+): Promise<PublicNewsItem[]> {
+  const archived = await listArchivedContent("news_posts");
+  const items = archived
+    .map(mapNewsItem)
+    .filter((item) => item.kind === "news" || item.kind === "newsletter");
+  return limit ? items.slice(0, limit) : items;
 }
 
 /** News + newsletter posts for static params and shared listings. */
@@ -332,7 +401,11 @@ export async function getPublicNewsFeed(
   const published = await listPublishedContent("news_posts");
   const feed = published
     .map(mapNewsItem)
-    .filter((item) => item.kind === "news" || item.kind === "newsletter");
+    .filter(
+      (item) =>
+        (item.kind === "news" || item.kind === "newsletter") &&
+        item.contentStatus !== "archived",
+    );
   if (feed.length === 0) {
     return limit ? NEWS_PLACEHOLDERS.slice(0, limit) : NEWS_PLACEHOLDERS;
   }

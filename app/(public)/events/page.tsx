@@ -24,13 +24,17 @@ import {
   getPublicEvents,
   type PublicEventItem,
 } from "@/features/content/public-content";
-import { isPastCalendarDate } from "@/lib/date/parse-flexible-date";
+import { eventStatusLabel } from "@/lib/events/programme-status";
 
 function EventCardList({ items }: { items: PublicEventItem[] }) {
   return (
     <Stagger className="space-y-5">
       {items.map((item) => {
         const href = item.isPlaceholder ? undefined : `/events/${item.slug}`;
+        const dateLabel =
+          item.displayStatus === "postponed" && item.revisedStartsOn
+            ? item.revisedStartsOn
+            : item.startsOn;
         const card = (
           <article className="grid h-full overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 md:grid-cols-[220px_1fr]">
             <div className="relative min-h-[160px] bg-blob-sky/40">
@@ -39,22 +43,31 @@ function EventCardList({ items }: { items: PublicEventItem[] }) {
                   src={item.imageSrc}
                   alt={item.title}
                   fill
-                  className="object-cover"
+                  className="object-contain object-center p-2"
                   sizes="220px"
                 />
               ) : null}
             </div>
             <div className="p-6">
-              {item.startsOn ? (
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
-                  {item.startsOn}
-                </p>
-              ) : null}
-              <h2 className="mt-1 font-display text-xl font-bold text-brand-navy">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex rounded-full bg-brand-navy/5 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-brand-navy">
+                  {eventStatusLabel(item.displayStatus)}
+                </span>
+                {dateLabel ? (
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                    {dateLabel}
+                  </p>
+                ) : null}
+              </div>
+              <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
                 {item.title}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-text-muted">
-                {item.summary}
+                {item.statusNote &&
+                (item.displayStatus === "cancelled" ||
+                  item.displayStatus === "postponed")
+                  ? item.statusNote
+                  : item.summary}
               </p>
               <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-brand-navy">
                 {item.endsOn ? <span>{item.endsOn}</span> : null}
@@ -87,12 +100,42 @@ function EventCardList({ items }: { items: PublicEventItem[] }) {
   );
 }
 
+function EventGroup({
+  title,
+  description,
+  items,
+  empty,
+}: {
+  title: string;
+  description?: string;
+  items: PublicEventItem[];
+  empty: string;
+}) {
+  return (
+    <div>
+      <h3 className="font-display text-lg font-bold text-brand-navy">{title}</h3>
+      {description ? (
+        <p className="mt-1 text-sm text-text-muted">{description}</p>
+      ) : null}
+      <div className="mt-4">
+        {items.length > 0 ? (
+          <EventCardList items={items} />
+        ) : (
+          <p className="text-sm text-text-muted">{empty}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default async function EventsPage() {
   const items = await getPublicEvents();
   const showingPlaceholders = items.every((item) => item.isPlaceholder);
   const live = showingPlaceholders ? [] : items;
-  const upcoming = live.filter((item) => !isPastCalendarDate(item.startsOn));
-  const past = live.filter((item) => isPastCalendarDate(item.startsOn));
+  const upcoming = live.filter((item) => item.displayStatus === "upcoming");
+  const past = live.filter((item) => item.displayStatus === "past");
+  const postponed = live.filter((item) => item.displayStatus === "postponed");
+  const cancelled = live.filter((item) => item.displayStatus === "cancelled");
 
   return (
     <>
@@ -164,7 +207,7 @@ export default async function EventsPage() {
         description={
           showingPlaceholders
             ? "Confirmed gatherings will appear here when published."
-            : "Upcoming invitations appear first. Past programmes stay available in the archive."
+            : "Upcoming invitations appear first. Cancelled and postponed events are labelled clearly. Past programmes stay available in the archive."
         }
         tone="cream"
       >
@@ -172,35 +215,33 @@ export default async function EventsPage() {
           <EventCardList items={items} />
         ) : (
           <div className="space-y-12">
-            <div>
-              <h3 className="font-display text-lg font-bold text-brand-navy">
-                Upcoming
-              </h3>
-              <div className="mt-4">
-                {upcoming.length > 0 ? (
-                  <EventCardList items={upcoming} />
-                ) : (
-                  <p className="text-sm text-text-muted">
-                    No upcoming events are published right now. Browse past
-                    programmes below or invite GGI to your community.
-                  </p>
-                )}
-              </div>
-            </div>
-            <div>
-              <h3 className="font-display text-lg font-bold text-brand-navy">
-                Past events
-              </h3>
-              <div className="mt-4">
-                {past.length > 0 ? (
-                  <EventCardList items={past} />
-                ) : (
-                  <p className="text-sm text-text-muted">
-                    Past programmes will appear here after their event date.
-                  </p>
-                )}
-              </div>
-            </div>
+            <EventGroup
+              title="Upcoming"
+              items={upcoming}
+              empty="No upcoming events are published right now. Browse other sections below or invite GGI to your community."
+            />
+            {postponed.length > 0 ? (
+              <EventGroup
+                title="Postponed"
+                description="Events officially postponed by GGI staff."
+                items={postponed}
+                empty="No postponed events."
+              />
+            ) : null}
+            {cancelled.length > 0 ? (
+              <EventGroup
+                title="Cancelled"
+                description="Events officially cancelled — kept for historical record."
+                items={cancelled}
+                empty="No cancelled events."
+              />
+            ) : null}
+            <EventGroup
+              title="Past events"
+              description="Completed programmes remain available for reference."
+              items={past}
+              empty="Past programmes will appear here after their event date."
+            />
           </div>
         )}
       </ContentSection>

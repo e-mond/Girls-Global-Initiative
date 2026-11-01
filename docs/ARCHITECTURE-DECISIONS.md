@@ -210,7 +210,7 @@ Decisions also summarised in `progress-tracker.md`. Prefer updating this file fo
 
 ## ADR-008 — Client-side branded programme report PDFs
 
-**DECISION:** Generate full programme-report PDFs in the browser with `jspdf`, using GGI navy/magenta/sky branding. Keep original source PDFs available as optional attachments.
+**DECISION:** Generate full programme-report PDFs in the browser with `jspdf`, using GGI navy/magenta/sky branding. Keep original source PDFs in admin storage only (`attachment_url`) — never as a public download.
 
 **CONTEXT:** Reports need a shareable full-text PDF; Cloudflare Workers is a poor host for Node PDF libraries (pdfkit).
 
@@ -218,13 +218,23 @@ Decisions also summarised in `progress-tracker.md`. Prefer updating this file fo
 
 **OPTIONS CONSIDERED:** pdfkit API route; static-only PDFs; client `jspdf`.
 
-**SELECTED APPROACH:** Client `jspdf` download button on report detail pages; proofread body stored in CMS; optional `attachmentUrl` for the original scanned/export PDF.
+**SELECTED APPROACH:** Shared report components + client `jspdf` “Download the Full Report”; proofread body stored in CMS; `attachmentUrl` retained for admin verification/regeneration only.
 
-**RATIONALE:** Works on Cloudflare and Node hosts; keeps secrets off the client path; staff control content via Admin → Reports.
+**RATIONALE:** Works on Cloudflare and Node hosts; keeps secrets off the client path; staff control content via Admin → Reports; visitors see one official GGI document format online and as PDF.
 
 **TRADE-OFFS:** PDF layout is simpler than desktop publishing; fonts are standard PDF fonts unless extended later.
 
-**IMPACT:** Dependency `jspdf`; `/reports` public routes; `news_posts.kind` / `attachment_url` columns.
+**IMPACT:** Dependency `jspdf`; `/reports` public routes; `news_posts.kind` / `attachment_url` columns; shared Markdown rendering.
+
+## ADR-009 — Content and programme status model
+
+**DECISION:** Extend `content_status` with `scheduled` and `archived`. Add explicit event `programme_status` (`scheduled` | `cancelled` | `postponed`) with optional revised date and public status note. Derive upcoming/past from confirmed dates in `Africa/Accra` only when programme status remains `scheduled`.
+
+**CONTEXT:** Public News/Events need clear groupings; cancellation/postponement must never be inferred.
+
+**SELECTED APPROACH:** Migration `0014_content_programme_status`; public visibility helpers; admin filters and confirmation dialogs.
+
+**TRADE-OFFS:** Scheduled go-live depends on `published_at` comparison at request time (no separate cron).
 
 ---
 

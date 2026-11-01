@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
 import type { ContentEntity, ContentStatus } from "@/features/governance/rbac";
@@ -15,8 +15,14 @@ type ContentItem = {
 type FieldDef = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "image";
+  type?: "text" | "textarea" | "number" | "image" | "select";
   required?: boolean;
+  options?: Array<{ value: string; label: string }>;
+};
+
+type StatusAction = {
+  status: ContentStatus;
+  label: string;
 };
 
 export function ContentEntityManager({
@@ -26,6 +32,7 @@ export function ContentEntityManager({
   fields,
   createDefaults,
   filterItems,
+  statusActions,
 }: {
   entity: ContentEntity;
   title: string;
@@ -34,6 +41,7 @@ export function ContentEntityManager({
   createDefaults?: Record<string, unknown>;
   /** Optional client filter (e.g. news vs programme reports). */
   filterItems?: (item: ContentItem) => boolean;
+  statusActions?: StatusAction[];
 }) {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +55,13 @@ export function ContentEntityManager({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [previewItem, setPreviewItem] = useState<ContentItem | null>(null);
   const [previewingForm, setPreviewingForm] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+
+  const actions: StatusAction[] = statusActions ?? [
+    { status: "draft", label: "Unpublish" },
+    { status: "published", label: "Publish" },
+  ];
 
   function primaryLabel(item: ContentItem): string {
     return String(
@@ -57,6 +72,10 @@ export function ContentEntityManager({
   function secondaryLabel(item: ContentItem): string | null {
     const role = item.roleTitle;
     if (typeof role === "string" && role.trim()) return role;
+    const programme = item.programmeStatus;
+    if (typeof programme === "string" && programme.trim()) {
+      return `Programme: ${programme}`;
+    }
     return null;
   }
 
@@ -87,6 +106,23 @@ export function ContentEntityManager({
     void load();
   }, [load]);
 
+  const visibleItems = useMemo(() => {
+    const needle = search.trim().toLowerCase();
+    return items.filter((item) => {
+      if (statusFilter !== "all" && item.status !== statusFilter) return false;
+      if (!needle) return true;
+      const haystack = [
+        primaryLabel(item),
+        String(item.slug ?? ""),
+        String(item.summary ?? ""),
+        String(item.programmeStatus ?? ""),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [items, search, statusFilter]);
+
   function startEdit(item: ContentItem) {
     const next: Record<string, string> = {};
     const nextPreviews: Record<string, string> = {};
@@ -97,10 +133,11 @@ export function ContentEntityManager({
           ? ""
           : typeof value === "number"
             ? String(value)
-            : String(value);
+            : typeof value === "string"
+              ? value
+              : String(value);
       if (field.type === "image") {
         if (field.name === "photoMediaId") {
-          // Resolved preview URL is not stored on the row; clear until re-upload.
           nextPreviews[field.name] = "";
         } else if (typeof value === "string" && value) {
           nextPreviews[field.name] = value;
@@ -190,10 +227,39 @@ export function ContentEntityManager({
       }
       if (field.name === "photoMediaId") {
         payload[field.name] = value.trim() ? value.trim() : null;
+      } else if (field.name === "publishedAt") {
+        payload[field.name] = value.trim() ? value.trim() : null;
+      } else if (
+        field.name === "revisedStartsOn" ||
+        field.name === "statusNote" ||
+        field.name === "timezone"
+      ) {
+        payload[field.name] = value.trim() ? value.trim() : null;
       } else {
         payload[field.name] =
           field.type === "number" ? Number(value || 0) : value;
       }
+    }
+
+    if (
+      entity === "events" &&
+      payload.programmeStatus === "cancelled" &&
+      !window.confirm(
+        "Mark this event as cancelled? It will stay in the archive with a clear cancelled label.",
+      )
+    ) {
+      setSaving(false);
+      return;
+    }
+    if (
+      entity === "events" &&
+      payload.programmeStatus === "postponed" &&
+      !window.confirm(
+        "Mark this event as postponed? Add a revised date and public note when available.",
+      )
+    ) {
+      setSaving(false);
+      return;
     }
 
     try {
@@ -231,6 +297,12 @@ export function ContentEntityManager({
 
   async function setStatus(id: string, status: ContentStatus) {
     setError(null);
+    if (
+      status === "archived" &&
+      !window.confirm("Archive this item? It will move to the public archive.")
+    ) {
+      return;
+    }
     const response = await fetch(`/api/admin/content/${entity}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -273,6 +345,19 @@ export function ContentEntityManager({
     }
     if (editingId === id) cancelEdit();
     await load();
+  }
+
+  function statusBadgeClass(status: string): string {
+    switch (status) {
+      case "published":
+        return "bg-state-success/15 text-state-success";
+      case "scheduled":
+        return "bg-brand-sky/15 text-brand-sky";
+      case "archived":
+        return "bg-brand-navy/10 text-brand-navy";
+      default:
+        return "bg-state-warning/15 text-state-warning";
+    }
   }
 
   return (
@@ -320,6 +405,24 @@ export function ContentEntityManager({
                   }
                   className="min-h-24 w-full rounded-xl border border-border-default bg-bg-base px-3 py-2 text-sm outline-none focus:border-brand-sky"
                 />
+              ) : field.type === "select" ? (
+                <select
+                  required={field.required}
+                  value={form[field.name] ?? field.options?.[0]?.value ?? ""}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      [field.name]: event.target.value,
+                    }))
+                  }
+                  className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm outline-none focus:border-brand-sky"
+                >
+                  {(field.options ?? []).map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               ) : field.type === "image" ? (
                 <div className="space-y-3 rounded-xl border border-border-default bg-bg-base p-3">
                   <input
@@ -346,7 +449,7 @@ export function ContentEntityManager({
                             imagePreviews[field.name] || form[field.name]
                           }
                           alt="Upload preview"
-                          className="h-20 w-20 rounded-lg object-cover"
+                          className="h-20 w-20 rounded-lg object-contain bg-bg-base"
                         />
                       ) : null}
                       <p className="text-xs text-text-muted break-all">
@@ -431,7 +534,7 @@ export function ContentEntityManager({
               <img
                 src={imagePreviews.imageUrl || form.imageUrl}
                 alt=""
-                className="mt-4 max-h-56 w-full rounded-xl object-cover"
+                className="mt-4 max-h-56 w-full rounded-xl object-contain bg-bg-base"
               />
             ) : null}
             <dl className="mt-4 space-y-3 text-sm">
@@ -478,7 +581,7 @@ export function ContentEntityManager({
               <img
                 src={previewItem.imageUrl}
                 alt=""
-                className="mt-4 max-h-56 w-full rounded-xl object-cover"
+                className="mt-4 max-h-56 w-full rounded-xl object-contain bg-bg-base"
               />
             ) : null}
             <dl className="mt-4 space-y-3 text-sm">
@@ -524,15 +627,43 @@ export function ContentEntityManager({
         </p>
       ) : null}
 
+      <div className="flex flex-col gap-3 rounded-2xl border border-border-default bg-bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search title, slug, summary…"
+          className="h-10 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm outline-none focus:border-brand-sky sm:max-w-xs"
+        />
+        <div className="flex flex-wrap gap-2">
+          {["all", "draft", "scheduled", "published", "archived"].map(
+            (value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setStatusFilter(value)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+                  statusFilter === value
+                    ? "bg-brand-navy text-text-on-inverse"
+                    : "bg-bg-base text-text-muted"
+                }`}
+              >
+                {value}
+              </button>
+            ),
+          )}
+        </div>
+      </div>
+
       {loading ? (
         <p className="text-sm text-text-muted">Loading content…</p>
-      ) : items.length === 0 ? (
+      ) : visibleItems.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
-          No items yet. Create a draft to get started.
+          No items match this filter. Create a draft to get started.
         </p>
       ) : (
         <ul className="space-y-3">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <li
               key={item.id}
               className="flex flex-col gap-3 rounded-xl border border-border-default bg-bg-surface p-4 sm:flex-row sm:items-center sm:justify-between"
@@ -543,7 +674,7 @@ export function ContentEntityManager({
                   <img
                     src={item.imageUrl}
                     alt=""
-                    className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                    className="h-12 w-12 shrink-0 rounded-lg object-contain bg-bg-base"
                   />
                 ) : null}
                 <div className="min-w-0">
@@ -560,9 +691,19 @@ export function ContentEntityManager({
                       {secondaryLabel(item)}
                     </p>
                   ) : null}
-                  <p className="mt-1 text-xs uppercase tracking-wide text-text-muted">
-                    {item.status}
-                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                    <span
+                      className={`rounded-full px-2 py-0.5 font-bold uppercase tracking-wide ${statusBadgeClass(item.status)}`}
+                    >
+                      {item.status}
+                    </span>
+                    {typeof item.publishedOn === "string" && item.publishedOn ? (
+                      <span className="text-text-muted">{item.publishedOn}</span>
+                    ) : null}
+                    {typeof item.startsOn === "string" && item.startsOn ? (
+                      <span className="text-text-muted">{item.startsOn}</span>
+                    ) : null}
+                  </div>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -574,7 +715,7 @@ export function ContentEntityManager({
                 >
                   Edit
                 </Button>
-                {item.status === "draft" ? (
+                {item.status === "draft" || item.status === "scheduled" ? (
                   <Button
                     type="button"
                     size="sm"
@@ -583,16 +724,20 @@ export function ContentEntityManager({
                   >
                     Preview & publish
                   </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => void setStatus(item.id, "draft")}
-                  >
-                    Unpublish
-                  </Button>
-                )}
+                ) : null}
+                {actions
+                  .filter((action) => action.status !== item.status)
+                  .map((action) => (
+                    <Button
+                      key={action.status}
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void setStatus(item.id, action.status)}
+                    >
+                      {action.label}
+                    </Button>
+                  ))}
                 <Button
                   type="button"
                   size="sm"

@@ -3,8 +3,21 @@ import { z } from "zod";
 export const staffRoleSchema = z.enum(["administrator", "editor"]);
 export type StaffRole = z.infer<typeof staffRoleSchema>;
 
-export const contentStatusSchema = z.enum(["draft", "published"]);
+export const contentStatusSchema = z.enum([
+  "draft",
+  "scheduled",
+  "published",
+  "archived",
+]);
 export type ContentStatus = z.infer<typeof contentStatusSchema>;
+
+/** Explicit event programme lifecycle (not inferred from missing data). */
+export const programmeStatusSchema = z.enum([
+  "scheduled",
+  "cancelled",
+  "postponed",
+]);
+export type ProgrammeStatus = z.infer<typeof programmeStatusSchema>;
 
 export const contentEntitySchema = z.enum([
   "pillars",

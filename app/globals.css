@@ -99,6 +99,15 @@ img {
   height: auto;
 }
 
+/* Shared GGI programme-report reading measure */
+.prose-report {
+  max-width: 42rem;
+}
+
+.prose-report p {
+  margin: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

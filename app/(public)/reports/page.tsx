@@ -27,7 +27,7 @@ export default async function ReportsPage() {
         badge="Reports"
         meta="Programmes · Evidence · Learning"
         title="Programme reports from the field."
-        description="Proofread activity and programme reports — with branded PDF downloads for partners who need the full record."
+        description="Proofread activity and programme reports in GGI's official format — read online or download the full report."
         tone="sky"
         ctas={[
           { href: "/news", label: "News updates", variant: "secondary" },
@@ -41,7 +41,7 @@ export default async function ReportsPage() {
         description={
           reports.length === 0
             ? "Reports will appear here when published from Admin → Content → Reports."
-            : "Open a report for a clear summary, then download the full branded PDF."
+            : "Open a report to read online, then download the full report in GGI's official document format."
         }
         tone="cream"
       >
