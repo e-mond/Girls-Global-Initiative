@@ -113,7 +113,7 @@ export function PublicHeader() {
             alt="Girls Global Initiative"
             width={44}
             height={44}
-            className="h-10 w-10 shrink-0 rounded-full bg-brand-navy object-cover sm:h-11 sm:w-11"
+            className="h-10 w-10 shrink-0 rounded-full border-2 border-brand-sky bg-brand-navy object-cover sm:h-11 sm:w-11"
             priority
           />
           <span className="min-w-0">

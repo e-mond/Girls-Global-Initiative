@@ -59,7 +59,7 @@ export function AdminNavBody({
               alt=""
               width={36}
               height={36}
-              className="h-9 w-9 shrink-0 rounded-full bg-brand-navy object-cover"
+              className="h-9 w-9 shrink-0 rounded-full border-2 border-brand-sky bg-brand-navy object-cover"
             />
             {collapsed ? null : (
               <span className="min-w-0">

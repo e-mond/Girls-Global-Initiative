@@ -7,20 +7,20 @@
 
 ## Current Phase
 
-* **Favicon & browser website identity**
-* **Status:** Merged — PR #50; Worker uploaded; live favicon hash matches
+* **Favicon circle + sky border; admin publish smoke**
+* **Status:** In progress on `feature/favicon-circle-border`
+* **Previous phase:** Favicon & browser identity (PR #50)
 * **Previous phase:** Reports/status system (PR #49)
-* **Previous phase:** Poster content archives (PR #47) / RSC stale-chunk (PR #48)
-* **Current branch:** `feature/content-status-report-design-system`
+* **Current branch:** `feature/favicon-circle-border`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Shared report UI (no public source PDF); contain-fit news images; news/event status groupings + admin controls; safe Markdown; migrate `0014`.
+* **Current objective:** Circular tab icon with sky-blue ring matching navbar; verify admin news/events publish; hard 404 for missing CMS slugs.
 * **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Ship system-wide report presentation, news image handling, Markdown/link fixes, and news/event status management so all future CMS content follows the same rules.
+Ship circular sky-bordered favicons and confirm admin news/events create/publish/schedule/postpone paths remain healthy.
 
 ---
 
@@ -1546,20 +1546,19 @@ Phase 2 recurring billing remains deferred.
 ### Session Notes — Favicon & browser identity
 
 * Source mark: `public/brand/ggi-logo.png` (approved circular emblem).
-* Regenerated package via `npm run generate:favicons`: multi-size ICO
-  (16/32/48) synced to `app/favicon.ico` + `public/favicon.ico`; PNG set;
-  Apple touch; maskable 192/512; Safari pinned-tab SVG; cream/white fields
-  (black logo canvas punched out so tabs are not an empty black square).
-* Metadata: cache-busted icon links in `app/layout.tsx`; `app/manifest.ts`
-  replaces conflicting `public/site.webmanifest`; `_headers` cache rules.
-* Root cause of “missing” favicon: conflicting older `app/favicon.ico`
-  (served in production) + duplicate head tags + black-canvas mark that
-  disappeared on dark browser chrome.
-* Ship: PR #50 merged; deploy uploaded Worker (same zone API warning).
-  Live checks: `/favicon.ico` 200 / hash match; PNG `?v=20261101f` 200;
-  `/manifest.webmanifest` GGI identity; Apple + Safari SVG 200; head includes
-  PNG icons + mask-icon. Recommend Cloudflare **Purge Everything** for sticky
-  tab caches.
+* PR #50 shipped square cream-backed icons (`?v=20261101f`).
+* Follow-up (`feature/favicon-circle-border`): regenerate as **circle +
+  `#00b0f2` ring** (`?v=20261101g`); navbar/admin/footer logos get
+  `border-2 border-brand-sky`; **remove `public/favicon.ico`** (conflicts with
+  `app/favicon.ico` → local `/favicon.ico` 500); keep App Router ICO only.
+* Admin publish smoke (local, authenticated API): news create→publish→public
+  visible; events create→publish→list/detail; scheduled news stays hidden;
+  postpone shows revised date; cleanup delete 200. Admin UI pages for news and
+  events render form fields without error boundaries.
+* Soft-404 fix: removed `app/(public)/loading.tsx` (Suspense streamed
+  `notFound()` as HTTP 200). Missing `/news/[slug]` and `/events/[slug]` now
+  return **404**. Kept skeletons on gallery + get-involved only.
+* Docs: `docs/SEO-AND-SEARCH.md` updated for circular icons and 404/loading rule.
 
 ### Session Notes — Reports design, media, Markdown & statuses
 

@@ -48,7 +48,7 @@ export async function PublicFooter() {
               alt="Girls Global Initiative"
               width={40}
               height={40}
-              className="h-10 w-10 rounded-full bg-bg-surface"
+              className="h-10 w-10 rounded-full border-2 border-brand-sky bg-bg-surface"
             />
             <span className="font-display font-semibold">
               Girls Global Initiative
