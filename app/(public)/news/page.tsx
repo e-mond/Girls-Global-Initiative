@@ -8,6 +8,7 @@ export const metadata = buildPageMetadata({
 });
 
 import Image from "next/image";
+import Link from "next/link";
 import { Newspaper, Radio } from "lucide-react";
 import {
   DualToneCards,
@@ -20,11 +21,18 @@ import {
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { ShareButtons } from "@/components/news/share-buttons";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
-import { getPublicNews } from "@/features/content/public-content";
+import {
+  getPublicEvents,
+  getPublicNews,
+} from "@/features/content/public-content";
 
 export default async function NewsPage() {
-  const items = await getPublicNews();
+  const [items, events] = await Promise.all([
+    getPublicNews(),
+    getPublicEvents(),
+  ]);
   const showingPlaceholders = items.every((item) => item.isPlaceholder);
+  const liveEvents = events.filter((item) => !item.isPlaceholder);
 
   return (
     <>
@@ -33,7 +41,7 @@ export default async function NewsPage() {
         badge="News"
         meta="Updates · Letters · Moments"
         title="Updates from Girls Global Initiative."
-        description="School outreach, community work, and partnership updates."
+        description="School outreach, community work, partnership updates, and upcoming events."
         tone="sky"
         ctas={[
           { href: "/events", label: "See events", variant: "secondary" },
@@ -50,11 +58,69 @@ export default async function NewsPage() {
         }}
         right={{
           label: "How it grows",
-          body: "Staff publish news from the CMS. Placeholders stay clearly labelled until then.",
+          body: "Staff publish news and events from the CMS. Placeholders stay clearly labelled until then.",
           icon: Radio,
           tone: "pink",
         }}
       />
+
+      {liveEvents.length > 0 ? (
+        <ContentSection
+          eyebrow="Events"
+          title="Upcoming and recent gatherings."
+          description="Open an event for the full details."
+          tone="cream"
+        >
+          <Stagger className="space-y-4">
+            {liveEvents.map((item) => (
+              <StaggerItem key={item.id}>
+                <Link
+                  href={`/events/${item.slug}`}
+                  className="block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                  aria-label={`View details for ${item.title}`}
+                >
+                  <article className="grid overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 md:grid-cols-[200px_1fr]">
+                    <div className="relative min-h-[140px] bg-blob-sky/40">
+                      {item.imageSrc ? (
+                        <Image
+                          src={item.imageSrc}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          sizes="200px"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="p-5 sm:p-6">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-brand-magenta">
+                        Event
+                        {item.startsOn ? ` · ${item.startsOn}` : ""}
+                      </p>
+                      <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">
+                        {item.title}
+                      </h2>
+                      <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                        {item.summary}
+                      </p>
+                      <span className="mt-4 inline-flex text-sm font-semibold text-brand-sky">
+                        View details
+                      </span>
+                    </div>
+                  </article>
+                </Link>
+              </StaggerItem>
+            ))}
+          </Stagger>
+          <p className="mt-6">
+            <Link
+              href="/events"
+              className="text-sm font-semibold text-brand-sky hover:underline"
+            >
+              All events
+            </Link>
+          </p>
+        </ContentSection>
+      ) : null}
 
       <ContentSection
         eyebrow="Latest"

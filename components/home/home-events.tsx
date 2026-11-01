@@ -33,40 +33,51 @@ export async function HomeEvents() {
               : "mt-10 grid gap-5 lg:grid-cols-2"
           }
         >
-          {items.map((item) => (
-            <StaggerItem key={item.id}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-surface">
-                <div className="relative min-h-[140px] bg-blob-pink/30">
-                  {item.imageSrc ? (
-                    <Image
-                      src={item.imageSrc}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 33vw"
-                    />
-                  ) : null}
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-xl font-bold text-brand-navy">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
-                    {item.summary}
-                  </p>
-                  {item.isPlaceholder ? (
-                    <p className="mt-3 text-xs text-text-muted">Placeholder</p>
-                  ) : null}
-                  <Link
-                    href="/partner"
-                    className="mt-4 inline-flex text-sm font-semibold text-brand-magenta hover:underline"
-                  >
-                    Invite GGI
-                  </Link>
-                </div>
-              </article>
-            </StaggerItem>
-          ))}
+          {items.map((item) => {
+            const href = item.isPlaceholder
+              ? "/events"
+              : `/events/${item.slug}`;
+            return (
+              <StaggerItem key={item.id}>
+                <Link
+                  href={href}
+                  className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border-default bg-bg-surface transition hover:border-brand-sky/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
+                  aria-label={
+                    item.isPlaceholder
+                      ? "Browse events"
+                      : `View details for ${item.title}`
+                  }
+                >
+                  <div className="relative min-h-[140px] bg-blob-pink/30">
+                    {item.imageSrc ? (
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 33vw"
+                      />
+                    ) : null}
+                  </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-display text-xl font-bold text-brand-navy">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">
+                      {item.summary}
+                    </p>
+                    {item.isPlaceholder ? (
+                      <p className="mt-3 text-xs text-text-muted">Placeholder</p>
+                    ) : (
+                      <span className="mt-4 inline-flex text-sm font-semibold text-brand-magenta">
+                        View details
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </StaggerItem>
+            );
+          })}
         </Stagger>
       </div>
     </section>
