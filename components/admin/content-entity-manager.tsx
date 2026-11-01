@@ -25,12 +25,15 @@ export function ContentEntityManager({
   description,
   fields,
   createDefaults,
+  filterItems,
 }: {
   entity: ContentEntity;
   title: string;
   description: string;
   fields: FieldDef[];
   createDefaults?: Record<string, unknown>;
+  /** Optional client filter (e.g. news vs programme reports). */
+  filterItems?: (item: ContentItem) => boolean;
 }) {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +72,8 @@ export function ContentEntityManager({
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Could not load content.");
       }
-      setItems(json.data?.items ?? []);
+      const loaded = json.data?.items ?? [];
+      setItems(filterItems ? loaded.filter(filterItems) : loaded);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Could not load content.",
@@ -77,7 +81,7 @@ export function ContentEntityManager({
     } finally {
       setLoading(false);
     }
-  }, [entity]);
+  }, [entity, filterItems]);
 
   useEffect(() => {
     void load();

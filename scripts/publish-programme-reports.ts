@@ -13,58 +13,37 @@ import path from "path";
 config({ path: ".env.local" });
 config();
 
+import {
+  BREAST_CANCER_BODY,
+  PAGES_OF_HOPE_BODY,
+} from "../content/programme-report-bodies";
 import { getDb } from "../db/client";
 import { events, galleryItems, newsPosts } from "../db/schema";
 
 const PAGES_OF_HOPE = {
   slug: "pages-of-hope-rural-girls-education-2026",
   title: "Pages of Hope: Rural girls' education — March 2026 report",
-  publishedOn: "2026-03-31",
+  publishedOn: "March 2026",
   sortOrder: 20,
   imageUrl: "/news/pages-of-hope-card.jpg",
+  kind: "report" as const,
+  attachmentUrl: "/reports/pages-of-hope-2026.pdf",
   summary:
     "GGI visited 10 schools and engaged about 150 girls across Nyankamam, Tekyikrom, Tekyiman, Yaakasi and Enchi, plus a parent engagement in Tekyikrom.",
-  body: `Girls Global Initiative implemented its 2026 Pages of Hope: Rural Girls' Education project to improve educational opportunity, strengthen girls' wellbeing, and listen carefully to barriers faced by girls in rural and underserved communities.
-
-## Reach
-During the reporting period (March 2026), GGI visited **10 schools** and directly engaged approximately **150 girls** in the Western North Region of Ghana — in Nyankamam, Tekyikrom, Tekyiman, Yaakasi and Enchi. Alongside the school visits, GGI held a community engagement with parents in Tekyikrom.
-
-## What we heard
-Girls and school communities described interconnected challenges: lack of educational materials, household poverty, tattered school uniforms, inadequate parental care and support, inadequate toilet facilities, lack of potable water in schools, inadequate teachers, and feeding-related challenges.
-
-These findings reinforce that improving girls' education requires more than encouraging attendance. Girls need learning resources, supportive families, safe school facilities, teaching support, food, water and sanitation.
-
-## What comes next
-GGI will use this community-level information to guide future programmes, advocacy, partnerships and fundraising focused on girls' education and wellbeing — staying in touch with participating schools, documenting needs, and developing partnerships that respond to what girls told us.
-
-Every girl deserves not only a place in a classroom, but the support to remain there, learn, thrive and build the future she dreams of.
-
-[Download the full programme report (PDF)](/reports/pages-of-hope-2026.pdf)`,
+  body: PAGES_OF_HOPE_BODY,
 };
 
 const BREAST_CANCER = {
   slug: "breast-cancer-awareness-enchi-october-2026",
   title: "Know Your Body, Protect Your Future — Breast cancer awareness in Enchi",
-  publishedOn: "2026-10-23",
+  publishedOn: "23 October 2026",
   sortOrder: 10,
   imageUrl: "/news/breast-cancer-card.jpg",
+  kind: "report" as const,
+  attachmentUrl: "/reports/breast-cancer-awareness-2026.pdf",
   summary:
     "On 23 October 2026, GGI brought 100 students, nine teachers and three nurses together at Enchi Presbyterian Church for breast health education under the theme Know Your Body, Protect Your Future.",
-  body: `Girls Global Initiative organised a Breast Cancer Awareness and Screening Programme on **Friday, 23 October 2026** at the Enchi Presbyterian Church, Western North Region, Ghana.
-
-The programme ran under the theme **“Know Your Body, Protect Your Future”** — educating young girls on breast health, promoting awareness of breast cancer, encouraging early detection, and empowering participants to take responsibility for their wellbeing.
-
-## Participation
-GGI planned for 80 students and welcomed **100 students**, plus **nine teachers** and **three nurses**. Transportation support helped girls from neighbouring Takyikrom take part.
-
-Sessions opened with prayer and introductions from the GGI team, including an opening address by Founder and President Philomena Ofori Larbi. Nurses facilitated interactive health education on breast cancer, early detection and self-awareness, followed by questions, refreshments and closing.
-
-## Outcomes
-The day exceeded its attendance target, brought schools across Enchi and surrounding communities together, and created space for girls and teachers to learn from health professionals. A power outage and generator logistics delayed the start from 10:00 a.m. to about 10:40 a.m.; the team adapted and completed the programme successfully.
-
-GGI remains committed to health education that helps girls in underserved communities protect their futures.
-
-[Download the full activity report (PDF)](/reports/breast-cancer-awareness-2026.pdf)`,
+  body: BREAST_CANCER_BODY,
 };
 
 const BREAST_CANCER_EVENT = {
@@ -74,10 +53,11 @@ const BREAST_CANCER_EVENT = {
     "Breast health education with nurses for girls from Enchi and surrounding communities.",
   body: `GGI hosted a breast cancer awareness and health education programme at Enchi Presbyterian Church under the theme Know Your Body, Protect Your Future.
 
-Students, teachers and nurses took part in interactive sessions on breast health and early detection. Read the full activity report on our news page.`,
+Students, teachers and nurses took part in interactive sessions on breast health and early detection. Read the full activity report under Reports.`,
   location: "Enchi Presbyterian Church, Enchi, Western North Region, Ghana",
   startsOn: "23 October 2026",
   endsOn: "10:40 a.m. – 2:50 p.m.",
+  hostLabel: "Girls Global Initiative",
   imageUrl: "/news/breast-cancer-card.jpg",
   sortOrder: 5,
 };
@@ -161,11 +141,14 @@ const GALLERY_META: Array<{
   },
 ];
 
-async function upsertNews(post: typeof PAGES_OF_HOPE) {
+async function upsertNews(
+  post: typeof PAGES_OF_HOPE,
+  publishedAtIso: string,
+) {
   const db = getDb();
   if (!db) throw new Error("DATABASE_URL is not set.");
   const now = new Date();
-  const publishedAt = new Date(`${post.publishedOn}T12:00:00.000Z`);
+  const publishedAt = new Date(publishedAtIso);
 
   const [existing] = await db
     .select()
@@ -182,13 +165,15 @@ async function upsertNews(post: typeof PAGES_OF_HOPE) {
         body: post.body,
         imageUrl: post.imageUrl,
         publishedOn: post.publishedOn,
+        kind: post.kind,
+        attachmentUrl: post.attachmentUrl,
         status: "published",
         publishedAt: existing.publishedAt ?? publishedAt,
         updatedAt: now,
         sortOrder: post.sortOrder,
       })
       .where(eq(newsPosts.id, existing.id));
-    console.log(`Updated news: ${post.slug}`);
+    console.log(`Updated report: ${post.slug}`);
     return;
   }
 
@@ -199,11 +184,13 @@ async function upsertNews(post: typeof PAGES_OF_HOPE) {
     body: post.body,
     imageUrl: post.imageUrl,
     publishedOn: post.publishedOn,
+    kind: post.kind,
+    attachmentUrl: post.attachmentUrl,
     status: "published",
     publishedAt,
     sortOrder: post.sortOrder,
   });
-  console.log(`Created news: ${post.slug}`);
+  console.log(`Created report: ${post.slug}`);
 }
 
 async function upsertEvent() {
@@ -313,8 +300,8 @@ async function upsertGallery() {
 }
 
 async function main() {
-  await upsertNews(PAGES_OF_HOPE);
-  await upsertNews(BREAST_CANCER);
+  await upsertNews(PAGES_OF_HOPE, "2026-03-31T12:00:00.000Z");
+  await upsertNews(BREAST_CANCER, "2026-10-23T12:00:00.000Z");
   await upsertEvent();
   await upsertGallery();
 }

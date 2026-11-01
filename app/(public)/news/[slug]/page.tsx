@@ -1,7 +1,7 @@
+import { notFound, redirect } from "next/navigation";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import {
   ContentSection,
   CtaBand,
@@ -36,6 +36,13 @@ export async function generateMetadata({
       path: "/news",
     });
   }
+  if (post.kind === "report") {
+    return buildPageMetadata({
+      title: post.title,
+      description: post.summary,
+      path: `/reports/${post.slug}`,
+    });
+  }
   return buildPageMetadata({
     title: post.title,
     description: post.summary,
@@ -54,6 +61,9 @@ export default async function NewsDetailPage({ params }: PageParams) {
   const { slug } = await params;
   const post = await getPublicNewsBySlug(slug);
   if (!post) notFound();
+  if (post.kind === "report") {
+    redirect(`/reports/${post.slug}`);
+  }
 
   const blocks = renderBlocks(post.body);
 
@@ -68,7 +78,7 @@ export default async function NewsDetailPage({ params }: PageParams) {
         tone="sky"
         ctas={[
           { href: "/news", label: "All news", variant: "secondary" },
-          { href: "/#newsletter", label: "Subscribe" },
+          { href: "/reports", label: "Reports" },
         ]}
       />
 
@@ -145,7 +155,7 @@ export default async function NewsDetailPage({ params }: PageParams) {
       <CtaBand
         title="Stay closer to the work."
         primary={{ href: "/#newsletter", label: "Newsletter" }}
-        secondary={{ href: "/events", label: "See events" }}
+        secondary={{ href: "/reports", label: "Programme reports" }}
       />
     </>
   );

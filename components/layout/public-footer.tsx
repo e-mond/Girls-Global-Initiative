@@ -11,6 +11,7 @@ const EXPLORE_LINKS = [
   { href: "/impact", label: "Impact" },
   { href: "/gallery", label: "Gallery" },
   { href: "/news", label: "News" },
+  { href: "/reports", label: "Reports" },
   { href: "/events", label: "Events" },
   { href: "/founder", label: "Founder" },
   { href: "/team", label: "Team" },

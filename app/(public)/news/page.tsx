@@ -44,8 +44,8 @@ export default async function NewsPage() {
         description="School outreach, community work, partnership updates, and upcoming events."
         tone="sky"
         ctas={[
-          { href: "/events", label: "See events", variant: "secondary" },
-          { href: "/gallery", label: "Gallery" },
+          { href: "/reports", label: "Programme reports", variant: "secondary" },
+          { href: "/events", label: "See events" },
         ]}
       />
 

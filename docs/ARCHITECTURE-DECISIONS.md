@@ -188,6 +188,46 @@ Decisions also summarised in `progress-tracker.md`. Prefer updating this file fo
 
 ---
 
+## ADR-009 — PDF text extraction with mandatory admin review
+
+**DECISION:** Extract report content from source PDFs with `pdf-parse` (Node-only admin routes/scripts), structure into GGI markdown sections, require `needs_review` → `approved` before publish, and keep `attachment_url` as the immutable source reference.
+
+**CONTEXT:** Uploaded/linked PDFs carry programme facts but must not dictate public branding or layout.
+
+**PROBLEM:** Embedding or screenshotting source PDFs fights brand consistency; free-form paste loses completeness; Workers Free cannot run heavy OCR safely.
+
+**OPTIONS CONSIDERED:** iframe/embed source PDF; server OCR pipeline; manual-only CMS entry; extract text layer + admin review.
+
+**SELECTED APPROACH:** `PDFParse.getText` (+ best-effort tables) → `structure-from-text` → draft with extraction status → admin Reports workspace → approve/publish gate. Branded online page + client `jspdf` (ADR-008) render reviewed content.
+
+**RATIONALE:** Preserves facts without inventing copy; keeps heavy parsing off the Edge path; enforces human approval.
+
+**TRADE-OFFS:** Scanned PDFs without a text layer need offline OCR; embedded images are not yet re-hosted into the branded layout.
+
+**IMPACT:** `pdf-parse`; migration `0013_report_extraction`; `/api/admin/reports/extract|approve`; docs `REPORT-PDF-EXTRACTION.md`.
+
+---
+
+## ADR-008 — Client-side branded programme report PDFs
+
+**DECISION:** Generate full programme-report PDFs in the browser with `jspdf`, using GGI navy/magenta/sky branding. Keep original source PDFs available as optional attachments.
+
+**CONTEXT:** Reports need a shareable full-text PDF; Cloudflare Workers is a poor host for Node PDF libraries (pdfkit).
+
+**PROBLEM:** Server-side PDF generation is runtime-fragile on Workers and would couple reports to one host.
+
+**OPTIONS CONSIDERED:** pdfkit API route; static-only PDFs; client `jspdf`.
+
+**SELECTED APPROACH:** Client `jspdf` download button on report detail pages; proofread body stored in CMS; optional `attachmentUrl` for the original scanned/export PDF.
+
+**RATIONALE:** Works on Cloudflare and Node hosts; keeps secrets off the client path; staff control content via Admin → Reports.
+
+**TRADE-OFFS:** PDF layout is simpler than desktop publishing; fonts are standard PDF fonts unless extended later.
+
+**IMPACT:** Dependency `jspdf`; `/reports` public routes; `news_posts.kind` / `attachment_url` columns.
+
+---
+
 ## ADR-007 — Hosting portability after Error 1102
 
 **DECISION:** Keep Cloudflare Workers + OpenNext as the *current* production host until a verified Node preview exists and the owner approves cutover. Treat standard Node (`next build` / `next start`), Vercel, and Docker standalone as first-class alternatives. Optimise request-path cost (published SQL filters, settings memoisation, deferred SMTP) before raising Workers limits or migrating.

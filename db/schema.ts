@@ -116,6 +116,19 @@ export const newsPosts = pgTable("news_posts", {
   body: text("body").notNull().default(""),
   imageUrl: text("image_url"),
   publishedOn: text("published_on"),
+  /** `news` (default) or `report` for programme/activity reports. */
+  kind: text("kind").notNull().default("news"),
+  /** Original source PDF URL/path (not the branded generated PDF). */
+  attachmentUrl: text("attachment_url"),
+  /**
+   * Report extraction lifecycle:
+   * none | pending | extracted | needs_review | approved | failed
+   */
+  extractionStatus: text("extraction_status").notNull().default("none"),
+  /** Admin-visible notes / uncertain extraction flags. */
+  extractionNotes: text("extraction_notes"),
+  /** Full raw text captured from the source PDF before editorial shaping. */
+  extractedRaw: text("extracted_raw"),
   sortOrder: integer("sort_order").notNull().default(0),
   ...contentTimestamps,
 });
@@ -130,6 +143,8 @@ export const events = pgTable("events", {
   startsOn: text("starts_on"),
   endsOn: text("ends_on"),
   imageUrl: text("image_url"),
+  /** Display host; defaults to Girls Global Initiative when empty. */
+  hostLabel: text("host_label"),
   sortOrder: integer("sort_order").notNull().default(0),
   ...contentTimestamps,
 });

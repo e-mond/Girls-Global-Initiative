@@ -28,6 +28,11 @@ const CONTENT_SECTIONS = [
     body: "News posts for the public News page and homepage strip.",
   },
   {
+    href: "/admin/content/reports",
+    title: "Reports",
+    body: "Programme and activity reports with branded PDF download for partners.",
+  },
+  {
     href: "/admin/content/events",
     title: "Events",
     body: "Events for the public Events page and homepage strip.",

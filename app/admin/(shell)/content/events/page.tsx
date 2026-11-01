@@ -12,12 +12,21 @@ export default function AdminEventsPage() {
         { name: "summary", label: "Summary", type: "textarea", required: true },
         { name: "body", label: "Body", type: "textarea" },
         { name: "location", label: "Location" },
-        { name: "startsOn", label: "Starts on (text)" },
-        { name: "endsOn", label: "Ends on (text)" },
+        { name: "startsOn", label: "Date (stands out on the public page)" },
+        { name: "endsOn", label: "Time / schedule (stands out on the public page)" },
+        {
+          name: "hostLabel",
+          label: "Host (defaults to Girls Global Initiative if blank)",
+        },
         { name: "imageUrl", label: "Image", type: "image" },
         { name: "sortOrder", label: "Sort order", type: "number" },
       ]}
-      createDefaults={{ summary: "", body: "", sortOrder: 0 }}
+      createDefaults={{
+        summary: "",
+        body: "",
+        hostLabel: "Girls Global Initiative",
+        sortOrder: 0,
+      }}
     />
   );
 }

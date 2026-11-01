@@ -22,6 +22,7 @@
     "db:publish-site-live-news": "tsx --env-file=.env.local scripts/publish-site-live-news.ts",
     "db:publish-girl-beyond-map-event": "tsx --env-file=.env.local scripts/publish-girl-beyond-the-map-event.ts",
     "db:publish-programme-reports": "tsx --env-file=.env.local scripts/publish-programme-reports.ts",
+    "db:extract-programme-reports": "tsx --env-file=.env.local scripts/extract-programme-reports.ts",
     "announce:site-live": "tsx --env-file=.env.local scripts/announce-site-live.ts"
   },
   "dependencies": {
@@ -31,10 +32,12 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.43.0",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.47.0",
     "next": "^15.5.9",
     "next-auth": "^5.0.0-beta.32",
     "nodemailer": "^8.0.11",
+    "pdf-parse": "^2.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.7.0",
@@ -48,6 +51,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cypress": "^16.1.0",
