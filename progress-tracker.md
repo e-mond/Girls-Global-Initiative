@@ -8,7 +8,7 @@
 ## Current Phase
 
 * **Favicon & browser website identity**
-* **Status:** Implementing — `feature/favicon-browser-identity`
+* **Status:** Merged — PR #50; Worker uploaded; live favicon hash matches
 * **Previous phase:** Reports/status system (PR #49)
 * **Previous phase:** Poster content archives (PR #47) / RSC stale-chunk (PR #48)
 * **Current branch:** `feature/content-status-report-design-system`
@@ -1555,6 +1555,11 @@ Phase 2 recurring billing remains deferred.
 * Root cause of “missing” favicon: conflicting older `app/favicon.ico`
   (served in production) + duplicate head tags + black-canvas mark that
   disappeared on dark browser chrome.
+* Ship: PR #50 merged; deploy uploaded Worker (same zone API warning).
+  Live checks: `/favicon.ico` 200 / hash match; PNG `?v=20261101f` 200;
+  `/manifest.webmanifest` GGI identity; Apple + Safari SVG 200; head includes
+  PNG icons + mask-icon. Recommend Cloudflare **Purge Everything** for sticky
+  tab caches.
 
 ### Session Notes — Reports design, media, Markdown & statuses
 
