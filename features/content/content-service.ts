@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import {
   advocacyContent,
@@ -12,6 +12,10 @@ import {
   testimonials,
 } from "@/db/schema";
 import type { ContentEntity, ContentStatus } from "@/features/governance/rbac";
+import {
+  isArchivedPublicContent,
+  isLivePublicContent,
+} from "@/lib/content/public-visibility";
 
 export type ContentRecord = {
   id: string;
@@ -153,6 +157,15 @@ function tableFor(entity: ContentEntity) {
   }
 }
 
+function asDateOrNull(value: unknown): Date | null {
+  if (value == null || value === "") return null;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  const parsed = new Date(String(value));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 function serializeRow(row: Record<string, unknown>): ContentRecord {
   return {
     ...row,
@@ -210,12 +223,16 @@ export async function createContent(
   actorId: string | null,
 ): Promise<ContentRecord> {
   const now = new Date();
+  const initialStatus = (input.status as ContentStatus) ?? "draft";
   const payload = {
     ...input,
-    status: (input.status as ContentStatus) ?? "draft",
+    status: initialStatus,
     createdById: actorId,
     updatedById: actorId,
-    publishedAt: input.status === "published" ? now : null,
+    publishedAt:
+      initialStatus === "published" || initialStatus === "scheduled"
+        ? asDateOrNull(input.publishedAt) ?? now
+        : null,
     createdAt: now,
     updatedAt: now,
   };
@@ -254,12 +271,27 @@ export async function updateContent(
 
   const nextStatus = (input.status as ContentStatus | undefined) ?? existing.status;
   const now = new Date();
-  const publishedAt =
-    nextStatus === "published"
-      ? existing.publishedAt
-        ? new Date(existing.publishedAt)
-        : now
+  let publishedAt: Date | null = null;
+  if (nextStatus === "published") {
+    publishedAt =
+      asDateOrNull(input.publishedAt) ??
+      (existing.publishedAt ? new Date(existing.publishedAt) : now);
+  } else if (nextStatus === "scheduled") {
+    publishedAt =
+      asDateOrNull(input.publishedAt) ??
+      (existing.publishedAt ? new Date(existing.publishedAt) : now);
+  } else if (nextStatus === "archived") {
+    publishedAt = existing.publishedAt
+      ? new Date(existing.publishedAt)
       : null;
+  }
+
+  if ("publishedAt" in input && nextStatus !== "draft") {
+    const explicit = asDateOrNull(input.publishedAt);
+    if (explicit && (nextStatus === "published" || nextStatus === "scheduled")) {
+      publishedAt = explicit;
+    }
+  }
 
   const db = getDb();
   if (!db) {
@@ -308,10 +340,25 @@ export async function deleteContent(
   return deleted.length > 0;
 }
 
-/** Published rows only, for public surfaces. Soft-fails offline/unreachable DB. */
+function filterLivePublicRows(
+  items: ContentRecord[],
+  options?: { includeArchived?: boolean },
+): ContentRecord[] {
+  return items.filter((item) => {
+    if (options?.includeArchived && isArchivedPublicContent(item.status)) {
+      return true;
+    }
+    return isLivePublicContent({
+      status: item.status,
+      publishedAt: item.publishedAt,
+    });
+  });
+}
+
+/** Live public rows (published + due scheduled). Soft-fails offline/unreachable DB. */
 export async function listPublishedContent(
   entity: ContentEntity,
-  options?: { limit?: number },
+  options?: { limit?: number; includeArchived?: boolean },
 ): Promise<ContentRecord[]> {
   try {
     const limit =
@@ -321,17 +368,64 @@ export async function listPublishedContent(
 
     const db = getDb();
     if (!db) {
-      const items = [...store()[entity]]
-        .filter((item) => item.status === "published")
-        .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0));
+      const items = filterLivePublicRows([...store()[entity]], options).sort(
+        (a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0),
+      );
       return limit ? items.slice(0, limit) : items;
     }
 
     const table = tableFor(entity);
+    const now = new Date();
+    const statusFilter = options?.includeArchived
+      ? inArray(table.status, ["published", "scheduled", "archived"])
+      : inArray(table.status, ["published", "scheduled"]);
+
     const base = db
       .select()
       .from(table)
-      .where(eq(table.status, "published"))
+      .where(statusFilter)
+      .orderBy(asc(table.sortOrder));
+    const rows = await base;
+    const live = rows
+      .map((row) => serializeRow(row as Record<string, unknown>))
+      .filter((item) => {
+        if (options?.includeArchived && isArchivedPublicContent(item.status)) {
+          return true;
+        }
+        return isLivePublicContent({
+          status: item.status,
+          publishedAt: item.publishedAt,
+          now,
+        });
+      });
+    return limit ? live.slice(0, limit) : live;
+  } catch {
+    return [];
+  }
+}
+
+/** Archived news/content for public archive sections. */
+export async function listArchivedContent(
+  entity: ContentEntity,
+  options?: { limit?: number },
+): Promise<ContentRecord[]> {
+  try {
+    const limit =
+      typeof options?.limit === "number" && options.limit > 0
+        ? Math.floor(options.limit)
+        : undefined;
+    const db = getDb();
+    if (!db) {
+      const items = [...store()[entity]]
+        .filter((item) => item.status === "archived")
+        .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0));
+      return limit ? items.slice(0, limit) : items;
+    }
+    const table = tableFor(entity);
+    const base = db
+      .select()
+      .from(table)
+      .where(eq(table.status, "archived"))
       .orderBy(asc(table.sortOrder));
     const rows = limit ? await base.limit(limit) : await base;
     return rows.map((row) => serializeRow(row as Record<string, unknown>));
@@ -340,7 +434,15 @@ export async function listPublishedContent(
   }
 }
 
-/** Single published news post by slug. */
+function isPubliclyReadableNews(item: ContentRecord): boolean {
+  if (item.status === "archived") return true;
+  return isLivePublicContent({
+    status: item.status,
+    publishedAt: item.publishedAt,
+  });
+}
+
+/** Single public news post by slug (live, due-scheduled, or archived). */
 export async function getPublishedNewsBySlug(
   slug: string,
 ): Promise<ContentRecord | null> {
@@ -353,8 +455,8 @@ export async function getPublishedNewsBySlug(
       return (
         store().news_posts.find(
           (item) =>
-            item.status === "published" &&
-            String(item.slug ?? "").toLowerCase() === needle.toLowerCase(),
+            String(item.slug ?? "").toLowerCase() === needle.toLowerCase() &&
+            isPubliclyReadableNews(item),
         ) ?? null
       );
     }
@@ -362,9 +464,16 @@ export async function getPublishedNewsBySlug(
     const [row] = await db
       .select()
       .from(newsPosts)
-      .where(and(eq(newsPosts.slug, needle), eq(newsPosts.status, "published")))
+      .where(
+        and(
+          eq(newsPosts.slug, needle),
+          inArray(newsPosts.status, ["published", "scheduled", "archived"]),
+        ),
+      )
       .limit(1);
-    return row ? serializeRow(row as Record<string, unknown>) : null;
+    if (!row) return null;
+    const record = serializeRow(row as Record<string, unknown>);
+    return isPubliclyReadableNews(record) ? record : null;
   } catch {
     return null;
   }
@@ -383,7 +492,10 @@ export async function getPublishedEventBySlug(
       return (
         store().events.find(
           (item) =>
-            item.status === "published" &&
+            isLivePublicContent({
+              status: item.status,
+              publishedAt: item.publishedAt,
+            }) &&
             String(item.slug ?? "").toLowerCase() === needle.toLowerCase(),
         ) ?? null
       );
@@ -392,9 +504,21 @@ export async function getPublishedEventBySlug(
     const [row] = await db
       .select()
       .from(events)
-      .where(and(eq(events.slug, needle), eq(events.status, "published")))
+      .where(
+        and(
+          eq(events.slug, needle),
+          inArray(events.status, ["published", "scheduled"]),
+        ),
+      )
       .limit(1);
-    return row ? serializeRow(row as Record<string, unknown>) : null;
+    if (!row) return null;
+    const record = serializeRow(row as Record<string, unknown>);
+    return isLivePublicContent({
+      status: record.status,
+      publishedAt: record.publishedAt,
+    })
+      ? record
+      : null;
   } catch {
     return null;
   }

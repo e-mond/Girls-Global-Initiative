@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ContainImage } from "@/components/media/contain-image";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { ShareButtons } from "@/components/news/share-buttons";
 import { getPublicNews } from "@/features/content/public-content";
@@ -36,15 +36,13 @@ export async function HomeNews() {
                   className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
                 >
                   {item.imageSrc ? (
-                    <div className="relative h-44">
-                      <Image
-                        src={item.imageSrc}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    </div>
+                    <ContainImage
+                      src={item.imageSrc}
+                      alt={item.title}
+                      variant="card"
+                      className="max-h-[240px] min-h-[180px]"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
                   ) : null}
                   <div className="flex flex-1 flex-col p-5">
                     <h3 className="font-display text-xl font-bold text-brand-navy">

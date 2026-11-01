@@ -16,9 +16,9 @@ PDF.
 5. Approve (`POST /api/admin/reports/approve`) — required before publish
 6. Publish — gated in content PATCH when `kind = report` and extraction is not approved
 
-Original source PDF remains in `news_posts.attachment_url`. Generated branded
-PDFs are created client-side from the reviewed body (jspdf) and are never a
-re-download of the source file.
+Original source PDF remains in `news_posts.attachment_url` for **admin reference
+only**. It is never linked on public report pages. Visitors use the online report
+and **Download the Full Report** (GGI branded PDF generated from reviewed content).
 
 ## Extraction pipeline
 
@@ -38,17 +38,22 @@ Rules:
 
 ## Presentation
 
-* Online: `/reports` and `/reports/[slug]` with section TOC, source PDF link,
-  branded download button
+Shared report components (all future reports use the same system):
+
+* `ReportHeader` / `ReportContent` / `ReportDownloadButton`
+* Safe Markdown via `lib/content/safe-markdown.tsx` (headings, lists, tables, links)
+* Online: `/reports` and `/reports/[slug]` with section TOC
 * Downloadable PDF: `components/reports/download-branded-pdf.tsx` — navy /
   magenta / sky / cream cover + body, page numbers, selectable text
+* Public CTA copy: **Download the Full Report** —
+  “Download the complete report in GGI's official document format.”
 
 ## Limits
 
 * Max source size ~25MB per pass
 * OCR is not automatic on Cloudflare Workers Free — use Node admin/scripts
 * Embedded photos/charts from the source PDF are not yet re-hosted into the
-  branded layout; use the report card image and keep the original PDF linked
+  branded layout; use the report card image
 * Extraction should run in Node (admin route / scripts), not on the Edge runtime
 
 ## Validation fixture

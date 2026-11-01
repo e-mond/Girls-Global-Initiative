@@ -21,7 +21,9 @@ export const staffStatusEnum = pgEnum("staff_status", [
 ]);
 export const contentStatusEnum = pgEnum("content_status", [
   "draft",
+  "scheduled",
   "published",
+  "archived",
 ]);
 
 export const users = pgTable("users", {
@@ -145,6 +147,17 @@ export const events = pgTable("events", {
   imageUrl: text("image_url"),
   /** Display host; defaults to Girls Global Initiative when empty. */
   hostLabel: text("host_label"),
+  /**
+   * Explicit programme lifecycle — never inferred as cancelled/postponed.
+   * scheduled | cancelled | postponed
+   */
+  programmeStatus: text("programme_status").notNull().default("scheduled"),
+  /** IANA timezone for date-based upcoming/past derivation. */
+  timezone: text("timezone").default("Africa/Accra"),
+  /** Revised date/time label when postponed. */
+  revisedStartsOn: text("revised_starts_on"),
+  /** Public explanation for cancellation or postponement. */
+  statusNote: text("status_note"),
   sortOrder: integer("sort_order").notNull().default(0),
   ...contentTimestamps,
 });

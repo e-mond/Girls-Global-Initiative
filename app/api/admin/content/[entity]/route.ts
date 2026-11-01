@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   contentEntitySchema,
   contentStatusSchema,
+  programmeStatusSchema,
 } from "@/features/governance/rbac";
 import {
   createContent,
@@ -17,6 +18,11 @@ import { requireAdminSession } from "@/features/governance/require-admin";
 const createSchema = z
   .object({
     status: contentStatusSchema.optional(),
+    programmeStatus: programmeStatusSchema.optional(),
+    publishedAt: z.union([z.string(), z.null()]).optional(),
+    revisedStartsOn: z.union([z.string(), z.null()]).optional(),
+    statusNote: z.union([z.string(), z.null()]).optional(),
+    timezone: z.union([z.string(), z.null()]).optional(),
   })
   .passthrough();
 
@@ -181,12 +187,29 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 
+  const auditAction =
+    rest.status === "published"
+      ? "content.publish"
+      : rest.status === "archived"
+        ? "content.archive"
+        : rest.status === "scheduled"
+          ? "content.schedule"
+          : rest.programmeStatus === "cancelled"
+            ? "content.event.cancel"
+            : rest.programmeStatus === "postponed"
+              ? "content.event.postpone"
+              : "content.update";
+
   await writeAuditLog({
     actorUserId: access.user.id,
-    action: rest.status === "published" ? "content.publish" : "content.update",
+    action: auditAction,
     entityType: entity.data,
     entityId: id,
     summary: `Updated ${entity.data} item`,
+    metadata: {
+      status: rest.status ?? null,
+      programmeStatus: rest.programmeStatus ?? null,
+    },
   });
 
   return NextResponse.json({ data: { item: updated } });

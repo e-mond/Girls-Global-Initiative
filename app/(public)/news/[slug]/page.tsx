@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ContentSection,
@@ -8,6 +7,8 @@ import {
   Prose,
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
+import { ContainImage } from "@/components/media/contain-image";
+import { CmsMarkdown } from "@/components/content/cms-markdown";
 import { ShareButtons } from "@/components/news/share-buttons";
 import {
   getPublicNewsBySlug,
@@ -50,13 +51,6 @@ export async function generateMetadata({
   });
 }
 
-function renderBlocks(body: string) {
-  return body
-    .split(/\n\n+/)
-    .map((block) => block.trim())
-    .filter(Boolean);
-}
-
 export default async function NewsDetailPage({ params }: PageParams) {
   const { slug } = await params;
   const post = await getPublicNewsBySlug(slug);
@@ -65,13 +59,17 @@ export default async function NewsDetailPage({ params }: PageParams) {
     redirect(`/reports/${post.slug}`);
   }
 
-  const blocks = renderBlocks(post.body);
-
   return (
     <>
       <PageHeroEditorial
         breadcrumb="News"
-        badge={post.kind === "newsletter" ? "Newsletter" : "Update"}
+        badge={
+          post.contentStatus === "archived"
+            ? "Archive"
+            : post.kind === "newsletter"
+              ? "Newsletter"
+              : "Update"
+        }
         meta={post.publishedOn ?? "GGI news"}
         title={post.title}
         description={post.summary}
@@ -83,53 +81,20 @@ export default async function NewsDetailPage({ params }: PageParams) {
       />
 
       {post.imageSrc ? (
-        <div className="bg-bg-surface px-4 pb-4 lg:px-6">
-          <div className="relative mx-auto aspect-[21/9] max-w-6xl overflow-hidden rounded-[1.75rem]">
-            <Image
-              src={post.imageSrc}
-              alt={post.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1200px) 100vw, 1100px"
-            />
-          </div>
+        <div className="bg-bg-surface px-4 pb-6 lg:px-6">
+          <ContainImage
+            src={post.imageSrc}
+            alt={post.title}
+            variant="detail"
+            priority
+          />
         </div>
       ) : null}
 
       <ContentSection tone="surface" narrow>
         <Prose>
-          {blocks.length > 0 ? (
-            blocks.map((block) => {
-              if (block.startsWith("## ")) {
-                return (
-                  <h2
-                    key={block.slice(0, 48)}
-                    className="font-display text-2xl font-bold text-brand-navy"
-                  >
-                    {block.replace(/^##\s+/, "")}
-                  </h2>
-                );
-              }
-              const linkMatch = block.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-              if (linkMatch) {
-                return (
-                  <p key={block.slice(0, 48)}>
-                    <Link
-                      href={linkMatch[2]}
-                      className="font-semibold text-brand-sky hover:underline"
-                    >
-                      {linkMatch[1]}
-                    </Link>
-                  </p>
-                );
-              }
-              return (
-                <p key={block.slice(0, 48)} className="whitespace-pre-line">
-                  {block}
-                </p>
-              );
-            })
+          {post.body.trim() ? (
+            <CmsMarkdown body={post.body} />
           ) : (
             <p>{post.summary}</p>
           )}

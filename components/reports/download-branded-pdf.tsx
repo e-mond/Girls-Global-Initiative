@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FileDown } from "lucide-react";
+import { normalizeCmsMarkdown } from "@/lib/content/safe-markdown";
 
 type DownloadBrandedPdfProps = {
   title: string;
@@ -46,7 +47,7 @@ export function DownloadBrandedPdf({
   body,
   fileName,
   className,
-  label = "Download branded PDF",
+  label = "Download the Full Report",
 }: DownloadBrandedPdfProps) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +116,7 @@ export function DownloadBrandedPdf({
       doc.rect(0, 0, pageWidth, pageHeight, "F");
       y = margin + 28;
 
-      const blocks = body
+      const blocks = normalizeCmsMarkdown(body)
         .split(/\n\n+/)
         .map((block) => block.trim())
         .filter(Boolean);
@@ -215,7 +216,7 @@ export function DownloadBrandedPdf({
         doc.line(margin, pageHeight - 40, pageWidth - margin, pageHeight - 40);
         doc.setTextColor(...NAVY);
         doc.text(
-          "Generated branded PDF from reviewed report content — not a reprint of the source layout.",
+          "Official Girls Global Initiative programme report.",
           margin,
           pageHeight - 24,
         );

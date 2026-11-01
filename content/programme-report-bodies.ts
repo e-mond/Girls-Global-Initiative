@@ -45,9 +45,7 @@ Major challenges identified were inadequate educational materials; household pov
 ## Conclusion and next steps
 Pages of Hope reaffirmed GGI's commitment to reaching girls in rural and underserved communities and understanding the realities that shape their educational experiences. GGI intends to maintain communication with participating schools, document needs, develop partnerships and continue the work in additional communities as resources permit.
 
-Every girl deserves not only a place in a classroom, but also the support and opportunity to remain there, learn, thrive and build the future she dreams of.
-
-[Download the original source PDF](/reports/pages-of-hope-2026.pdf)`;
+Every girl deserves not only a place in a classroom, but also the support and opportunity to remain there, learn, thrive and build the future she dreams of.`;
 
 export const BREAST_CANCER_BODY = `## Introduction
 Girls Global Initiative organised a Breast Cancer Awareness and Screening Programme on Friday, 23 October 2026, at the Enchi Presbyterian Church in the Western North Region of Ghana.
@@ -91,6 +89,4 @@ A power outage delayed banner printing and other preparations, and generator fue
 ## Conclusion
 The Breast Cancer Awareness and Screening Programme achieved its primary objective of bringing young girls together to learn about breast health and early detection. Despite logistical challenges, the dedication of the organising team ensured successful delivery.
 
-Prepared by Miss Philomena Ofori Larbi, President and Founder, Girls Global Initiative.
-
-[Download the original source PDF](/reports/breast-cancer-awareness-2026.pdf)`;
+Prepared by Miss Philomena Ofori Larbi, President and Founder, Girls Global Initiative.`;

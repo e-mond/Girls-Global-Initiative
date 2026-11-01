@@ -8,23 +8,24 @@ import {
   Users,
 } from "lucide-react";
 import { AddToCalendar } from "@/components/events/add-to-calendar";
+import { CmsMarkdown } from "@/components/content/cms-markdown";
 import { CtaBand } from "@/components/layout/content-section";
 import { PageBreadcrumb } from "@/components/layout/editorial";
+import { ContainImage } from "@/components/media/contain-image";
 import { Reveal } from "@/components/motion/reveal";
 import { ShareButtons } from "@/components/news/share-buttons";
 import type { PublicEventItem } from "@/features/content/public-content";
-
-function bodyParagraphs(body: string) {
-  return body
-    .split(/\n\n+/)
-    .map((block) => block.trim())
-    .filter(Boolean);
-}
+import { eventStatusLabel } from "@/lib/events/programme-status";
 
 export function EventDetailView({ event }: { event: PublicEventItem }) {
-  const paragraphs = bodyParagraphs(event.body);
   const host = event.hostLabel?.trim() || "Girls Global Initiative";
   const whenLabel = [event.startsOn, event.endsOn].filter(Boolean).join(" · ");
+  const displayDate =
+    event.displayStatus === "postponed" && event.revisedStartsOn
+      ? event.revisedStartsOn
+      : event.startsOn;
+  const isInactive =
+    event.displayStatus === "cancelled" || event.displayStatus === "postponed";
 
   return (
     <>
@@ -49,7 +50,7 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
           <PageBreadcrumb current="Events" onDark />
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center rounded-full bg-brand-magenta px-3 py-1 text-xs font-bold uppercase tracking-wide text-text-on-inverse">
-              Event
+              {eventStatusLabel(event.displayStatus)}
             </span>
             {whenLabel ? (
               <span className="text-sm font-medium text-white/85">{whenLabel}</span>
@@ -61,6 +62,11 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
             {event.summary}
           </p>
+          {event.statusNote && isInactive ? (
+            <p className="mt-4 max-w-2xl rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white/90">
+              {event.statusNote}
+            </p>
+          ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="#event-details"
@@ -85,28 +91,20 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
         <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-6">
             {event.imageSrc ? (
-              <div className="relative aspect-[16/10] overflow-hidden rounded-[1.75rem] border border-border-default bg-bg-surface shadow-sm">
-                <Image
-                  src={event.imageSrc}
-                  alt={event.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 640px"
-                />
-              </div>
+              <ContainImage
+                src={event.imageSrc}
+                alt={event.title}
+                variant="detail"
+              />
             ) : null}
 
             <article className="rounded-[1.75rem] border border-border-default bg-bg-surface p-6 sm:p-8">
               <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
                 About this gathering
               </p>
-              <div className="mt-5 space-y-4 text-base leading-relaxed text-text-muted">
-                {paragraphs.length > 0 ? (
-                  paragraphs.map((paragraph) => (
-                    <p key={paragraph.slice(0, 48)} className="whitespace-pre-line">
-                      {paragraph}
-                    </p>
-                  ))
+              <div className="mt-5 text-base leading-relaxed text-text-muted">
+                {event.body.trim() ? (
+                  <CmsMarkdown body={event.body} />
                 ) : (
                   <p>{event.summary}</p>
                 )}
@@ -126,11 +124,20 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
                   </span>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
-                      Date
+                      {event.displayStatus === "postponed"
+                        ? "Revised date"
+                        : "Date"}
                     </p>
                     <p className="mt-1 font-display text-lg font-bold">
-                      {event.startsOn ?? "To be confirmed"}
+                      {displayDate ?? "To be confirmed"}
                     </p>
+                    {event.displayStatus === "postponed" &&
+                    event.startsOn &&
+                    event.revisedStartsOn ? (
+                      <p className="mt-1 text-xs text-white/70">
+                        Originally {event.startsOn}
+                      </p>
+                    ) : null}
                   </div>
                 </li>
                 <li className="flex gap-3">
@@ -182,27 +189,29 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-dashed border-brand-sky/40 bg-blob-sky/25 p-6">
-              <div className="flex items-start gap-3">
-                <Sparkles className="mt-0.5 h-5 w-5 text-brand-navy" aria-hidden />
-                <div>
-                  <p className="font-display text-lg font-bold text-brand-navy">
-                    Save the day
-                  </p>
-                  <p className="mt-1 text-sm text-text-muted">
-                    Add this gathering to your calendar so you do not miss it.
-                  </p>
+            {!isInactive && event.displayStatus !== "past" ? (
+              <div className="rounded-[1.75rem] border border-dashed border-brand-sky/40 bg-blob-sky/25 p-6">
+                <div className="flex items-start gap-3">
+                  <Sparkles className="mt-0.5 h-5 w-5 text-brand-navy" aria-hidden />
+                  <div>
+                    <p className="font-display text-lg font-bold text-brand-navy">
+                      Save the day
+                    </p>
+                    <p className="mt-1 text-sm text-text-muted">
+                      Add this gathering to your calendar so you do not miss it.
+                    </p>
+                  </div>
                 </div>
+                <AddToCalendar
+                  title={event.title}
+                  summary={event.summary}
+                  location={event.location}
+                  startsOn={displayDate}
+                  endsOn={event.endsOn}
+                  url={`/events/${event.slug}`}
+                />
               </div>
-              <AddToCalendar
-                title={event.title}
-                summary={event.summary}
-                location={event.location}
-                startsOn={event.startsOn}
-                endsOn={event.endsOn}
-                url={`/events/${event.slug}`}
-              />
-            </div>
+            ) : null}
 
             <ShareButtons
               title={event.title}
@@ -220,54 +229,56 @@ export function EventDetailView({ event }: { event: PublicEventItem }) {
         </div>
       </section>
 
-      <section className="bg-bg-surface px-4 py-12 lg:px-6">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
-            Timeline
-          </p>
-          <h2 className="mt-2 font-display text-3xl font-bold text-brand-navy">
-            How the day unfolds
-          </h2>
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                step: "01",
-                title: "Arrive & welcome",
-                body: event.startsOn
-                  ? `Gathering opens around ${event.startsOn}${event.location ? ` at ${event.location}` : ""}.`
-                  : "Guests arrive and are welcomed by the GGI team.",
-              },
-              {
-                step: "02",
-                title: "Programme in motion",
-                body: "Conversations, learning and community engagement with girls at the centre.",
-              },
-              {
-                step: "03",
-                title: "Close & next steps",
-                body: event.endsOn
-                  ? `Programme winds down by ${event.endsOn}, with clear ways to stay involved.`
-                  : "The day closes with appreciation and ways to continue supporting girls.",
-              },
-            ].map((item) => (
-              <li
-                key={item.step}
-                className="rounded-[1.5rem] border border-border-default bg-bg-base p-5"
-              >
-                <p className="text-xs font-bold uppercase tracking-wide text-brand-sky">
-                  {item.step}
-                </p>
-                <p className="mt-2 font-display text-xl font-bold text-brand-navy">
-                  {item.title}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                  {item.body}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      {!isInactive ? (
+        <section className="bg-bg-surface px-4 py-12 lg:px-6">
+          <div className="mx-auto max-w-6xl">
+            <p className="text-xs font-bold uppercase tracking-wide text-brand-magenta">
+              Timeline
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-brand-navy">
+              How the day unfolds
+            </h2>
+            <ol className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  step: "01",
+                  title: "Arrive & welcome",
+                  body: displayDate
+                    ? `Gathering opens around ${displayDate}${event.location ? ` at ${event.location}` : ""}.`
+                    : "Guests arrive and are welcomed by the GGI team.",
+                },
+                {
+                  step: "02",
+                  title: "Programme in motion",
+                  body: "Conversations, learning and community engagement with girls at the centre.",
+                },
+                {
+                  step: "03",
+                  title: "Close & next steps",
+                  body: event.endsOn
+                    ? `Programme winds down by ${event.endsOn}, with clear ways to stay involved.`
+                    : "The day closes with appreciation and ways to continue supporting girls.",
+                },
+              ].map((item) => (
+                <li
+                  key={item.step}
+                  className="rounded-[1.5rem] border border-border-default bg-bg-base p-5"
+                >
+                  <p className="text-xs font-bold uppercase tracking-wide text-brand-sky">
+                    {item.step}
+                  </p>
+                  <p className="mt-2 font-display text-xl font-bold text-brand-navy">
+                    {item.title}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                    {item.body}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : null}
 
       <CtaBand
         title="Bring GGI to your school or community."
