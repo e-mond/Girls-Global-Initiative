@@ -7,20 +7,20 @@
 
 ## Current Phase
 
-* **Favicon circle + sky border; admin publish smoke**
-* **Status:** In progress on `feature/favicon-circle-border`
+* **Admin content UX (placeholders, reports editor, fixed sidebar)**
+* **Status:** In progress on `feature/admin-content-ux`
+* **Previous phase:** Favicon circle + sky border (PR #51 merged; deploy retry if OpenNext flaked)
 * **Previous phase:** Favicon & browser identity (PR #50)
-* **Previous phase:** Reports/status system (PR #49)
-* **Current branch:** `feature/favicon-circle-border`
+* **Current branch:** `feature/admin-content-ux`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Circular tab icon with sky-blue ring matching navbar; verify admin news/events publish; hard 404 for missing CMS slugs.
-* **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
+* **Current objective:** Admin form placeholders/descriptions; report device PDF upload + Markdown toolbar + publish preview; fixed admin sidebar.
+* **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2); free-choice custom web fonts in CMS (brand fonts only).
 
 ---
 
 ## Current Goal
 
-Ship circular sky-bordered favicons and confirm admin news/events create/publish/schedule/postpone paths remain healthy.
+Ship admin content UX improvements and complete production deploy of the circular favicon.
 
 ---
 
@@ -1547,18 +1547,22 @@ Phase 2 recurring billing remains deferred.
 
 * Source mark: `public/brand/ggi-logo.png` (approved circular emblem).
 * PR #50 shipped square cream-backed icons (`?v=20261101f`).
-* Follow-up (`feature/favicon-circle-border`): regenerate as **circle +
-  `#00b0f2` ring** (`?v=20261101g`); navbar/admin/footer logos get
-  `border-2 border-brand-sky`; **remove `public/favicon.ico`** (conflicts with
-  `app/favicon.ico` → local `/favicon.ico` 500); keep App Router ICO only.
-* Admin publish smoke (local, authenticated API): news create→publish→public
-  visible; events create→publish→list/detail; scheduled news stays hidden;
-  postpone shows revised date; cleanup delete 200. Admin UI pages for news and
-  events render form fields without error boundaries.
-* Soft-404 fix: removed `app/(public)/loading.tsx` (Suspense streamed
-  `notFound()` as HTTP 200). Missing `/news/[slug]` and `/events/[slug]` now
-  return **404**. Kept skeletons on gallery + get-involved only.
-* Docs: `docs/SEO-AND-SEARCH.md` updated for circular icons and 404/loading rule.
+* Follow-up PR [#51](https://github.com/e-mond/Girls-Global-Initiative/pull/51):
+  circular mark + `#00b0f2` ring (`?v=20261101g`); logo borders; removed
+  conflicting `public/favicon.ico`; hard 404 for missing CMS slugs.
+* Deploy: Worker uploaded; live `/favicon.ico` hash matches circular ICO;
+  PNG `?v=20261101g` 200. Same zone API warning (10083).
+
+### Session Notes — Admin content UX
+
+* Placeholders + helper descriptions on all Content entity forms.
+* Markdown toolbar (bold/italic/H2/H3/lists/link/quote) for body fields;
+  draft preview renders via `CmsMarkdown`.
+* Reports: device PDF upload (`/api/admin/reports/upload`, Cloudinary raw or
+  `public/reports/uploads`), publish preview modal, formatting toolbar.
+* Admin shell: `h-dvh` + fixed sidebar (`overflow-hidden`); main column scrolls.
+* Assumption: formatting stays Markdown → GGI brand fonts on public pages
+  (no arbitrary font picker).
 
 ### Session Notes — Reports design, media, Markdown & statuses
 

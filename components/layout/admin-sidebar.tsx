@@ -20,7 +20,7 @@ export function AdminSidebar({
   return (
     <aside
       className={cn(
-        "hidden shrink-0 border-r border-border-default bg-bg-surface md:flex md:flex-col",
+        "sticky top-0 hidden h-dvh shrink-0 overflow-hidden border-r border-border-default bg-bg-surface md:flex md:flex-col",
         sidebarCollapsed ? "w-[4.5rem]" : "w-64",
       )}
     >
