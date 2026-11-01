@@ -27,6 +27,9 @@ const securityHeaders = [
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
       "connect-src 'self' https: https://cloudflareinsights.com",
+      // Optional story/founder embeds from Settings (YouTube / Vimeo / self-host).
+      "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://player.vimeo.com",
+      "child-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://player.vimeo.com",
       "upgrade-insecure-requests",
     ].join("; "),
   },

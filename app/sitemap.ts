@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
-import { pillars } from "@/features/content/mock-home";
+import { getPublicPillars } from "@/features/content/public-content";
 import { getSiteOrigin } from "@/lib/seo/site-origin";
 
 /**
  * Stable content revision date for sitemap lastmod (YYYY-MM-DD).
  * Update when public marketing URLs or key page content ship.
  */
-const SITEMAP_LASTMOD = "2026-10-12";
+const SITEMAP_LASTMOD = "2026-11-01";
 
 const STATIC_PATHS = [
   "/",
@@ -36,7 +36,7 @@ function absoluteUrl(origin: string, path: string) {
   return `${origin}${path}`;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const origin = getSiteOrigin();
 
   // Guard against accidentally publishing localhost URLs to crawlers.
@@ -58,6 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/" ? 1 : path.startsWith("/get-involved") ? 0.8 : 0.7,
   }));
 
+  const pillars = await getPublicPillars();
   const pillarEntries: MetadataRoute.Sitemap = pillars.map((pillar) => ({
     url: absoluteUrl(origin, `/what-we-do/${pillar.slug}`),
     lastModified,

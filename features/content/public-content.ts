@@ -4,7 +4,17 @@
  */
 
 import { listPublishedContent } from "@/features/content/content-service";
-import { communityStories } from "@/features/content/mock-home";
+import { getMedia } from "@/features/content/media-service";
+import {
+  challengeTags as mockChallengeTags,
+  communityStories,
+  founderSpotlight as mockFounder,
+  pillars as mockPillars,
+  teamMembers as mockTeamMembers,
+  type Pillar,
+  type PillarSlug,
+} from "@/features/content/mock-home";
+import { ADVOCATE_COPY } from "@/content/site-copy";
 
 export type PublicGalleryItem = {
   id: string;
@@ -37,6 +47,51 @@ export type PublicEventItem = {
   startsOn: string | null;
   endsOn: string | null;
   imageSrc: string | null;
+  isPlaceholder: boolean;
+};
+
+export type PublicTeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  imageSrc: string;
+  isFounder: boolean;
+  photoPending: boolean;
+  isPlaceholder: boolean;
+};
+
+export type PublicFounderSpotlight = {
+  id: string;
+  name: string;
+  role: string;
+  badge: string;
+  quote: string;
+  body: string;
+  imageSrc: string;
+  callouts: Array<{ title: string; body: string; icon: string }>;
+  isPlaceholder: boolean;
+};
+
+export type PublicChallengeTag = {
+  id: string;
+  label: string;
+  icon: string;
+  isPlaceholder: boolean;
+};
+
+export type PublicTestimonial = {
+  id: string;
+  quote: string;
+  attribution: string;
+  roleLabel: string | null;
+  isPlaceholder: boolean;
+};
+
+export type PublicAdvocacyItem = {
+  id: string;
+  title: string;
+  body: string;
   isPlaceholder: boolean;
 };
 
@@ -93,6 +148,36 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     isPlaceholder: true,
   },
 ];
+
+const PILLAR_TONES = new Set(["navy", "magenta", "sky", "cream"]);
+
+function asTone(colour: unknown): Pillar["tone"] {
+  const value = String(colour ?? "navy");
+  return PILLAR_TONES.has(value) ? (value as Pillar["tone"]) : "navy";
+}
+
+function mockImageForName(name: string): string | null {
+  const needle = name.trim().toLowerCase();
+  const match = mockTeamMembers.find(
+    (member) => member.name.toLowerCase() === needle,
+  );
+  return match?.imageSrc ?? null;
+}
+
+async function resolvePhotoUrl(
+  photoMediaId: unknown,
+  name: string,
+): Promise<{ url: string; pending: boolean }> {
+  if (typeof photoMediaId === "string" && photoMediaId.trim()) {
+    const media = await getMedia(photoMediaId.trim());
+    if (media?.url) {
+      return { url: media.url, pending: false };
+    }
+  }
+  const byName = mockImageForName(name);
+  if (byName) return { url: byName, pending: false };
+  return { url: "/home/community-1.jpg", pending: true };
+}
 
 export async function getPublicGalleryItems(): Promise<PublicGalleryItem[]> {
   const published = await listPublishedContent("gallery_items");
@@ -188,4 +273,175 @@ export async function getPublicEvents(
     isPlaceholder: false,
   }));
   return limit ? items.slice(0, limit) : items;
+}
+
+export async function getPublicTeamMembers(): Promise<PublicTeamMember[]> {
+  const published = await listPublishedContent("team_members");
+  if (published.length === 0) {
+    return mockTeamMembers.map((member) => ({
+      id: member.id,
+      name: member.name,
+      role: member.role,
+      bio: "",
+      imageSrc: member.imageSrc,
+      isFounder: member.isFounder,
+      photoPending: member.photoPending,
+      isPlaceholder: true,
+    }));
+  }
+
+  return Promise.all(
+    published.map(async (item) => {
+      const name = String(item.name ?? "Team member");
+      const photo = await resolvePhotoUrl(item.photoMediaId, name);
+      return {
+        id: item.id,
+        name,
+        role: String(item.roleTitle ?? ""),
+        bio: String(item.bio ?? ""),
+        imageSrc: photo.url,
+        isFounder: Boolean(item.isFounder),
+        photoPending: photo.pending,
+        isPlaceholder: false,
+      };
+    }),
+  );
+}
+
+export async function getPublicFounderSpotlight(): Promise<PublicFounderSpotlight> {
+  const published = await listPublishedContent("team_members");
+  const founder = published.find((item) => Boolean(item.isFounder)) ?? null;
+
+  if (!founder) {
+    return {
+      id: "mock-founder",
+      name: mockFounder.name,
+      role: mockFounder.role,
+      badge: mockFounder.badge,
+      quote: mockFounder.quote,
+      body: mockFounder.body,
+      imageSrc: mockFounder.imageSrc,
+      callouts: mockFounder.callouts.map((item) => ({ ...item })),
+      isPlaceholder: true,
+    };
+  }
+
+  const name = String(founder.name ?? mockFounder.name);
+  const photo = await resolvePhotoUrl(founder.photoMediaId, name);
+  const callouts = [
+    {
+      title: String(founder.callout1Title ?? "").trim(),
+      body: String(founder.callout1Body ?? "").trim(),
+      icon: "megaphone",
+    },
+    {
+      title: String(founder.callout2Title ?? "").trim(),
+      body: String(founder.callout2Body ?? "").trim(),
+      icon: "graduation",
+    },
+    {
+      title: String(founder.callout3Title ?? "").trim(),
+      body: String(founder.callout3Body ?? "").trim(),
+      icon: "users",
+    },
+  ].filter((item) => item.title || item.body);
+
+  return {
+    id: founder.id,
+    name,
+    role: String(founder.roleTitle ?? mockFounder.role),
+    badge: "Leadership with lived understanding",
+    quote: String(founder.quote ?? "").trim() || mockFounder.quote,
+    body: String(founder.bio ?? "").trim() || mockFounder.body,
+    imageSrc: photo.url,
+    callouts: callouts.length
+      ? callouts
+      : mockFounder.callouts.map((item) => ({ ...item })),
+    isPlaceholder: false,
+  };
+}
+
+export async function getPublicPillars(): Promise<Pillar[]> {
+  const published = await listPublishedContent("pillars");
+  if (published.length === 0) {
+    return mockPillars;
+  }
+
+  return published.map((item) => {
+    const slug = String(item.slug ?? "rights-dignity") as PillarSlug;
+    const title = String(item.title ?? "Pillar");
+    return {
+      slug,
+      title,
+      shortTitle: title,
+      description: String(item.description ?? ""),
+      detail: String(item.detail ?? ""),
+      tone: asTone(item.colour),
+    };
+  });
+}
+
+export async function getPublicPillar(
+  slug: string,
+): Promise<Pillar | undefined> {
+  const pillars = await getPublicPillars();
+  return pillars.find((pillar) => pillar.slug === slug);
+}
+
+export async function getPublicChallengeTags(): Promise<PublicChallengeTag[]> {
+  const published = await listPublishedContent("challenge_tags");
+  if (published.length === 0) {
+    return mockChallengeTags.map((tag, index) => ({
+      id: `mock-tag-${index}`,
+      label: tag.label,
+      icon: tag.icon,
+      isPlaceholder: true,
+    }));
+  }
+
+  return published.map((item) => ({
+    id: item.id,
+    label: String(item.label ?? "Tag"),
+    icon: String(item.icon ?? "tag"),
+    isPlaceholder: false,
+  }));
+}
+
+export async function getPublicTestimonials(
+  limit?: number,
+): Promise<PublicTestimonial[]> {
+  const published = await listPublishedContent("testimonials");
+  if (published.length === 0) {
+    return [];
+  }
+  const items = published.map((item) => ({
+    id: item.id,
+    quote: String(item.quote ?? ""),
+    attribution: String(item.attribution ?? ""),
+    roleLabel:
+      typeof item.roleLabel === "string" && item.roleLabel.trim()
+        ? item.roleLabel
+        : null,
+    isPlaceholder: false,
+  }));
+  return limit ? items.slice(0, limit) : items;
+}
+
+export async function getPublicAdvocacyItems(): Promise<PublicAdvocacyItem[]> {
+  const published = await listPublishedContent("advocacy_content");
+  if (published.length === 0) {
+    return ADVOCATE_COPY.actions.map((action, index) => ({
+      id: `mock-advocacy-${index}`,
+      title: action.title,
+      body: action.body,
+      isPlaceholder: true,
+    }));
+  }
+
+  return published.map((item) => ({
+    id: item.id,
+    title: String(item.title ?? "Advocacy"),
+    body: String(item.body ?? ""),
+    isPlaceholder: false,
+  }));
 }

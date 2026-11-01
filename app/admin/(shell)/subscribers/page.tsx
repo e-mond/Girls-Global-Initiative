@@ -98,12 +98,20 @@ export default function AdminSubscribersPage() {
         title="Subscribers"
         description="Manage Letters for her future. Unsubscribed addresses stay flagged — they are never silently deleted."
         actions={
-          <a
-            href="/api/admin/subscribers?format=csv"
-            className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
-          >
-            Export CSV
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="/admin/subscribers/broadcast"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
+            >
+              Broadcast
+            </a>
+            <a
+              href="/api/admin/subscribers?format=csv"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
+            >
+              Export CSV
+            </a>
+          </div>
         }
       />
 

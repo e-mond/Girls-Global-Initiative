@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Crown, GraduationCap, Megaphone, Users } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
-import { founderSpotlight } from "@/features/content/mock-home";
+import { getPublicFounderSpotlight } from "@/features/content/public-content";
 
 const calloutIcons = {
   megaphone: Megaphone,
@@ -11,7 +11,9 @@ const calloutIcons = {
 } as const;
 
 /** Founder spotlight , matches the approved navy leadership screenshot. */
-export function HomeFounder() {
+export async function HomeFounder() {
+  const founderSpotlight = await getPublicFounderSpotlight();
+
   return (
     <section className="relative overflow-hidden bg-[#050b20] px-4 py-16 text-text-on-inverse lg:px-6 lg:py-24">
       <div
@@ -63,7 +65,9 @@ export function HomeFounder() {
 
           <Stagger className="grid gap-3 sm:grid-cols-3">
             {founderSpotlight.callouts.map((item) => {
-              const Icon = calloutIcons[item.icon];
+              const Icon =
+                calloutIcons[item.icon as keyof typeof calloutIcons] ??
+                Megaphone;
               return (
                 <StaggerItem key={item.title}>
                   <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">

@@ -20,9 +20,11 @@ import {
 } from "@/components/layout/content-section";
 import { PageHeroPhoto } from "@/components/layout/public-page-intro";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
-import { teamMembers } from "@/features/content/mock-home";
+import { getPublicTeamMembers } from "@/features/content/public-content";
 
-export default function TeamPage() {
+export default async function TeamPage() {
+  const teamMembers = await getPublicTeamMembers();
+
   return (
     <>
       <PageHeroPhoto

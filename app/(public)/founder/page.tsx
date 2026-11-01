@@ -27,8 +27,10 @@ import {
 } from "@/components/layout/content-section";
 import { PageHeroSplit } from "@/components/layout/public-page-intro";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { VideoEmbed } from "@/components/media/video-embed";
 import { FOUNDER_MESSAGE } from "@/content/site-copy";
-import { founderSpotlight } from "@/features/content/mock-home";
+import { getPublicFounderSpotlight } from "@/features/content/public-content";
+import { getSiteSettings } from "@/features/settings/service";
 
 const calloutIcons = {
   megaphone: Megaphone,
@@ -36,7 +38,12 @@ const calloutIcons = {
   users: Users,
 } as const;
 
-export default function FounderPage() {
+export default async function FounderPage() {
+  const [founderSpotlight, settings] = await Promise.all([
+    getPublicFounderSpotlight(),
+    getSiteSettings(),
+  ]);
+
   return (
     <>
       <PageHeroSplit
@@ -69,7 +76,9 @@ export default function FounderPage() {
             </span>
             <Stagger className="mt-6 grid gap-3 sm:grid-cols-3">
               {founderSpotlight.callouts.map((item) => {
-                const Icon = calloutIcons[item.icon];
+                const Icon =
+                  calloutIcons[item.icon as keyof typeof calloutIcons] ??
+                  Megaphone;
                 return (
                   <StaggerItem key={item.title}>
                     <div className="h-full rounded-2xl border border-border-default bg-bg-base p-4">
@@ -117,6 +126,20 @@ export default function FounderPage() {
         attribution={FOUNDER_MESSAGE.signatureName}
         tone="navy"
       />
+
+      {settings.founderVideoEmbedUrl ? (
+        <ContentSection
+          eyebrow="Watch"
+          title="A message from the founder."
+          tone="surface"
+          narrow
+        >
+          <VideoEmbed
+            url={settings.founderVideoEmbedUrl}
+            title="Founder message — Girls Global Initiative"
+          />
+        </ContentSection>
+      ) : null}
 
       <DualToneCards
         left={{

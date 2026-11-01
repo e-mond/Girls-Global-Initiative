@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
-import { pillars, type Pillar } from "@/features/content/mock-home";
+import { getPublicPillars } from "@/features/content/public-content";
+import type { Pillar } from "@/features/content/mock-home";
 import { cn } from "@/lib/utils";
 
 const toneClasses: Record<Pillar["tone"], string> = {
@@ -12,11 +13,13 @@ const toneClasses: Record<Pillar["tone"], string> = {
 };
 
 /** Four-pillar strip matching GGIHomepage.png “What we do”. */
-export function HomePillars({
+export async function HomePillars({
   showIntro = true,
 }: {
   showIntro?: boolean;
 }) {
+  const pillars = await getPublicPillars();
+
   return (
     <section className="bg-bg-surface px-4 py-16 lg:px-6 lg:py-24">
       <div className="mx-auto max-w-6xl">

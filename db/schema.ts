@@ -341,6 +341,9 @@ export const siteSettings = pgTable("site_settings", {
     .notNull()
     .default("/get-involved/volunteer"),
   ctaPartnerUrl: text("cta_partner_url").notNull().default("/partner"),
+  /** Provider-agnostic iframe embed URL (YouTube/Vimeo/self-host). */
+  storyVideoEmbedUrl: text("story_video_embed_url").notNull().default(""),
+  founderVideoEmbedUrl: text("founder_video_embed_url").notNull().default(""),
   updatedById: uuid("updated_by_id").references(() => users.id),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()

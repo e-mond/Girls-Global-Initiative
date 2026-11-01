@@ -41,6 +41,8 @@ export const siteSettingsSchema = z.object({
     .optional()
     .default("/get-involved/volunteer"),
   ctaPartnerUrl: z.string().trim().max(300).optional().default("/partner"),
+  storyVideoEmbedUrl: z.string().trim().max(500).optional().default(""),
+  founderVideoEmbedUrl: z.string().trim().max(500).optional().default(""),
 });
 
 export type SiteSettings = z.infer<typeof siteSettingsSchema>;
@@ -57,4 +59,6 @@ export const SITE_SETTINGS_DEFAULTS: SiteSettings = {
   ctaDonateUrl: "/get-involved/donate",
   ctaVolunteerUrl: "/get-involved/volunteer",
   ctaPartnerUrl: "/partner",
+  storyVideoEmbedUrl: "",
+  founderVideoEmbedUrl: "",
 };

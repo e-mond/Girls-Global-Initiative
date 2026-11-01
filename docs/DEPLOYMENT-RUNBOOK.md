@@ -17,18 +17,61 @@ Do not invent credentials; obtain them from GGI before go-live.
 | `ORG_MOBILE_MONEY` / `ORG_ACCOUNT_NAME` | Recommended | MoMo / direct-transfer details on donate page |
 | `ORG_BANK_NAME` / `ORG_ACCOUNT_NUMBER` | Optional | Publish when bank details are available |
 | `CLOUDINARY_*` | Later | Media library (local fallback until set) |
+| `STAFF_NOTIFY_EMAIL` | Optional | Inbox for new form submissions (else footer email) |
 
 Never commit real secrets. Use platform secret stores / `.env.local` (gitignored).
 
 ## Pre-deploy checklist
 
-1. Apply Drizzle migrations (`npm run db:migrate`) against Neon.
+1. Apply Drizzle migrations (`npm run db:migrate`) against Neon (include `0009`+).
 2. Seed the first administrator (`npm run db:seed-admin`) if needed.
 3. Confirm `AUTH_SECRET` and `AUTH_URL` are set.
 4. Confirm Paystack webhook URL points to `/api/donations/webhook`.
 5. Confirm SMTP credentials if acknowledgement emails are expected.
 6. Hit `/api/health` (liveness) and `/api/ready` (readiness).
 7. Confirm MSW is disabled: `NEXT_PUBLIC_ENABLE_MSW=false`.
+
+## Production go-live checklist (operators)
+
+Complete in the Cloudflare account that owns Worker `girls-global-initiative`
+and `girlsglobalinitiative.org` (not a personal/wrong Wrangler account).
+
+### Secrets & vars (Worker secret store / vars)
+
+| Item | Action |
+| --- | --- |
+| `DATABASE_URL` | Neon production connection string |
+| `AUTH_SECRET` / `AUTH_URL` | Long secret; `AUTH_URL=https://girlsglobalinitiative.org` |
+| Paystack | Mirror `PAYSTACK_SECRET_KEY`, public key, webhook secret |
+| SMTP | Domain ESP preferred (`SMTP_*`); keep `SMTP_PASS` as a Secret |
+| Cloudinary | Set `CLOUDINARY_*` for media uploads |
+| Org transfer | `ORG_MOBILE_MONEY`, `ORG_ACCOUNT_NAME`, `ORG_BANK_*`, notes |
+| Search Console | Optional `GOOGLE_SITE_VERIFICATION` |
+
+### Deploy & cache
+
+1. Build/deploy via OpenNext + `opennextjs-cloudflare deploy` (see `docs/CLOUDFLARE.md`).
+2. If dashboard metadata fetch fails: clear build cache, retry.
+3. After every successful production deploy: **Purge Everything** in Cloudflare cache
+   (stale HTML caused CSS/JS MIME + ChunkLoadError).
+4. Verify `/api/ready` on the live host.
+
+### Content seed
+
+1. Admin → Content → **News / Events / Gallery**: create drafts, then **Publish**
+   (or `npm run db:publish-site-live-news` for the site-live news item).
+2. Admin → Content → **Team / Pillars / Challenge tags / Testimonials / Advocacy**:
+   publish so public pages leave mock fallbacks.
+3. Settings → paste optional **story / founder video embed URLs** when the host is chosen
+   (YouTube/Vimeo/self-host — provider-agnostic iframe URL).
+
+### DNS / email deliverability
+
+- Confirm DNS points at the Worker custom domain.
+- Prefer sending from `@girlsglobalinitiative.org` with SPF/DKIM/DMARC
+  (Gmail SMTP + `.org` brand mismatch lands in spam).
+- Large newsletter blasts: use local `npm run announce:site-live` (or Admin
+  broadcast in small batches) — do not fan out full lists from the Worker CPU budget.
 
 ## Health endpoints
 

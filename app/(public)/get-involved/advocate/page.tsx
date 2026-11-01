@@ -21,8 +21,11 @@ import {
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { SocialLinks } from "@/components/layout/social-links";
 import { ADVOCATE_COPY } from "@/content/site-copy";
+import { getPublicAdvocacyItems } from "@/features/content/public-content";
 
-export default function AdvocatePage() {
+export default async function AdvocatePage() {
+  const advocacyItems = await getPublicAdvocacyItems();
+
   return (
     <>
       <PageHeroEditorial
@@ -44,9 +47,9 @@ export default function AdvocatePage() {
         tone="cream"
       >
         <ul className="grid gap-4 lg:grid-cols-3">
-          {ADVOCATE_COPY.actions.map((action, index) => (
+          {advocacyItems.map((action, index) => (
             <li
-              key={action.title}
+              key={action.id}
               className={
                 index === 0
                   ? "rounded-[1.75rem] bg-brand-navy p-6 text-text-on-inverse"

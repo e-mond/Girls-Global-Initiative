@@ -26,7 +26,7 @@ import {
   STORY_JOURNEY,
 } from "@/content/our-story";
 import { OUR_STORY } from "@/content/site-copy";
-import { founderSpotlight } from "@/features/content/mock-home";
+import type { PublicFounderSpotlight } from "@/features/content/public-content";
 
 const challengeIcons = {
   coins: Coins,
@@ -46,8 +46,10 @@ const beliefIcons = {
 
 export function OurStoryView({
   galleryImages = [],
+  founderSpotlight,
 }: {
   galleryImages?: GalleryShuffleImage[];
+  founderSpotlight: PublicFounderSpotlight;
 }) {
   return (
     <>

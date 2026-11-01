@@ -21,7 +21,8 @@ import {
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { APPROACH_STEPS, FOCUS_AREAS } from "@/content/site-copy";
-import { pillars, type Pillar } from "@/features/content/mock-home";
+import type { Pillar } from "@/features/content/mock-home";
+import { getPublicPillars } from "@/features/content/public-content";
 import { cn } from "@/lib/utils";
 
 const toneClasses: Record<Pillar["tone"], string> = {
@@ -31,7 +32,8 @@ const toneClasses: Record<Pillar["tone"], string> = {
   cream: "bg-[#f3e6d8] text-brand-navy",
 };
 
-export default function WhatWeDoPage() {
+export default async function WhatWeDoPage() {
+  const pillars = await getPublicPillars();
   const [featured, ...rest] = pillars;
   const approachSteps = APPROACH_STEPS.slice(0, 4).map((step, index) => ({
     step: String(index + 1).padStart(2, "0"),
