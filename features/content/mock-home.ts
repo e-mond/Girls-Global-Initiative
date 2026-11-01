@@ -174,8 +174,8 @@ export const communityStories = [
     id: "circles",
     title: "Circles of support",
     caption: "Guidance, mentorship & friendship",
-    imageSrc: "/home/community-2.jpg?v=20261026",
-    imageAlt: "Participants learning together at a workshop in Accra, Ghana",
+    imageSrc: "/home/community-2.jpg?v=20261101",
+    imageAlt: "Community mentoring and support with girls in Ghana",
     badge: null as string | null,
   },
   {
@@ -191,10 +191,10 @@ export const communityStories = [
 export const originCopy = {
   eyebrow: "Our origin",
   title: "Born from listening. Built around girls.",
-  body: "GGI was born from a conversation between two young women who recognised the challenges affecting girls in their communities and decided to act. The initiative was created around girls' empowerment, education and advocacy.",
+  body: "GGI was born from a conversation between a young lady and a young man who recognised the challenges affecting girls in their communities and decided to act. The initiative was created around girls' empowerment, education and advocacy.",
   facingLabel: "What girls told us they were facing:",
   howItStarted:
-    "A conversation between two young women who saw girls in their communities being left behind.",
+    "A conversation between a young lady and a young man who saw girls in their communities being left behind.",
   vision:
     "A world where every girl, regardless of location or background, has the rights, knowledge, health, support and opportunities to reach her full potential.",
   mission:

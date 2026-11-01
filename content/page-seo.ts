@@ -15,7 +15,7 @@ export const PAGE_SEO = {
   ourStory: {
     title: "Our story",
     description:
-      "How Girls Global Initiative began — from a conversation between two young women to a youth-led organisation advancing the rights, health and potential of girls.",
+      "How Girls Global Initiative began — from a conversation between a young lady and a young man to a youth-led organisation advancing the rights, health and potential of girls.",
   },
   whatWeDo: {
     title: "What we do",

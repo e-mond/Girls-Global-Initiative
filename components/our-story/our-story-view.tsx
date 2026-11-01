@@ -119,8 +119,8 @@ export function OurStoryView({
           <Reveal delay={0.12} className="relative">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-blob-sky">
               <Image
-                src="/our-story/hero.jpg?v=20261026"
-                alt="Two schoolgirls walking with their backpacks in Ghana"
+                src="/our-story/hero.jpg?v=20261101"
+                alt="Community mentoring with girls in a schoolyard"
                 fill
                 priority
                 className="object-cover object-[50%_20%]"
@@ -229,8 +229,8 @@ export function OurStoryView({
           <Reveal delay={0.1} className="mt-12 overflow-hidden rounded-[1.75rem]">
             <div className="relative aspect-[21/9] min-h-[12rem]">
               <Image
-                src="/our-story/journey.jpg?v=20261026"
-                alt="Schoolchildren gathering for a tree-planting activity in Ghana"
+                src="/our-story/journey.jpg?v=20261101"
+                alt="Community mentoring session with girls"
                 fill
                 className="object-cover opacity-90"
                 sizes="100vw"

@@ -1,4 +1,4 @@
-/** Licensed illustrative photography; founder and team portraits are supplied by GGI. */
+/** Licensed illustrative photography; founder/team portraits and recent event photos are supplied by GGI. */
 export const photoCredits = [
   {
     title: "A happy child in uniform",
@@ -21,36 +21,12 @@ export const photoCredits = [
     ],
   },
   {
-    title: "Women for sustainability Africa Arts + Feminism 2024 Workshop 03",
-    creator: "CoachAni",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Women_for_sustainability_Africa_Arts_%2B_Feminism_2024_Workshop_03.jpg",
-    license: "CC BY 4.0",
-    licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
-    files: ["/home/community-2.jpg"],
-  },
-  {
     title: "Girls from Global Academy Hohoe 2011 B003b",
     creator: "Nora Morgan",
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Girls_from_Global_Academy_Hohoe_2011_B003b.jpg",
     license: "CC BY 2.0",
     licenseUrl: "https://creativecommons.org/licenses/by/2.0/",
     files: ["/home/community-3.jpg", "/our-story/community.jpg"],
-  },
-  {
-    title: "Dance performed by the students of Mampong School for the Deaf and Dumb",
-    creator: "Akosua Agyepong2",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Dance_performed_by_the_students_of_Mampong_School_for_the_Deaf_and_Dumb.jpg",
-    license: "CC BY-SA 4.0",
-    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
-    files: ["/home/woman-dancing.jpg"],
-  },
-  {
-    title: "Pupils in school uniform 03",
-    creator: "Bright Kwame Ayisi (Kwameghana)",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Pupils_in_school_uniform_03.jpg",
-    license: "CC0 1.0",
-    licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
-    files: ["/our-story/hero.jpg"],
   },
   {
     title: "Pupils studying",
@@ -61,11 +37,27 @@ export const photoCredits = [
     files: ["/our-story/challenges.jpg"],
   },
   {
-    title: "School pupils involved in tree planting exercise",
-    creator: "Bright Kwame Ayisi (Kwameghana)",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:School_pupils_involved_in_tree_planting_exercise.jpg",
-    license: "CC0 1.0",
-    licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
-    files: ["/our-story/journey.jpg"],
+    title: "Community mentoring in the schoolyard",
+    creator: "Girls Global Initiative",
+    sourceUrl: "https://girlsglobalinitiative.org/",
+    license: "GGI photograph",
+    licenseUrl: "https://girlsglobalinitiative.org/",
+    files: ["/home/woman-dancing.jpg", "/our-story/hero.jpg"],
+  },
+  {
+    title: "Community mentoring session",
+    creator: "Girls Global Initiative",
+    sourceUrl: "https://girlsglobalinitiative.org/",
+    license: "GGI photograph",
+    licenseUrl: "https://girlsglobalinitiative.org/",
+    files: ["/our-story/journey.jpg", "/home/community-2.jpg"],
+  },
+  {
+    title: "The Girl Beyond the Map — virtual conversation",
+    creator: "Girls Global Initiative",
+    sourceUrl: "https://girlsglobalinitiative.org/events",
+    license: "GGI photograph",
+    licenseUrl: "https://girlsglobalinitiative.org/",
+    files: ["/events/girl-beyond-the-map.jpg"],
   },
 ] as const;

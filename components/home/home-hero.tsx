@@ -100,7 +100,7 @@ export function HomeHero() {
               </span>
             </div>
             <p className="max-w-[14rem] text-sm text-text-muted sm:max-w-none">
-              Born from a conversation between two young women.
+              Born from a conversation between a young lady and a young man.
             </p>
           </div>
         </Reveal>
