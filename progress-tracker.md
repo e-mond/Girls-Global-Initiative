@@ -8,7 +8,7 @@
 ## Current Phase
 
 * **Reports design system, news media, Markdown & status management**
-* **Status:** Validated locally — `feature/content-status-report-design-system` (awaiting commit/PR/deploy)
+* **Status:** Merged — PR #49; Worker uploaded (zone custom-domain API warning remains)
 * **Previous phase:** Poster content archives (PR #47) / RSC stale-chunk (PR #48)
 * **Current branch:** `feature/content-status-report-design-system`
 * **Repository:** `e-mond/Girls-Global-Initiative`
@@ -1562,8 +1562,14 @@ Phase 2 recurring billing remains deferred.
 * **Validation:** lint PASS; type-check PASS; Playwright **61** PASS (incl. new
   safe-markdown / status tests); `npm run build` PASS; migration `0014` applied
   on Neon; `db:fix-cms-markdown` updated 1 news body.
-* **Status:** Implemented + tested locally; awaiting commit, PR, and production deploy.
-* **Not yet:** git commit/PR/merge; Cloudflare/production publish; owner visual sign-off.
+* **Ship:** Commit `722f891`; PR [#49](https://github.com/e-mond/Girls-Global-Initiative/pull/49) merged to `main`.
+* **Deploy:** `npm run deploy` uploaded Worker `girls-global-initiative` + new assets;
+  wrangler exit 1 on custom-domain API (`zone does not exist on your account` / 10083)
+  — same known account/zone mismatch. Live smoke shows new copy/assets
+  (`Download the Full Report`, news `Published updates`, events Upcoming/Past,
+  new CSS/JS 200). Recommend Cloudflare **Purge Everything** in the account that
+  owns `girlsglobalinitiative.org`.
+* **Not yet:** owner visual sign-off; zone-account OAuth alignment for clean wrangler exits.
 
 ---
 
