@@ -59,34 +59,34 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         {
-          url: "/icons/favicon-16x16.png?v=20261101f",
+          url: "/icons/favicon-16x16.png?v=20261101g",
           sizes: "16x16",
           type: "image/png",
         },
         {
-          url: "/icons/favicon-32x32.png?v=20261101f",
+          url: "/icons/favicon-32x32.png?v=20261101g",
           sizes: "32x32",
           type: "image/png",
         },
         {
-          url: "/icons/favicon-48x48.png?v=20261101f",
+          url: "/icons/favicon-48x48.png?v=20261101g",
           sizes: "48x48",
           type: "image/png",
         },
         {
-          url: "/icons/icon-192.png?v=20261101f",
+          url: "/icons/icon-192.png?v=20261101g",
           sizes: "192x192",
           type: "image/png",
         },
         {
-          url: "/icons/icon-512.png?v=20261101f",
+          url: "/icons/icon-512.png?v=20261101g",
           sizes: "512x512",
           type: "image/png",
         },
       ],
       apple: [
         {
-          url: "/icons/apple-touch-icon.png?v=20261101f",
+          url: "/icons/apple-touch-icon.png?v=20261101g",
           sizes: "180x180",
           type: "image/png",
         },
@@ -94,7 +94,7 @@ export async function generateMetadata(): Promise<Metadata> {
       other: [
         {
           rel: "mask-icon",
-          url: "/icons/safari-pinned-tab.svg?v=20261101f",
+          url: "/icons/safari-pinned-tab.svg?v=20261101g",
           color: "#041b4b",
         },
       ],

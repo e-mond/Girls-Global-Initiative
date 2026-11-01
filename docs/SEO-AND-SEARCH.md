@@ -25,8 +25,11 @@ Production should set `NEXT_PUBLIC_SITE_URL` to the canonical public domain (for
 
 Approved source mark: `public/brand/ggi-logo.png` (circular GGI emblem).
 
+Icons are generated as a **circle with a Vivid Sky Blue (`#00b0f2`) ring**, matching
+the navbar/admin logo treatment (`rounded-full border-2 border-brand-sky`).
+
 Regenerate the full favicon package (ICO 16/32/48, PNG sizes, Apple touch,
-maskable PWA icons, Safari pinned-tab SVG, synced `app/favicon.ico` +
+maskable PWA icons, Safari pinned-tab SVG, `app/favicon.ico` +
 `app/icon.png` + `app/apple-icon.png`) with:
 
 ```bash
@@ -38,7 +41,16 @@ Runtime wiring:
 * Explicit icon links in `app/layout.tsx` (`?v=` cache-bust)
 * `app/manifest.ts` → `/manifest.webmanifest` (name GGI, navy theme, cream background)
 * Static copies under `public/icons/` for browsers that fetch paths directly
+* **Do not** also place `public/favicon.ico` — Next.js App Router conflicts with
+  `app/favicon.ico` and `/favicon.ico` returns HTTP 500
 * Do not keep a second conflicting `public/site.webmanifest`
+
+## Soft vs hard 404 on CMS detail pages
+
+`notFound()` only returns HTTP 404 before streaming starts. A parent
+`loading.tsx` wraps the segment in Suspense and soft-404s (HTTP 200 +
+`robots: noindex`). Public list segments may keep local `loading.tsx`; do **not**
+put one on `(public)/` or on parents of `[slug]` news/events/reports routes.
 
 ## Robots
 

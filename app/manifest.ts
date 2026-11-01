@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 /**
  * Web app identity for browser “Add to Home Screen” / installed shortcuts.
- * Icons are the approved GGI circular mark (cream-backed / maskable variants).
+ * Icons are the approved GGI circular mark with sky-blue ring / maskable variants.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,31 +17,31 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#041b4b",
     icons: [
       {
-        src: "/icons/icon-192.png?v=20261101f",
+        src: "/icons/icon-192.png?v=20261101g",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon-512.png?v=20261101f",
+        src: "/icons/icon-512.png?v=20261101g",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon-192-maskable.png?v=20261101f",
+        src: "/icons/icon-192-maskable.png?v=20261101g",
         sizes: "192x192",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "/icons/icon-512-maskable.png?v=20261101f",
+        src: "/icons/icon-512-maskable.png?v=20261101g",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "/icons/apple-touch-icon.png?v=20261101f",
+        src: "/icons/apple-touch-icon.png?v=20261101g",
         sizes: "180x180",
         type: "image/png",
         purpose: "any",
