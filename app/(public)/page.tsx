@@ -7,6 +7,7 @@ import { HomeNews } from "@/components/home/home-news";
 import { HomeNewsletter } from "@/components/home/home-newsletter";
 import { HomeOrigin } from "@/components/home/home-origin";
 import { HomePillars } from "@/components/home/home-pillars";
+import { HomeTestimonials } from "@/components/home/home-testimonials";
 import { HomeJsonLd } from "@/components/seo/json-ld";
 import { PAGE_SEO } from "@/content/page-seo";
 import { getSiteSettings } from "@/features/settings/service";
@@ -40,6 +41,7 @@ export default async function HomePage() {
       <HomeCommunities />
       <HomeNews />
       <HomeEvents />
+      <HomeTestimonials />
       <HomeGetInvolved />
       <HomeNewsletter />
     </>

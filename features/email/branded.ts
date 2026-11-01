@@ -288,6 +288,57 @@ export function siteLiveAnnouncementEmail(input: {
   });
 }
 
+export function staffSubmissionNotifyEmail(input: {
+  kind: "volunteer" | "partnership" | "contact";
+  name: string;
+  email: string;
+  summary?: string;
+}): BrandedEmailContent {
+  const labels = {
+    volunteer: "Volunteer application",
+    partnership: "Partnership request",
+    contact: "Contact message",
+  } as const;
+  const label = labels[input.kind];
+  return brandedMessage({
+    subject: `New GGI ${label.toLowerCase()}`,
+    title: label,
+    greeting: "Staff notification",
+    paragraphs: [
+      `A new ${label.toLowerCase()} was submitted on the public site.`,
+      `From: ${input.name} <${input.email}>`,
+      input.summary?.trim() ? `Summary: ${input.summary.trim()}` : "",
+      "Review it in the admin submissions inbox.",
+    ].filter(Boolean),
+    cta: {
+      href: `${emailSiteOrigin()}/admin/submissions`,
+      label: "Open submissions",
+    },
+    preheader: `New ${label.toLowerCase()} from ${input.name}`,
+  });
+}
+
+export function newsletterBroadcastEmail(input: {
+  subject: string;
+  title: string;
+  body: string;
+  unsubscribeUrl: string;
+}): BrandedEmailContent {
+  return brandedMessage({
+    subject: input.subject,
+    title: input.title,
+    greeting: "Hello,",
+    paragraphs: [input.body],
+    cta: { href: `${emailSiteOrigin()}/news`, label: "Read our news" },
+    secondaryLinks: [
+      { href: input.unsubscribeUrl, label: "Unsubscribe" },
+      { href: `${emailSiteOrigin()}/`, label: "Visit GGI" },
+    ],
+    preheader: input.title,
+    footerNote: "You received this because you subscribed to Letters for her future.",
+  });
+}
+
 export function submissionAckEmail(input: {
   kind: "volunteer" | "partnership" | "contact";
   name: string;

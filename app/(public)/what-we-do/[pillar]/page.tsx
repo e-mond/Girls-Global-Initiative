@@ -13,10 +13,14 @@ import {
 } from "@/components/layout/content-section";
 import { PageHeroEditorial } from "@/components/layout/public-page-intro";
 import { PILLAR_FOCUS } from "@/content/site-copy";
-import { getPillar, pillars } from "@/features/content/mock-home";
+import {
+  getPublicPillar,
+  getPublicPillars,
+} from "@/features/content/public-content";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const pillars = await getPublicPillars();
   return pillars.map((pillar) => ({ pillar: pillar.slug }));
 }
 
@@ -26,7 +30,7 @@ export async function generateMetadata({
   params: Promise<{ pillar: string }>;
 }): Promise<Metadata> {
   const { pillar: slug } = await params;
-  const pillar = getPillar(slug);
+  const pillar = await getPublicPillar(slug);
   if (!pillar) {
     return buildPageMetadata({
       title: "What we do",
@@ -47,11 +51,12 @@ export default async function PillarDetailPage({
   params: Promise<{ pillar: string }>;
 }) {
   const { pillar: slug } = await params;
-  const pillar = getPillar(slug);
+  const pillar = await getPublicPillar(slug);
   if (!pillar) notFound();
 
   const focus = PILLAR_FOCUS[slug];
-  const related = pillars.filter((item) => item.slug !== slug).slice(0, 3);
+  const allPillars = await getPublicPillars();
+  const related = allPillars.filter((item) => item.slug !== slug).slice(0, 3);
 
   return (
     <>

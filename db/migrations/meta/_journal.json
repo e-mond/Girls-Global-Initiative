@@ -71,6 +71,13 @@
       "when": 1791300000000,
       "tag": "0009_donation_method_email",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794000000000,
+      "tag": "0010_site_settings_video_embeds",
+      "breakpoints": true
     }
   ]
 }

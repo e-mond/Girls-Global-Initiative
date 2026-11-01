@@ -9,6 +9,7 @@ import {
   volunteerSchema,
   type SubmissionKind,
 } from "@/features/submissions/schemas";
+import { queueStaffSubmissionNotify } from "@/features/submissions/notify-staff";
 import {
   createContact,
   createPartnership,
@@ -117,6 +118,13 @@ export async function POST(request: Request, context: RouteContext) {
     subject: mail.subject,
     text: mail.text,
     html: mail.html,
+  });
+
+  queueStaffSubmissionNotify({
+    kind,
+    name: recipientName,
+    email: created.email,
+    summary: created.summary,
   });
 
   await writeAuditLog({

@@ -11,7 +11,8 @@ import {
   Target,
 } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
-import { challengeTags, originCopy } from "@/features/content/mock-home";
+import { originCopy } from "@/features/content/mock-home";
+import { getPublicChallengeTags } from "@/features/content/public-content";
 
 const tagIcons = {
   calendar: Calendar,
@@ -20,10 +21,13 @@ const tagIcons = {
   droplet: Droplets,
   check: CheckCircle2,
   briefcase: Briefcase,
+  tag: Target,
 } as const;
 
 /** Origin section , pixel-faithful to the approved Our Origin screenshot. */
-export function HomeOrigin() {
+export async function HomeOrigin() {
+  const challengeTags = await getPublicChallengeTags();
+
   return (
     <section className="bg-bg-base px-4 py-16 lg:px-6 lg:py-24">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
@@ -77,10 +81,11 @@ export function HomeOrigin() {
             </p>
             <div className="mt-3 flex flex-wrap gap-2.5">
               {challengeTags.map((tag) => {
-                const Icon = tagIcons[tag.icon];
+                const Icon =
+                  tagIcons[tag.icon as keyof typeof tagIcons] ?? Target;
                 return (
                   <span
-                    key={tag.label}
+                    key={tag.id}
                     className="inline-flex items-center gap-2 rounded-xl bg-[#f8ede3] px-3 py-2 text-sm font-medium text-brand-navy"
                   >
                     <Icon className="h-4 w-4 text-brand-navy/70" aria-hidden />

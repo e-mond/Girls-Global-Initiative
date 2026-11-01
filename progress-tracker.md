@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Cloudflare runtime recovery for the real-photo release**
-* **Status:** Recovery implementation validated locally
-* **Previous phase:** Real photography merged through PR #40
-* **Current branch:** `feature/cloudflare-runtime-fix`
+* **CMS public wiring + Phase-1 gaps**
+* **Status:** In progress on `feature/cms-public-wiring-and-gaps`
+* **Previous phase:** Cloudflare runtime recovery (PR #41) + real photography (PR #40)
+* **Current branch:** `feature/cms-public-wiring-and-gaps`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Restore working production rendering and verify the real photographs on the live site.
-* **Owner notes:** Merge and deployment are authorised. Manual CDN cache purge is explicitly skipped at the owner's request.
+* **Current objective:** Wire published CMS to public Team/Founder/Pillars/Tags/Testimonials/Advocacy; staff notify email; newsletter broadcast batches; BR-23 privacy tools; provider-agnostic video embed settings; go-live checklist.
+* **Explicitly deferred:** Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Recover the photo release with the original framework family and the targeted OpenNext adapter patch.
+Close remaining Phase-1 product gaps from the remaining-work audit (CMS→public wiring, broadcast, privacy tools, video settings, ops checklist). Recurring donations stay Phase 2.
 
 ---
 
@@ -1372,9 +1372,11 @@ The design reference was renamed `RefenceImage.png` → `GGIHomepage.png`.
 
 ### Current Status
 
-On `feature/admin-team-media-donations-notifs`: admin Team CRUD (edit name/role,
-add/remove), Media upload location + preview, Donations JSON-safe responses,
-clearable notifications.
+On `feature/cms-public-wiring-and-gaps`: public site reads published CMS for
+team, founder, pillars, challenge tags, testimonials, advocacy; Settings video
+embed URLs; staff submission notify; newsletter broadcast batches; privacy
+data-subject export/erase; production go-live checklist in deployment runbook.
+Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Payments / email / authenticity / team (audit pass)
 
@@ -1451,6 +1453,18 @@ clearable notifications.
 * Donations API: try/catch returns JSON 500; client uses `readJsonResponse`
   to avoid `Unexpected token '<'` HTML parse errors.
 * Notifications: dismiss one / Clear all via `localStorage`.
+
+### Session Notes — CMS public wiring + Phase-1 gaps
+
+* Public Team / Founder / Pillars / Challenge tags / Testimonials / Advocacy
+  read published CMS via `public-content.ts` (mock fallbacks when empty).
+* Settings: `storyVideoEmbedUrl` / `founderVideoEmbedUrl` (migration `0010`);
+  CSP `frame-src` for YouTube/Vimeo; Our Story + Founder pages embed when set.
+* Staff notify on new submissions (`STAFF_NOTIFY_EMAIL` or footer email) via `after()`.
+* Newsletter broadcast: Admin `/admin/subscribers/broadcast` batches of 20.
+* Privacy tools: Admin `/admin/privacy` data-subject export JSON + erase/anonymise.
+* Go-live checklist expanded in `docs/DEPLOYMENT-RUNBOOK.md`.
+* Phase 2 recurring Paystack billing remains deferred (not implemented).
 
 ---
 

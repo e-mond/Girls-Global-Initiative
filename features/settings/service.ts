@@ -35,6 +35,8 @@ function serialize(row: {
   ctaDonateUrl: string;
   ctaVolunteerUrl: string;
   ctaPartnerUrl: string;
+  storyVideoEmbedUrl?: string | null;
+  founderVideoEmbedUrl?: string | null;
 }): SiteSettings {
   return {
     socialFacebook: row.socialFacebook,
@@ -47,6 +49,8 @@ function serialize(row: {
     ctaDonateUrl: row.ctaDonateUrl,
     ctaVolunteerUrl: row.ctaVolunteerUrl,
     ctaPartnerUrl: row.ctaPartnerUrl,
+    storyVideoEmbedUrl: row.storyVideoEmbedUrl ?? "",
+    founderVideoEmbedUrl: row.founderVideoEmbedUrl ?? "",
   };
 }
 

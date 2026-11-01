@@ -61,6 +61,7 @@ export function buildAdminNavGroups(options: {
   if (options.canManageSettings) {
     adminItems.push(
       { href: "/admin/settings", label: "Settings", icon: "settings" },
+      { href: "/admin/privacy", label: "Privacy", icon: "history" },
       { href: "/admin/audit", label: "Audits", icon: "history" },
     );
   }
@@ -110,8 +111,10 @@ export function adminPageTitle(pathname: string): string {
     "/admin/submissions": "Submissions",
     "/admin/donations": "Donations",
     "/admin/subscribers": "Subscribers",
+    "/admin/subscribers/broadcast": "Broadcast",
     "/admin/users": "Users",
     "/admin/settings": "Settings",
+    "/admin/privacy": "Privacy",
     "/admin/audit": "Audits",
   };
   if (map[pathname]) return map[pathname];

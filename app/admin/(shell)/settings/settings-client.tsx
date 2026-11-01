@@ -144,6 +144,25 @@ export default function AdminSettingsPageClient() {
         <div className="grid gap-4 rounded-2xl border border-border-default bg-bg-surface p-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <h3 className="font-display text-base font-bold text-brand-navy">
+              Video embeds
+            </h3>
+            <p className="mt-1 text-sm text-text-muted">
+              Optional iframe embed URLs (YouTube, Vimeo, or self-hosted). Leave
+              blank until the hosting choice is confirmed. Paste the full embed
+              URL, not a watch page link.
+            </p>
+          </div>
+          <div className="sm:col-span-2">
+            {field("storyVideoEmbedUrl", "Our story video embed URL")}
+          </div>
+          <div className="sm:col-span-2">
+            {field("founderVideoEmbedUrl", "Founder message video embed URL")}
+          </div>
+        </div>
+
+        <div className="grid gap-4 rounded-2xl border border-border-default bg-bg-surface p-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <h3 className="font-display text-base font-bold text-brand-navy">
               Social profiles
             </h3>
             <p className="mt-1 text-sm text-text-muted">
