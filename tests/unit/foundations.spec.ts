@@ -15,7 +15,7 @@ test.describe("public homepage shell", () => {
       page.getByRole("heading", { name: /Every girl/i }),
     ).toBeVisible();
     await expect(
-      page.getByText("Youth-led", { exact: true }),
+      page.getByRole("main").getByText("Youth-led", { exact: true }),
     ).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Primary", exact: true }),
@@ -49,7 +49,7 @@ test.describe("public homepage shell", () => {
       }),
     ).toBeVisible();
     await expect(
-      page.getByText("Advancing rights & dignity"),
+      page.getByRole("main").getByText("Advancing rights & dignity"),
     ).toBeVisible();
   });
 });

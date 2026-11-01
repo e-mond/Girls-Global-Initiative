@@ -145,7 +145,7 @@ export default async function AdvocatePage() {
         </div>
       </ContentSection>
 
-      <PhotoBand src="/our-story/growth.jpg" alt="Advocacy rooted in community" />
+      <PhotoBand src="/our-story/growth.jpg?v=20261026" alt="A smiling schoolgirl running in her school uniform in Ghana" />
 
       <CtaBand
         title="Turn attention into action."

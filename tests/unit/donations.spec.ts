@@ -51,9 +51,15 @@ test.describe("donate page", () => {
     await expect(
       page.getByRole("heading", { name: /Donate and support a girl/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Support GGI/i).first()).toBeVisible();
-    await expect(page.getByText(/Pay with Paystack/i).first()).toBeVisible();
-    await expect(page.getByText(/Direct payment/i).first()).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/Support GGI/i).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/Pay with Paystack/i).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/Direct payment/i).first(),
+    ).toBeVisible();
   });
 
   test("opens direct payment when method=direct", async ({ page }) => {
@@ -74,7 +80,9 @@ test.describe("donation outcome pages", () => {
     await expect(
       page.getByRole("heading", { name: /Payment not completed/i }),
     ).toBeVisible();
-    await expect(page.getByText(/GGI-20261012-0001/i)).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/GGI-20261012-0001/i),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: /Try Paystack again/i }),
     ).toBeVisible();

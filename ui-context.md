@@ -785,6 +785,16 @@ When final GGI photography is unavailable, use clearly replaceable placeholders 
 
 Optimise all images for performance and responsive delivery.
 
+The bundled illustrative photographs in `public/home/` and `public/our-story/`
+are real photographs sourced from Wikimedia Commons. Creator, source-page,
+licence and asset-path records live in `content/photo-credits.ts`; the public
+footer displays the credits and explains that these images do not document GGI
+programmes or imply endorsement. Preserve that distinction in image descriptions.
+Founder and team portraits remain the owner-supplied photographs. Design-reference
+mockups are retained as layout references and are not public photography assets.
+Bundled photo references include a version query so replacement photographs bypass
+previously cached Next.js image renditions without breaking existing asset paths.
+
 ---
 
 # 29. Content & Data Honesty

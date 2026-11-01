@@ -70,7 +70,7 @@ export function HomeHero() {
             <div className="flex -space-x-2" aria-hidden>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-main.jpg"
+                  src="/home/hero-main.jpg?v=20261026"
                   alt=""
                   fill
                   className="object-cover object-[30%_20%]"
@@ -79,7 +79,7 @@ export function HomeHero() {
               </span>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-little-girl.jpg"
+                  src="/home/hero-little-girl.jpg?v=20261026"
                   alt=""
                   fill
                   className="object-cover object-center"
@@ -88,7 +88,7 @@ export function HomeHero() {
               </span>
               <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-bg-base">
                 <Image
-                  src="/home/hero-main.jpg"
+                  src="/home/hero-main.jpg?v=20261026"
                   alt=""
                   fill
                   className="object-cover object-[70%_35%]"
@@ -110,8 +110,8 @@ export function HomeHero() {
             <div className="relative min-h-[280px] sm:min-h-[340px]">
               <div className="absolute inset-0 overflow-hidden rounded-t-[999px] rounded-b-3xl bg-blob-sky shadow-lg">
                 <Image
-                  src="/home/hero-main.jpg"
-                  alt="Young people gathering outdoors in community"
+                  src="/home/hero-main.jpg?v=20261026"
+                  alt="A smiling schoolgirl running in her school uniform in Ghana"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 55vw, 320px"
@@ -134,8 +134,8 @@ export function HomeHero() {
             <div className="flex flex-col gap-3 pt-4 sm:gap-4 sm:pt-8">
               <div className="relative min-h-[120px] flex-[0.9] overflow-hidden rounded-2xl bg-blob-sky shadow-md sm:min-h-[140px]">
                 <Image
-                  src="/home/hero-little-girl.jpg"
-                  alt="A schoolgirl reading a book in class"
+                  src="/home/hero-little-girl.jpg?v=20261026"
+                  alt="Two schoolgirls reading a book together outdoors in Ghana"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 40vw, 220px"

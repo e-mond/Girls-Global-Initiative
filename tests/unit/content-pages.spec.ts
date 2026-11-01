@@ -36,8 +36,12 @@ test.describe("content public pages", () => {
     await expect(
       page.getByRole("heading", { name: /What we have begun/i }),
     ).toBeVisible();
-    await expect(page.getByText("Schools Reached", { exact: true })).toBeVisible();
-    await expect(page.getByText(/figures pending/i).first()).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText("Schools Reached", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("main").getByText(/figures pending/i).first(),
+    ).toBeVisible();
   });
 
   test("advocate page is no longer a stub", async ({ page }) => {

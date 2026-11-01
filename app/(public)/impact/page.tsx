@@ -124,7 +124,7 @@ export default function ImpactPage() {
       </ContentSection>
 
       <HomeCommunities showIntro={false} />
-      <PhotoBand src="/our-story/community.jpg" alt="Community impact moments" />
+      <PhotoBand src="/our-story/community.jpg?v=20261026" alt="Three schoolgirls standing together in Hohoe, Ghana" />
 
       <RelatedLinks
         links={[

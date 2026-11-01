@@ -37,8 +37,8 @@ export default function CommunitiesPage() {
         meta="Rural · Remote · Underserved"
         title="Rural, remote & underserved: first, not last."
         description="We prioritise rural, remote, and underserved communities — where girls are too often reached last."
-        imageSrc="/home/community-1.jpg"
-        imageAlt="Girls and community members in a learning setting"
+        imageSrc="/home/community-1.jpg?v=20261026"
+        imageAlt="Two schoolgirls reading a book together outdoors in Ghana"
         ctas={[
           { href: "/partner", label: "Invite GGI", variant: "onDark" },
           { href: "/programmes", label: "See programmes", variant: "secondary" },
@@ -78,8 +78,8 @@ export default function CommunitiesPage() {
         eyebrow="How we show up"
         title="Presence that protects dignity."
         description="Community work means listening first, then walking with schools, families and girls."
-        imageSrc="/our-story/challenges.jpg"
-        imageAlt="Girls gathering in community"
+        imageSrc="/our-story/challenges.jpg?v=20261026"
+        imageAlt="Two schoolgirls studying a book together outdoors in Ghana"
         items={[
           {
             title: "Listen before leading",
@@ -99,7 +99,7 @@ export default function CommunitiesPage() {
         ]}
       />
 
-      <PhotoBand src="/our-story/journey.jpg" alt="Community journey with GGI" />
+      <PhotoBand src="/our-story/journey.jpg?v=20261026" alt="Schoolchildren gathering for a tree-planting activity in Ghana" />
 
       <ContentSection tone="sky" narrow>
         <p className="text-sm text-text-muted">

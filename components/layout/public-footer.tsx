@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CONTACT_EMAIL } from "@/content/contact-details";
+import { photoCredits } from "@/content/photo-credits";
 import { SocialLinks } from "@/components/layout/social-links";
 import { getSiteSettings } from "@/features/settings/service";
 
@@ -126,6 +127,42 @@ export async function PublicFooter() {
             </Link>
           </div>
         </div>
+      </div>
+      <div className="mx-auto max-w-6xl px-4 pb-8 text-sm text-white/80 sm:px-6">
+        <p>
+          Illustrative photographs show education and community life in Ghana;
+          they do not document GGI programmes or imply endorsement. Founder and
+          team portraits are supplied by GGI.
+        </p>
+        <details id="photo-credits" className="mt-3">
+          <summary className="w-fit cursor-pointer py-2 font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-sky">
+            Photo credits
+          </summary>
+          <p className="mt-2">
+            Photographs via Wikimedia Commons, resized and compressed for the web
+            and cropped for display. Each photograph retains its listed licence.
+          </p>
+          <ul className="mt-4 grid gap-4 md:grid-cols-2">
+            {photoCredits.map((photo) => (
+              <li key={photo.sourceUrl}>
+                <a
+                  href={photo.sourceUrl}
+                  className="underline underline-offset-2 hover:text-brand-sky"
+                >
+                  {photo.title}
+                </a>{" "}
+                by {photo.creator}.{" "}
+                <a
+                  href={photo.licenseUrl}
+                  className="underline underline-offset-2 hover:text-brand-sky"
+                >
+                  {photo.license}
+                </a>
+                .
+              </li>
+            ))}
+          </ul>
+        </details>
       </div>
       <div className="border-t border-white/10 px-4 py-4 sm:px-6">
         <nav

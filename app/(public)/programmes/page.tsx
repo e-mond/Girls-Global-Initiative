@@ -35,8 +35,8 @@ export default function ProgrammesPage() {
         meta="Initiatives · Projects · Outreach"
         title="Programmes, initiatives and projects."
         description="GGI delivers its mission through focused initiatives and community projects: from school tours and mentorship to rural girl empowerment."
-        imageSrc="/home/community-2.jpg"
-        imageAlt="Girls participating in a GGI community programme"
+        imageSrc="/home/community-2.jpg?v=20261026"
+        imageAlt="Participants learning together at a workshop in Accra, Ghana"
         imageCaption="Work that travels"
         imageTags="Schools · Mentorship · Health"
         ctas={[
@@ -129,10 +129,14 @@ export default function ProgrammesPage() {
                   <Image
                     src={
                       index % 2 === 0
-                        ? "/home/community-2.jpg"
-                        : "/home/community-3.jpg"
+                        ? "/home/community-2.jpg?v=20261026"
+                        : "/home/community-3.jpg?v=20261026"
                     }
-                    alt={project.title}
+                    alt={
+                      index % 2 === 0
+                        ? "Participants learning together at a workshop in Accra, Ghana"
+                        : "Three schoolgirls standing together in Hohoe, Ghana"
+                    }
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -163,7 +167,7 @@ export default function ProgrammesPage() {
         </div>
       </ContentSection>
 
-      <PhotoBand src="/our-story/values.jpg" alt="Girls learning through GGI programmes" />
+      <PhotoBand src="/our-story/values.jpg?v=20261026" alt="Two schoolgirls reading a book together outdoors in Ghana" />
 
       <RelatedLinks
         links={[

@@ -39,7 +39,7 @@ export function HomeCommunities({
               <article className="group relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-brand-navy">
                 <Image
                   src={story.imageSrc}
-                  alt={story.title}
+                  alt={story.imageAlt}
                   fill
                   className="object-cover object-top transition duration-300 group-hover:scale-[1.03]"
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -63,6 +63,13 @@ export function HomeCommunities({
             </StaggerItem>
           ))}
         </Stagger>
+
+        <p className="mt-4 text-sm text-text-muted">
+          Illustrative photography of education and community life in Ghana.{" "}
+          <a href="#photo-credits" className="underline underline-offset-2">
+            Photo credits
+          </a>
+        </p>
 
         <Reveal
           delay={0.08}

@@ -166,7 +166,7 @@ export function AdminAuthShell({
         <div className="relative z-10 mt-12 overflow-hidden rounded-[1.75rem] ring-1 ring-white/15">
           <div className="relative aspect-[4/3]">
             <Image
-              src="/home/hero-main.jpg"
+              src="/home/hero-main.jpg?v=20261026"
               alt=""
               fill
               className="object-cover"

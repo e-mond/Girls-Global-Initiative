@@ -33,8 +33,8 @@ export default async function GalleryPage() {
         meta="Field moments · Dignity first"
         title="Moments from the work with girls."
         description="Field moments from school engagement, community visits, and safe spaces."
-        imageSrc="/home/community-1.jpg"
-        imageAlt="Girls Global Initiative community photography"
+        imageSrc="/home/community-1.jpg?v=20261026"
+        imageAlt="Two schoolgirls reading a book together outdoors in Ghana"
         ctas={[
           { href: "/communities", label: "Communities", variant: "secondary" },
           { href: "/partner", label: "Invite GGI", variant: "onDark" },
@@ -125,7 +125,7 @@ export default async function GalleryPage() {
         </p>
       </ContentSection>
 
-      <PhotoBand src="/our-story/journey.jpg" alt="More moments from GGI work" />
+      <PhotoBand src="/our-story/journey.jpg?v=20261026" alt="Schoolchildren gathering for a tree-planting activity in Ghana" />
 
       <CtaBand
         title="Share a community invitation."

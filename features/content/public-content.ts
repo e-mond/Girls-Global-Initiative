@@ -103,7 +103,7 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     summary:
       "GGI continues school tours and safe conversations with girls about rights, health and confidence. Full updates will appear here when published from the CMS.",
     body: "",
-    imageSrc: "/home/community-1.jpg",
+    imageSrc: "/home/community-1.jpg?v=20261026",
     publishedOn: null,
     isPlaceholder: true,
   },
@@ -114,7 +114,7 @@ const NEWS_PLACEHOLDERS: PublicNewsItem[] = [
     summary:
       "Hygiene education and practical support remain part of GGI's community work. Publish a news item from Admin to replace this placeholder.",
     body: "",
-    imageSrc: "/home/community-2.jpg",
+    imageSrc: "/home/community-2.jpg?v=20261026",
     publishedOn: null,
     isPlaceholder: true,
   },
@@ -131,7 +131,7 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     location: null,
     startsOn: null,
     endsOn: null,
-    imageSrc: "/home/community-3.jpg",
+    imageSrc: "/home/community-3.jpg?v=20261026",
     isPlaceholder: true,
   },
   {
@@ -144,7 +144,7 @@ const EVENT_PLACEHOLDERS: PublicEventItem[] = [
     location: null,
     startsOn: null,
     endsOn: null,
-    imageSrc: "/home/community-1.jpg",
+    imageSrc: "/home/community-1.jpg?v=20261026",
     isPlaceholder: true,
   },
 ];

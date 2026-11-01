@@ -119,8 +119,8 @@ export function OurStoryView({
           <Reveal delay={0.12} className="relative">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-blob-sky">
               <Image
-                src="/our-story/hero.jpg"
-                alt="Community celebration with girls and women"
+                src="/our-story/hero.jpg?v=20261026"
+                alt="Two schoolgirls walking with their backpacks in Ghana"
                 fill
                 priority
                 className="object-cover object-[50%_20%]"
@@ -158,8 +158,8 @@ export function OurStoryView({
           <div className="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <Reveal className="relative min-h-[22rem] overflow-hidden rounded-[1.75rem] lg:min-h-full">
               <Image
-                src="/our-story/challenges.jpg"
-                alt="Girls running and playing outdoors"
+                src="/our-story/challenges.jpg?v=20261026"
+                alt="Two schoolgirls studying a book together outdoors in Ghana"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"
@@ -229,8 +229,8 @@ export function OurStoryView({
           <Reveal delay={0.1} className="mt-12 overflow-hidden rounded-[1.75rem]">
             <div className="relative aspect-[21/9] min-h-[12rem]">
               <Image
-                src="/our-story/journey.jpg"
-                alt="Girls and community members gathered together"
+                src="/our-story/journey.jpg?v=20261026"
+                alt="Schoolchildren gathering for a tree-planting activity in Ghana"
                 fill
                 className="object-cover opacity-90"
                 sizes="100vw"
@@ -351,8 +351,8 @@ export function OurStoryView({
           <div className="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <Reveal className="relative min-h-[22rem] overflow-hidden rounded-[1.75rem] lg:min-h-full">
               <Image
-                src="/our-story/values.jpg"
-                alt="A girl reading outdoors"
+                src="/our-story/values.jpg?v=20261026"
+                alt="Two schoolgirls reading a book together outdoors in Ghana"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"
