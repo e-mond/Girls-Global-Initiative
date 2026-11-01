@@ -54,18 +54,51 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     applicationName: "Girls Global Initiative",
+    // Cache-busted public icons. app/favicon.ico + app/icon.png + app/apple-icon.png
+    // remain the App Router file convention sources (kept in sync by generate:favicons).
     icons: {
       icon: [
-        { url: "/favicon.ico" },
-        { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-        { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+        {
+          url: "/icons/favicon-16x16.png?v=20261101f",
+          sizes: "16x16",
+          type: "image/png",
+        },
+        {
+          url: "/icons/favicon-32x32.png?v=20261101f",
+          sizes: "32x32",
+          type: "image/png",
+        },
+        {
+          url: "/icons/favicon-48x48.png?v=20261101f",
+          sizes: "48x48",
+          type: "image/png",
+        },
+        {
+          url: "/icons/icon-192.png?v=20261101f",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          url: "/icons/icon-512.png?v=20261101f",
+          sizes: "512x512",
+          type: "image/png",
+        },
       ],
-      apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
-      shortcut: ["/favicon.ico"],
+      apple: [
+        {
+          url: "/icons/apple-touch-icon.png?v=20261101f",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+      other: [
+        {
+          rel: "mask-icon",
+          url: "/icons/safari-pinned-tab.svg?v=20261101f",
+          color: "#041b4b",
+        },
+      ],
     },
-    manifest: "/site.webmanifest",
     openGraph: {
       title: titleDefault,
       description,

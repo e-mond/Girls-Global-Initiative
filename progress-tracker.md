@@ -7,8 +7,9 @@
 
 ## Current Phase
 
-* **Reports design system, news media, Markdown & status management**
-* **Status:** Merged — PR #49; Worker uploaded (zone custom-domain API warning remains)
+* **Favicon & browser website identity**
+* **Status:** Implementing — `feature/favicon-browser-identity`
+* **Previous phase:** Reports/status system (PR #49)
 * **Previous phase:** Poster content archives (PR #47) / RSC stale-chunk (PR #48)
 * **Current branch:** `feature/content-status-report-design-system`
 * **Repository:** `e-mond/Girls-Global-Initiative`
@@ -1541,6 +1542,19 @@ Phase 2 recurring billing remains deferred.
   CF Paid upgrade. Do not claim production fixed until staged deploy verified.
 * Hosting recommendation: prefer Node (Vercel/Docker) after preview; retain CF
   only if Paid + mitigations show headroom in metrics.
+
+### Session Notes — Favicon & browser identity
+
+* Source mark: `public/brand/ggi-logo.png` (approved circular emblem).
+* Regenerated package via `npm run generate:favicons`: multi-size ICO
+  (16/32/48) synced to `app/favicon.ico` + `public/favicon.ico`; PNG set;
+  Apple touch; maskable 192/512; Safari pinned-tab SVG; cream/white fields
+  (black logo canvas punched out so tabs are not an empty black square).
+* Metadata: cache-busted icon links in `app/layout.tsx`; `app/manifest.ts`
+  replaces conflicting `public/site.webmanifest`; `_headers` cache rules.
+* Root cause of “missing” favicon: conflicting older `app/favicon.ico`
+  (served in production) + duplicate head tags + black-canvas mark that
+  disappeared on dark browser chrome.
 
 ### Session Notes — Reports design, media, Markdown & statuses
 
