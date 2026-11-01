@@ -14,14 +14,14 @@ import { getDb } from "../db/client";
 import { events, newsPosts } from "../db/schema";
 
 const IMG = {
-  girlBeyond: "/events/girl-beyond-the-map.jpg?v=20261101p",
-  knowYourBody: "/events/know-your-body-enchi.jpg?v=20261101p",
-  breastCampaign: "/news/breast-cancer-awareness-month.jpg?v=20261101p",
-  happyNovember: "/news/happy-new-month-november.jpg?v=20261101p",
-  nonViolence: "/news/international-day-of-non-violence.jpg?v=20261101p",
-  teachers: "/news/world-teachers-day.jpg?v=20261101p",
-  girlChild: "/news/international-day-of-the-girl-child.jpg?v=20261101p",
-  ruralWomen: "/news/international-day-of-rural-women.jpg?v=20261101p",
+  girlBeyond: "/events/girl-beyond-the-map.jpg",
+  knowYourBody: "/events/know-your-body-enchi.jpg",
+  breastCampaign: "/news/breast-cancer-awareness-month.jpg",
+  happyNovember: "/news/happy-new-month-november.jpg",
+  nonViolence: "/news/international-day-of-non-violence.jpg",
+  teachers: "/news/world-teachers-day.jpg",
+  girlChild: "/news/international-day-of-the-girl-child.jpg",
+  ruralWomen: "/news/international-day-of-rural-women.jpg",
 } as const;
 
 const REPORT_SLUG = "breast-cancer-awareness-enchi-october-2026";
