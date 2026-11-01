@@ -21,11 +21,24 @@ Production should set `NEXT_PUBLIC_SITE_URL` to the canonical public domain (for
 - Uses a stable `lastmod` date and canonical `https://girlsglobalinitiative.org/…` URLs
 - Production builds refuse to publish `localhost` origins (falls back to the public domain if env is missing)
 
-Regenerate favicons from the brand logo with:
+## Favicons and browser identity
+
+Approved source mark: `public/brand/ggi-logo.png` (circular GGI emblem).
+
+Regenerate the full favicon package (ICO 16/32/48, PNG sizes, Apple touch,
+maskable PWA icons, Safari pinned-tab SVG, synced `app/favicon.ico` +
+`app/icon.png` + `app/apple-icon.png`) with:
 
 ```bash
 npm run generate:favicons
 ```
+
+Runtime wiring:
+
+* Explicit icon links in `app/layout.tsx` (`?v=` cache-bust)
+* `app/manifest.ts` → `/manifest.webmanifest` (name GGI, navy theme, cream background)
+* Static copies under `public/icons/` for browsers that fetch paths directly
+* Do not keep a second conflicting `public/site.webmanifest`
 
 ## Robots
 
