@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Fix auth session 503 noise + password visibility**
-* **Status:** In progress on `feature/fix-auth-session-password-toggle`
+* **Status:** Complete — PR #58 merged; Worker uploaded
 * **Previous phase:** Purge test accounts + Team CMS (PR #57)
-* **Current branch:** `feature/fix-auth-session-password-toggle`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Stop global SessionProvider polling `/api/auth/session` (HTML 503 → Auth.js JSON error); add show/hide password on staff sign-in.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** Cloudflare Insights beacon blocked by browser Tracking Prevention / ad blockers (client-side, not app-fixable).
 
 ---
 
 ## Current Goal
 
-Ship auth session resilience and accessible password toggle.
+Await next owner-scoped unit.
 
 ---
 
@@ -1589,6 +1589,9 @@ Phase 2 recurring billing remains deferred.
   sr-only hint).
 * Cloudflare Insights `ERR_BLOCKED_BY_CLIENT` / Tracking Prevention: browser
   blocks CF beacon — not an application defect.
+* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
+* Ship: PR [#58](https://github.com/e-mond/Girls-Global-Initiative/pull/58) merged.
+* Deploy: Worker uploaded (login/layout chunks); wrangler zone 10083 known.
 
 ---
 
