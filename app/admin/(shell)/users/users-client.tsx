@@ -56,17 +56,30 @@ export default function AdminUsersPageClient({
     const response = await fetch("/api/admin/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, role }),
+      body: JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+        role,
+      }),
     });
-    const json = await response.json();
+    let json: {
+      data?: { item?: { email?: string } };
+      error?: { message?: string };
+    } | null = null;
+    try {
+      json = await response.json();
+    } catch {
+      json = null;
+    }
     if (!response.ok) {
       setError(json?.error?.message ?? "Could not invite user.");
       return;
     }
+    const invitedEmail = json?.data?.item?.email?.trim() || email.trim();
     setName("");
     setEmail("");
     setRole("editor");
-    setSuccess(`Invitation sent to ${json.data.item.email}.`);
+    setSuccess(`Invitation sent to ${invitedEmail}.`);
     await load();
   }
 

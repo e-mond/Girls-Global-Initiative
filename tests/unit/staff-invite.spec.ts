@@ -32,6 +32,20 @@ test.describe("staff invite / disable schemas", () => {
       role: "editor",
     });
     expect(missingEmail.success).toBe(false);
+
+    const shortName = createStaffUserSchema.safeParse({
+      name: "A",
+      email: "ama@example.com",
+      role: "editor",
+    });
+    expect(shortName.success).toBe(false);
+
+    const badEmail = createStaffUserSchema.safeParse({
+      name: "Ama Mensah",
+      email: "not-an-email",
+      role: "editor",
+    });
+    expect(badEmail.success).toBe(false);
   });
 
   test("update schema accepts disable / re-enable and resend invite", () => {
