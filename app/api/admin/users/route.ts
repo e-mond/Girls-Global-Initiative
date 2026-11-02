@@ -46,14 +46,17 @@ export async function POST(request: Request) {
 
   const parsed = createStaffUserSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      {
-        error: {
-          message: "Provide name, email, and a staff role.",
-        },
-      },
-      { status: 400 },
-    );
+    const issue = parsed.error.issues[0];
+    const field = issue?.path[0];
+    const message =
+      field === "email"
+        ? "Enter a valid email address."
+        : field === "name"
+          ? "Enter a full name (at least 2 characters)."
+          : field === "role"
+            ? "Choose a staff role (Editor or Administrator)."
+            : "Provide name, email, and a staff role.";
+    return NextResponse.json({ error: { message } }, { status: 400 });
   }
 
   const result = await inviteStaffUser(parsed.data);

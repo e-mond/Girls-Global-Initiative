@@ -77,7 +77,7 @@ async function issueInviteToken(
     return {
       error:
         sent.reason ??
-        "Could not send the invitation email. Check SMTP settings.",
+        "Could not send the invitation email. Check SMTP settings in Admin → Settings / hosting secrets.",
     };
   }
 
@@ -104,13 +104,49 @@ export async function inviteStaffUser(input: {
   }
 
   const email = input.email.trim().toLowerCase();
+  const name = input.name.trim();
   const [existing] = await db
     .select()
     .from(users)
     .where(eq(users.email, email))
     .limit(1);
+
+  // Re-invite pending accounts instead of a confusing "already exists" 400.
   if (existing) {
-    return { error: "A staff user with this email already exists." };
+    if (existing.status === "disabled") {
+      return {
+        error:
+          "This email belongs to a disabled staff account. Re-enable it first, then resend the invite.",
+      };
+    }
+    if (existing.status === "active" && existing.lastLoginAt) {
+      return {
+        error:
+          "A staff user with this email already exists and has signed in. Use role/status controls instead of inviting again.",
+      };
+    }
+
+    await db
+      .update(users)
+      .set({
+        name,
+        role: input.role,
+        status: "invited",
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, existing.id));
+
+    const invite = await issueInviteToken(existing.id, name, email);
+    if ("error" in invite) {
+      return { error: invite.error ?? "Could not send the invitation email." };
+    }
+
+    const [freshExisting] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, existing.id))
+      .limit(1);
+    return mapRow(freshExisting);
   }
 
   // Unusable random hash until the invitee sets their own password.
@@ -118,7 +154,7 @@ export async function inviteStaffUser(input: {
   const [row] = await db
     .insert(users)
     .values({
-      name: input.name.trim(),
+      name,
       email,
       role: input.role,
       passwordHash,
@@ -128,6 +164,8 @@ export async function inviteStaffUser(input: {
 
   const invite = await issueInviteToken(row.id, row.name, row.email);
   if ("error" in invite) {
+    // Roll back so the administrator can retry without a stuck "already exists" row.
+    await db.delete(users).where(eq(users.id, row.id));
     return { error: invite.error ?? "Could not send the invitation email." };
   }
 

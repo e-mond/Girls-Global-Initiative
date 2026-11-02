@@ -7,20 +7,19 @@
 
 ## Current Phase
 
-* **Our Story images + About nav (News/Events)**
-* **Status:** In progress on `feature/our-story-images-nav-about`
-* **Previous phase:** Admin content UX (PR #52 merged & deployed)
-* **Previous phase:** Favicon circle + sky border (PR #51)
-* **Current branch:** `feature/our-story-images-nav-about`
+* **Fix admin users invite 400**
+* **Status:** In progress on `feature/fix-admin-users-invite`
+* **Previous phase:** Our Story images + About nav (PR #53)
+* **Current branch:** `feature/fix-admin-users-invite`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Replace Our Story began/believe images (Pinterest sources; began in B&W); add News and Events to About dropdown.
-* **Explicitly deferred:** Automatic OCR; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
+* **Current objective:** Clearer invite validation/SMTP errors; re-invite pending emails; roll back orphan invite rows when email send fails.
+* **Explicitly deferred:** Cloudflare Insights beacon blocked by client ad blockers (not app-fixable).
 
 ---
 
 ## Current Goal
 
-Ship Our Story photography updates and About-menu News/Events links.
+Fix `/api/admin/users` invite 400s so staff invitations fail with actionable messages and can be retried.
 
 ---
 

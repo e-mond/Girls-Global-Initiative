@@ -86,7 +86,12 @@ export async function sendAcknowledgementEmail(
     });
 
     return { sent: true };
-  } catch {
-    return { sent: false, reason: "Email could not be sent." };
+  } catch (error) {
+    console.error("[email] SMTP send failed", error);
+    return {
+      sent: false,
+      reason:
+        "Email could not be sent. Check SMTP host, mailbox and app password, then try again.",
+    };
   }
 }
