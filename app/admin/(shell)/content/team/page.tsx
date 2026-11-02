@@ -5,7 +5,9 @@ export default function AdminTeamPage() {
     <ContentEntityManager
       entity="team_members"
       title="Team"
-      description="Team members and founder spotlight fields."
+      description="Add, edit, publish or remove team members. Changes go live on the public Team page after you publish. Editors and administrators can manage this list."
+      createLabel="Add team member"
+      emptyMessage="No team members in the CMS yet. Add someone below, then Publish so they appear on the public Team page."
       fields={[
         {
           name: "name",
@@ -15,7 +17,7 @@ export default function AdminTeamPage() {
         },
         {
           name: "roleTitle",
-          label: "Role",
+          label: "Role / title",
           required: true,
           placeholder: "e.g. Founder & Executive Director",
         },
@@ -30,7 +32,15 @@ export default function AdminTeamPage() {
           name: "photoMediaId",
           label: "Photo",
           type: "image",
-          description: "Portrait photo (JPEG, PNG, WebP or GIF, max 5MB).",
+          description:
+            "Portrait photo (JPEG, PNG, WebP or GIF, max 5MB). You can replace this anytime.",
+        },
+        {
+          name: "isFounder",
+          label: "Founder spotlight",
+          type: "boolean",
+          description:
+            "Mark Yes for the founder profile used on Our Story / Founder pages.",
         },
         {
           name: "quote",
@@ -73,7 +83,7 @@ export default function AdminTeamPage() {
           label: "Sort order",
           type: "number",
           placeholder: "0",
-          description: "Lower numbers appear first.",
+          description: "Lower numbers appear first on the Team page.",
         },
       ]}
       createDefaults={{ bio: "", sortOrder: 0, isFounder: false }}

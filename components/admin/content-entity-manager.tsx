@@ -24,7 +24,7 @@ type ContentItem = {
 type FieldDef = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "image" | "select";
+  type?: "text" | "textarea" | "number" | "image" | "select" | "boolean";
   required?: boolean;
   options?: Array<{ value: string; label: string }>;
   placeholder?: string;
@@ -46,6 +46,8 @@ export function ContentEntityManager({
   createDefaults,
   filterItems,
   statusActions,
+  createLabel = "Create draft",
+  emptyMessage,
 }: {
   entity: ContentEntity;
   title: string;
@@ -55,10 +57,15 @@ export function ContentEntityManager({
   /** Optional client filter (e.g. news vs programme reports). */
   filterItems?: (item: ContentItem) => boolean;
   statusActions?: StatusAction[];
+  /** Label for the create form heading / submit affordance. */
+  createLabel?: string;
+  /** Empty-state copy when no CMS rows exist. */
+  emptyMessage?: string;
 }) {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
@@ -142,14 +149,18 @@ export function ContentEntityManager({
     const nextPreviews: Record<string, string> = {};
     for (const field of fields) {
       const value = item[field.name];
-      next[field.name] =
-        value == null
-          ? ""
-          : typeof value === "number"
-            ? String(value)
-            : typeof value === "string"
-              ? value
-              : String(value);
+      if (field.type === "boolean") {
+        next[field.name] = value === true || value === "true" ? "true" : "false";
+      } else {
+        next[field.name] =
+          value == null
+            ? ""
+            : typeof value === "number"
+              ? String(value)
+              : typeof value === "string"
+                ? value
+                : String(value);
+      }
       if (field.type === "image") {
         if (field.name === "photoMediaId") {
           nextPreviews[field.name] = "";
@@ -162,6 +173,7 @@ export function ContentEntityManager({
     setImagePreviews(nextPreviews);
     setEditingId(item.id);
     setError(null);
+    setSuccess(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -227,6 +239,7 @@ export function ContentEntityManager({
     event.preventDefault();
     setSaving(true);
     setError(null);
+    setSuccess(null);
 
     const payload: Record<string, unknown> = editingId
       ? { id: editingId }
@@ -249,6 +262,8 @@ export function ContentEntityManager({
         field.name === "timezone"
       ) {
         payload[field.name] = value.trim() ? value.trim() : null;
+      } else if (field.type === "boolean") {
+        payload[field.name] = value === "true";
       } else {
         payload[field.name] =
           field.type === "number" ? Number(value || 0) : value;
@@ -295,6 +310,11 @@ export function ContentEntityManager({
       setForm({});
       setImagePreviews({});
       setEditingId(null);
+      setSuccess(
+        editingId
+          ? "Saved. Use Publish if you want the public site to show these changes."
+          : "Draft created. Use Publish on the card below when it is ready for the public site.",
+      );
       await load();
     } catch (err) {
       setError(
@@ -311,6 +331,7 @@ export function ContentEntityManager({
 
   async function setStatus(id: string, status: ContentStatus) {
     setError(null);
+    setSuccess(null);
     if (
       status === "archived" &&
       !window.confirm("Archive this item? It will move to the public archive.")
@@ -331,6 +352,13 @@ export function ContentEntityManager({
       return;
     }
     setPreviewItem(null);
+    setSuccess(
+      status === "published"
+        ? "Published — visible on the public site."
+        : status === "draft"
+          ? "Unpublished — hidden from the public site."
+          : `Status updated to ${status}.`,
+    );
     await load();
   }
 
@@ -341,10 +369,15 @@ export function ContentEntityManager({
   }
 
   async function remove(id: string) {
-    if (!window.confirm("Delete this content item? This cannot be undone.")) {
+    if (
+      !window.confirm(
+        "Remove this person/item from the CMS? This cannot be undone. Published pages will stop showing them.",
+      )
+    ) {
       return;
     }
     setError(null);
+    setSuccess(null);
     const response = await fetch(
       `/api/admin/content/${entity}?id=${encodeURIComponent(id)}`,
       { method: "DELETE" },
@@ -358,6 +391,7 @@ export function ContentEntityManager({
       return;
     }
     if (editingId === id) cancelEdit();
+    setSuccess("Removed.");
     await load();
   }
 
@@ -388,7 +422,7 @@ export function ContentEntityManager({
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm font-semibold text-brand-navy">
-            {editingId ? "Edit item" : "Create draft"}
+            {editingId ? "Edit item" : createLabel}
           </p>
           {editingId ? (
             <Button type="button" size="sm" variant="ghost" onClick={cancelEdit}>
@@ -412,7 +446,22 @@ export function ContentEntityManager({
                   {field.description}
                 </span>
               ) : null}
-              {field.type === "textarea" ? (
+              {field.type === "boolean" ? (
+                <select
+                  required={field.required}
+                  value={form[field.name] ?? "false"}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      [field.name]: event.target.value,
+                    }))
+                  }
+                  className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm outline-none focus:border-brand-sky"
+                >
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              ) : field.type === "textarea" ? (
                 <div>
                   {field.markdown ? (
                     <MarkdownToolbar
@@ -689,14 +738,20 @@ export function ContentEntityManager({
           {error}
         </p>
       ) : null}
+      {success ? (
+        <p className="text-sm text-brand-navy" role="status">
+          {success}
+        </p>
+      ) : null}
 
       <div className="flex flex-col gap-3 rounded-2xl border border-border-default bg-bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
         <input
           type="search"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search title, slug, summary…"
+          placeholder="Search name, title, slug…"
           className="h-10 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm outline-none focus:border-brand-sky sm:max-w-xs"
+          aria-label="Search content"
         />
         <div className="flex flex-wrap gap-2">
           {["all", "draft", "scheduled", "published", "archived"].map(
@@ -722,7 +777,10 @@ export function ContentEntityManager({
         <p className="text-sm text-text-muted">Loading content…</p>
       ) : visibleItems.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border-default bg-bg-surface p-6 text-sm text-text-muted">
-          No items match this filter. Create a draft to get started.
+          {items.length === 0
+            ? emptyMessage ??
+              "No items yet. Use the form above to add one, then Publish when ready."
+            : "No items match this filter."}
         </p>
       ) : (
         <ul className="space-y-3">
@@ -807,7 +865,7 @@ export function ContentEntityManager({
                   variant="ghost"
                   onClick={() => void remove(item.id)}
                 >
-                  Delete
+                  Remove
                 </Button>
               </div>
             </li>
