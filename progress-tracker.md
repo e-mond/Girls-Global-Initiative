@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Fix admin users invite 400**
-* **Status:** In progress on `feature/fix-admin-users-invite`
-* **Previous phase:** Our Story images + About nav (PR #53)
-* **Current branch:** `feature/fix-admin-users-invite`
+* **Admin sidebar scroll, roles UX, privacy PDF, clear donations**
+* **Status:** Validated locally; shipping PR
+* **Previous phase:** Fix admin users invite 400 (PR #54)
+* **Current branch:** `feature/admin-sidebar-roles-privacy-donations`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Clearer invite validation/SMTP errors; re-invite pending emails; roll back orphan invite rows when email send fails.
-* **Explicitly deferred:** Cloudflare Insights beacon blocked by client ad blockers (not app-fixable).
+* **Current objective:** Scrollable sidebar nav; clearer Editor/Administrator permissions UI; human privacy look-up + branded PDF; wipe donation test rows.
+* **Explicitly deferred:** Fine-grained custom permission matrix beyond BR-19 Administrator/Editor roles.
 
 ---
 
 ## Current Goal
 
-Fix `/api/admin/users` invite 400s so staff invitations fail with actionable messages and can be retried.
+Ship admin UX (sidebar scroll, role guide), privacy tools revamp, and cleared Paystack/donation test data.
 
 ---
 
@@ -1565,32 +1565,21 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Reports design, media, Markdown & statuses
 
-* **Implemented (this branch, awaiting full validation/ship):**
-  * Shared report components (`ReportHeader`, `ReportContent`,
-    `ReportDownloadButton`); removed public Original source PDF links;
-    official download wording; source PDF remains admin-only (`attachment_url`).
-  * Safe Markdown (`lib/content/safe-markdown.tsx`) wired into reports, news
-    detail, events detail; strips escaped links and source-PDF download lines.
-  * `ContainImage` for news cards/detail/home (object-contain, aspect frame).
-  * Migration `0014_content_programme_status`: content_status +scheduled/archived;
-    events `programme_status`, `timezone`, `revised_starts_on`, `status_note`.
-  * Public Events groups: Upcoming / Postponed / Cancelled / Past (Accra TZ).
-  * Public News: published + newsletter + archive; cancelled/postponed notices
-    link to events.
-  * Admin news/events: status filters, search, badges, schedule/archive actions,
-    programme status select + confirmation for cancel/postpone.
-  * Docs: REPORT-PDF-EXTRACTION, ADR-008/009; script `db:fix-cms-markdown`.
-* **Validation:** lint PASS; type-check PASS; Playwright **61** PASS (incl. new
-  safe-markdown / status tests); `npm run build` PASS; migration `0014` applied
-  on Neon; `db:fix-cms-markdown` updated 1 news body.
-* **Ship:** Commit `722f891`; PR [#49](https://github.com/e-mond/Girls-Global-Initiative/pull/49) merged to `main`.
-* **Deploy:** `npm run deploy` uploaded Worker `girls-global-initiative` + new assets;
-  wrangler exit 1 on custom-domain API (`zone does not exist on your account` / 10083)
-  — same known account/zone mismatch. Live smoke shows new copy/assets
-  (`Download the Full Report`, news `Published updates`, events Upcoming/Past,
-  new CSS/JS 200). Recommend Cloudflare **Purge Everything** in the account that
-  owns `girlsglobalinitiative.org`.
-* **Not yet:** owner visual sign-off; zone-account OAuth alignment for clean wrangler exits.
+* Shipped earlier via PR #49; see validation history.
+
+### Session Notes — Admin sidebar / roles / privacy / donations wipe
+
+* Sidebar nav: `overflow-y-auto` on admin nav links so long menus scroll inside
+  fixed `h-dvh` shell.
+* Roles: `STAFF_ROLE_GUIDE` (BR-19 Editor vs Administrator) + Users UI with
+  capability cards and Make Editor / Make Administrator actions (no invented
+  fine-grained ACL matrix).
+* Privacy look-up: plain-language copy, result cards, branded jsPDF summary
+  (replaces JSON download).
+* Donations: all Paystack/donation rows deleted in Neon (test data wipe per
+  owner request); count verified at 0 after delete.
+* Validation: `npm run type-check` PASS; `npm run lint` PASS.
+* Branch: `feature/admin-sidebar-roles-privacy-donations`.
 
 ---
 

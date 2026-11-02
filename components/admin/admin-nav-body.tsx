@@ -90,7 +90,7 @@ export function AdminNavBody({
         </div>
       </div>
 
-      <nav aria-label="Admin" className="min-h-0 flex-1 space-y-5 overflow-hidden p-3">
+      <nav aria-label="Admin" className="min-h-0 flex-1 space-y-5 overflow-y-auto p-3">
         {groups.map((group) => (
           <div key={group.id}>
             {collapsed ? null : (
