@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Admin sidebar scroll, roles UX, privacy PDF, clear donations**
-* **Status:** Validated locally; shipping PR
+* **Status:** Complete — PR #55 merged; Worker uploaded
 * **Previous phase:** Fix admin users invite 400 (PR #54)
-* **Current branch:** `feature/admin-sidebar-roles-privacy-donations`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Scrollable sidebar nav; clearer Editor/Administrator permissions UI; human privacy look-up + branded PDF; wipe donation test rows.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** Fine-grained custom permission matrix beyond BR-19 Administrator/Editor roles.
 
 ---
 
 ## Current Goal
 
-Ship admin UX (sidebar scroll, role guide), privacy tools revamp, and cleared Paystack/donation test data.
+Await next owner-scoped unit.
 
 ---
 
@@ -1578,8 +1578,10 @@ Phase 2 recurring billing remains deferred.
   (replaces JSON download).
 * Donations: all Paystack/donation rows deleted in Neon (test data wipe per
   owner request); count verified at 0 after delete.
-* Validation: `npm run type-check` PASS; `npm run lint` PASS.
-* Branch: `feature/admin-sidebar-roles-privacy-donations`.
+* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
+* Ship: PR [#55](https://github.com/e-mond/Girls-Global-Initiative/pull/55) merged.
+* Deploy: Worker `girls-global-initiative` uploaded (users/privacy chunks live);
+  wrangler exit 1 on custom-domain API (zone 10083 — known).
 
 ---
 
