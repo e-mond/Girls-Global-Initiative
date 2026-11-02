@@ -7,20 +7,20 @@
 
 ## Current Phase
 
-* **Admin content UX (placeholders, reports editor, fixed sidebar)**
-* **Status:** In progress on `feature/admin-content-ux`
-* **Previous phase:** Favicon circle + sky border (PR #51 merged; deploy retry if OpenNext flaked)
-* **Previous phase:** Favicon & browser identity (PR #50)
-* **Current branch:** `feature/admin-content-ux`
+* **Our Story images + About nav (News/Events)**
+* **Status:** In progress on `feature/our-story-images-nav-about`
+* **Previous phase:** Admin content UX (PR #52 merged & deployed)
+* **Previous phase:** Favicon circle + sky border (PR #51)
+* **Current branch:** `feature/our-story-images-nav-about`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Admin form placeholders/descriptions; report device PDF upload + Markdown toolbar + publish preview; fixed admin sidebar.
-* **Explicitly deferred:** Automatic OCR; re-hosting embedded PDF images into branded layout; production host migration; Workers Paid; Paystack recurring billing (Phase 2); free-choice custom web fonts in CMS (brand fonts only).
+* **Current objective:** Replace Our Story began/believe images (Pinterest sources; began in B&W); add News and Events to About dropdown.
+* **Explicitly deferred:** Automatic OCR; production host migration; Workers Paid; Paystack recurring billing (Phase 2).
 
 ---
 
 ## Current Goal
 
-Ship admin content UX improvements and complete production deploy of the circular favicon.
+Ship Our Story photography updates and About-menu News/Events links.
 
 ---
 

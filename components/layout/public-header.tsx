@@ -20,6 +20,8 @@ const ABOUT_LINKS = [
   { href: "/team", label: "Team" },
   { href: "/communities", label: "Communities" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/news", label: "News" },
+  { href: "/events", label: "Events" },
 ] as const;
 
 function linkIsActive(pathname: string, href: string) {
@@ -176,7 +178,7 @@ export function PublicHeader() {
                 id={aboutMenuId}
                 role="menu"
                 aria-label="About"
-                className="absolute left-1/2 top-full z-20 mt-2 min-w-[11rem] -translate-x-1/2 rounded-xl border border-border-default bg-bg-surface p-1.5 shadow-md"
+                className="absolute left-1/2 top-full z-20 mt-2 min-w-[12.5rem] -translate-x-1/2 rounded-xl border border-border-default bg-bg-surface p-1.5 shadow-md"
               >
                 {ABOUT_LINKS.map((link) => (
                   <li key={link.href} role="none">

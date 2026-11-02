@@ -34,6 +34,8 @@ test.describe("public navigation IA", () => {
       aboutMenu.getByRole("menuitem", { name: "Communities" }),
     ).toBeVisible();
     await expect(aboutMenu.getByRole("menuitem", { name: "Gallery" })).toBeVisible();
+    await expect(aboutMenu.getByRole("menuitem", { name: "News" })).toBeVisible();
+    await expect(aboutMenu.getByRole("menuitem", { name: "Events" })).toBeVisible();
   });
 
   test("header stays sticky while scrolling", async ({ page }) => {
