@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { AdminAuthShell } from "@/components/admin/admin-login-form";
+import { PasswordField } from "@/components/admin/password-field";
 import { Button } from "@/components/ui/button";
 import { readJsonResponse } from "@/lib/safe-json";
 
@@ -146,44 +147,24 @@ function ResetPasswordForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-brand-navy"
-        >
-          {isInvite ? "Choose a password" : "New password"}
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="new-password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus:border-brand-sky"
-        />
-      </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="confirm"
-          className="text-sm font-medium text-brand-navy"
-        >
-          Confirm password
-        </label>
-        <input
-          id="confirm"
-          name="confirm"
-          type="password"
-          autoComplete="new-password"
-          required
-          minLength={8}
-          value={confirm}
-          onChange={(event) => setConfirm(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus:border-brand-sky"
-        />
-      </div>
+      <PasswordField
+        id="password"
+        name="password"
+        label={isInvite ? "Choose a password" : "New password"}
+        value={password}
+        onChange={setPassword}
+        autoComplete="new-password"
+        invalid={Boolean(error)}
+      />
+      <PasswordField
+        id="confirm"
+        name="confirm"
+        label="Confirm password"
+        value={confirm}
+        onChange={setConfirm}
+        autoComplete="new-password"
+        invalid={Boolean(error)}
+      />
       {error ? (
         <p className="text-sm text-brand-magenta" role="alert">
           {error}

@@ -5,7 +5,6 @@ import {
   Red_Hat_Text,
 } from "next/font/google";
 import { MswProvider } from "@/components/providers/msw-provider";
-import { AuthSessionProvider } from "@/components/providers/auth-session-provider";
 import {
   DEFAULT_SITE_DESCRIPTION,
   DEFAULT_SITE_TITLE,
@@ -143,9 +142,7 @@ export default function RootLayout({
       <body
         className={`${redHatDisplay.variable} ${redHatText.variable} ${jetbrainsMono.variable} min-h-screen overflow-x-hidden antialiased`}
       >
-        <AuthSessionProvider>
-          <MswProvider>{children}</MswProvider>
-        </AuthSessionProvider>
+        <MswProvider>{children}</MswProvider>
       </body>
     </html>
   );
