@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Purge test staff emails + Team CMS manageability**
-* **Status:** Complete — PR #57 merged; Worker uploaded
-* **Previous phase:** Staff invite expiry / email feedback (PR #56)
-* **Current branch:** `main`
+* **Fix auth session 503 noise + password visibility**
+* **Status:** In progress on `feature/fix-auth-session-password-toggle`
+* **Previous phase:** Purge test accounts + Team CMS (PR #57)
+* **Current branch:** `feature/fix-auth-session-password-toggle`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Next owner-scoped unit (none queued).
-* **Explicitly deferred:** Domain-authenticated ESP for invite deliverability.
+* **Current objective:** Stop global SessionProvider polling `/api/auth/session` (HTML 503 → Auth.js JSON error); add show/hide password on staff sign-in.
+* **Explicitly deferred:** Cloudflare Insights beacon blocked by browser Tracking Prevention / ad blockers (client-side, not app-fixable).
 
 ---
 
 ## Current Goal
 
-Await next owner-scoped unit.
+Ship auth session resilience and accessible password toggle.
 
 ---
 
@@ -1577,15 +1577,18 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Purge test accounts + Team CMS
 
-* Neon purge (users + newsletter + related actor refs): 
-  `eddiegot75@gmail.com`, `menalarbi142@gmail.com`, `jevisd48@gmail.com`,
-  `e_ander.son@yahoo.com` — remaining count verified 0.
-* Seeded 7 published `team_members` rows (owner roster) so Admin → Content →
-  Team can Edit / Remove / Publish instead of hard-coded public mocks only.
-* Public Team: if CMS has any rows, mock placeholders no longer reappear after
-  unpublish/delete.
-* ContentEntityManager: boolean fields, success feedback, Remove label,
-  team-specific create/empty copy; founders flag editable.
+* Shipped via PR #57.
+
+### Session Notes — Auth session 503 + password visibility
+
+* Console `Unexpected token '<'` / AuthError: global `SessionProvider` polled
+  `/api/auth/session` on every page; intermittent Worker HTML 503 was parsed as
+  JSON. Removed provider from root layout (no `useSession` usage); signIn/signOut
+  still work. Auth route returns JSON 503 if our handler throws.
+* Staff login + reset: accessible show/hide password control (`aria-pressed`,
+  sr-only hint).
+* Cloudflare Insights `ERR_BLOCKED_BY_CLIENT` / Tracking Prevention: browser
+  blocks CF beacon — not an application defect.
 
 ---
 

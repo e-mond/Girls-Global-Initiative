@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { FormEvent, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PasswordField } from "@/components/admin/password-field";
 import { Button } from "@/components/ui/button";
 import { safeAdminCallbackUrl } from "@/lib/auth/safe-callback-url";
 
@@ -27,21 +28,27 @@ export function AdminLoginForm() {
     setError(null);
     setPending(true);
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    setPending(false);
+      if (result?.error) {
+        setError("Email or password is incorrect. Please try again.");
+        return;
+      }
 
-    if (result?.error) {
-      setError("Email or password is incorrect. Please try again.");
-      return;
+      router.replace(callbackUrl);
+      router.refresh();
+    } catch {
+      setError(
+        "Sign-in is temporarily unavailable. Please wait a moment and try again.",
+      );
+    } finally {
+      setPending(false);
     }
-
-    router.replace(callbackUrl);
-    router.refresh();
   }
 
   return (
@@ -70,28 +77,16 @@ export function AdminLoginForm() {
           className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
         />
       </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-brand-navy"
-        >
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          aria-required="true"
-          minLength={8}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={error ? "login-error" : undefined}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
-        />
-      </div>
+      <PasswordField
+        id="password"
+        name="password"
+        label="Password"
+        value={password}
+        onChange={setPassword}
+        autoComplete="current-password"
+        invalid={Boolean(error)}
+        describedBy={error ? "login-error" : undefined}
+      />
       {activated ? (
         <p
           className="rounded-xl border border-brand-sky/40 bg-blob-sky/30 px-4 py-3 text-sm text-brand-navy"
