@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Fix auth session 503 noise + password visibility**
-* **Status:** Complete — PR #58 merged; Worker uploaded
-* **Previous phase:** Purge test accounts + Team CMS (PR #57)
-* **Current branch:** `main`
+* **Users confirm modal + account-change notifications**
+* **Status:** In progress on `feature/users-confirm-modal-notify`
+* **Previous phase:** Auth session / password visibility (PR #58)
+* **Current branch:** `feature/users-confirm-modal-notify`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Next owner-scoped unit (none queued).
-* **Explicitly deferred:** Cloudflare Insights beacon blocked by browser Tracking Prevention / ad blockers (client-side, not app-fixable).
+* **Current objective:** Proper confirm modal for role/disable; in-app notice for actor; email to affected staff; purge `scriptjack4@gmail.com`.
+* **Explicitly deferred:** Full staff_notifications table (using audit-backed attention items for actor).
 
 ---
 
 ## Current Goal
 
-Await next owner-scoped unit.
+Ship users confirm modal and account-change notifications.
 
 ---
 
@@ -1581,17 +1581,16 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Auth session 503 + password visibility
 
-* Console `Unexpected token '<'` / AuthError: global `SessionProvider` polled
-  `/api/auth/session` on every page; intermittent Worker HTML 503 was parsed as
-  JSON. Removed provider from root layout (no `useSession` usage); signIn/signOut
-  still work. Auth route returns JSON 503 if our handler throws.
-* Staff login + reset: accessible show/hide password control (`aria-pressed`,
-  sr-only hint).
-* Cloudflare Insights `ERR_BLOCKED_BY_CLIENT` / Tracking Prevention: browser
-  blocks CF beacon — not an application defect.
-* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
-* Ship: PR [#58](https://github.com/e-mond/Girls-Global-Initiative/pull/58) merged.
-* Deploy: Worker uploaded (login/layout chunks); wrangler zone 10083 known.
+* Shipped via PR #58.
+
+### Session Notes — Users confirm modal + notifications
+
+* Neon purge: `scriptjack4@gmail.com` user removed (related refs cleared).
+* Users admin: accessible `ConfirmDialog` for role change / disable / re-enable
+  (replaces `window.confirm`).
+* Affected staff receive branded email; actor gets page success banner plus
+  audit-backed items in the admin notifications bell.
+* Validation pending ship.
 
 ---
 

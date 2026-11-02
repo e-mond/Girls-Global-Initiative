@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { writeAuditLog } from "@/features/audit/write-audit";
 import { requireAdministratorSession } from "@/features/governance/require-admin";
+import { STAFF_ROLE_GUIDE } from "@/features/governance/rbac";
 import {
   createStaffUserSchema,
   updateStaffUserSchema,
 } from "@/features/settings/schemas";
+import { notifyStaffAccountChange } from "@/features/users/notify-account-change";
 import {
   inviteStaffUser,
   listStaffUsers,
@@ -126,9 +128,9 @@ export async function PATCH(request: Request) {
   const { resendInvite: _resend, ...update } = parsed.data;
   void _resend;
 
-  const previousStatus = (
-    await listStaffUsers()
-  ).find((item) => item.id === update.id)?.status;
+  const previous = (await listStaffUsers()).find(
+    (item) => item.id === update.id,
+  );
 
   const result = await updateStaffUser({
     ...update,
@@ -143,12 +145,24 @@ export async function PATCH(request: Request) {
 
   let action = "user.update";
   let summary = `Updated staff user ${result.email}`;
-  if (update.status === "disabled") {
+  let notifyKind: "role_changed" | "disabled" | "reenabled" | null = null;
+  let actorNotice = `Updated ${result.name}.`;
+
+  if (update.role && previous && update.role !== previous.role) {
+    action = "user.role_changed";
+    summary = `Changed ${result.email} role from ${previous.role} to ${update.role}`;
+    notifyKind = "role_changed";
+    actorNotice = `You changed ${result.name}'s role to ${STAFF_ROLE_GUIDE[update.role].label}. They were emailed about the change.`;
+  } else if (update.status === "disabled") {
     action = "user.disabled";
     summary = `Disabled staff user ${result.email}`;
-  } else if (update.status === "active" && previousStatus === "disabled") {
+    notifyKind = "disabled";
+    actorNotice = `You disabled ${result.name}'s staff access. They were emailed about the change.`;
+  } else if (update.status === "active" && previous?.status === "disabled") {
     action = "user.reenabled";
     summary = `Re-enabled staff user ${result.email}`;
+    notifyKind = "reenabled";
+    actorNotice = `You re-enabled ${result.name}'s staff access. They were emailed about the change.`;
   }
 
   await writeAuditLog({
@@ -157,7 +171,44 @@ export async function PATCH(request: Request) {
     entityType: "user",
     entityId: result.id,
     summary,
+    metadata: {
+      previousRole: previous?.role ?? null,
+      nextRole: result.role,
+      previousStatus: previous?.status ?? null,
+      nextStatus: result.status,
+    },
   });
 
-  return NextResponse.json({ data: { item: result } });
+  let emailSent = false;
+  let emailWarning: string | null = null;
+  if (notifyKind) {
+    const mail = await notifyStaffAccountChange({
+      toEmail: result.email,
+      toName: result.name,
+      actorName: access.user.name || access.user.email,
+      kind: notifyKind,
+      role: notifyKind === "role_changed" ? result.role : undefined,
+    });
+    emailSent = mail.sent;
+    if (!mail.sent) {
+      emailWarning =
+        mail.reason ??
+        "The account was updated, but the notification email could not be sent.";
+      actorNotice = `${actorNotice.replace(
+        " They were emailed about the change.",
+        "",
+      )} The notification email could not be sent.`;
+    }
+  }
+
+  return NextResponse.json({
+    data: {
+      item: result,
+      notice: {
+        forActor: actorNotice,
+        emailSent,
+        emailWarning,
+      },
+    },
+  });
 }

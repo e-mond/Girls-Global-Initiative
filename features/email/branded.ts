@@ -252,6 +252,58 @@ export function passwordResetEmail(input: {
   });
 }
 
+export function staffAccountChangeEmail(input: {
+  name: string;
+  actorName: string;
+  kind: "role_changed" | "disabled" | "reenabled";
+  roleLabel?: string;
+}): BrandedEmailContent {
+  const copy = {
+    role_changed: {
+      subject: "Your GGI staff role was updated",
+      title: "Staff role updated",
+      paragraphs: [
+        `${input.actorName} updated your Girls Global Initiative staff role to ${input.roleLabel ?? "a new role"}.`,
+        "Sign in to the staff workspace to continue with your new permissions.",
+      ],
+      preheader: "Your GGI staff role was updated.",
+    },
+    disabled: {
+      subject: "Your GGI staff access was disabled",
+      title: "Staff access disabled",
+      paragraphs: [
+        `${input.actorName} disabled your Girls Global Initiative staff account.`,
+        "You will not be able to sign in until an administrator re-enables access. Contact your administrator if this was unexpected.",
+      ],
+      preheader: "Your GGI staff access was disabled.",
+    },
+    reenabled: {
+      subject: "Your GGI staff access was restored",
+      title: "Staff access restored",
+      paragraphs: [
+        `${input.actorName} re-enabled your Girls Global Initiative staff account.`,
+        "You can sign in again with your existing password, or use Forgot password if you need a new one.",
+      ],
+      preheader: "Your GGI staff access was restored.",
+    },
+  }[input.kind];
+
+  return brandedMessage({
+    subject: copy.subject,
+    title: copy.title,
+    greeting: `Hello ${input.name},`,
+    paragraphs: copy.paragraphs,
+    cta: {
+      href: `${emailSiteOrigin()}/admin/login`,
+      label: "Staff sign in",
+    },
+    secondaryLinks: [
+      { href: `${emailSiteOrigin()}/contact`, label: "Contact GGI" },
+    ],
+    preheader: copy.preheader,
+  });
+}
+
 export function staffInviteEmail(input: {
   name: string;
   inviteUrl: string;
