@@ -203,6 +203,17 @@ export async function listContent(
   return rows.map((row) => serializeRow(row as Record<string, unknown>));
 }
 
+/** True when any CMS rows exist for the entity (any status). */
+export async function hasContentRows(entity: ContentEntity): Promise<boolean> {
+  const db = getDb();
+  if (!db) {
+    return store()[entity].length > 0;
+  }
+  const table = tableFor(entity);
+  const [row] = await db.select({ id: table.id }).from(table).limit(1);
+  return Boolean(row);
+}
+
 export async function getContent(
   entity: ContentEntity,
   id: string,

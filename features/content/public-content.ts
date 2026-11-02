@@ -6,6 +6,7 @@
 import {
   getPublishedEventBySlug,
   getPublishedFounder,
+  hasContentRows,
   getPublishedNewsBySlug,
   listArchivedContent,
   listPublishedContent,
@@ -461,6 +462,11 @@ export async function getPublicEventBySlug(
 export async function getPublicTeamMembers(): Promise<PublicTeamMember[]> {
   const published = await listPublishedContent("team_members");
   if (published.length === 0) {
+    // Once staff manage Team in CMS, do not resurrect hard-coded placeholders
+    // after every member is unpublished or deleted.
+    if (await hasContentRows("team_members")) {
+      return [];
+    }
     return mockTeamMembers.map((member) => ({
       id: member.id,
       name: member.name,

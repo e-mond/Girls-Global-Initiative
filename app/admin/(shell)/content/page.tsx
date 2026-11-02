@@ -10,7 +10,7 @@ const CONTENT_SECTIONS = [
   {
     href: "/admin/content/team",
     title: "Team",
-    body: "Team members and founder spotlight fields.",
+    body: "Add, edit, publish or remove team members and founder photos.",
   },
   {
     href: "/admin/content/challenge-tags",

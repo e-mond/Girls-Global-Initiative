@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Fix staff invite expiry + email feedback**
-* **Status:** Complete — PR #56 merged; Worker uploaded
-* **Previous phase:** Admin sidebar / roles / privacy (PR #55)
-* **Current branch:** `main`
+* **Purge test staff emails + Team CMS manageability**
+* **Status:** In progress on `feature/purge-test-accounts-team-crud`
+* **Previous phase:** Staff invite expiry / email feedback (PR #56)
+* **Current branch:** `feature/purge-test-accounts-team-crud`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Next owner-scoped unit (none queued).
-* **Explicitly deferred:** Moving off consumer Gmail SMTP to domain-authenticated ESP (deliverability root cause for some inboxes).
+* **Current objective:** Remove listed test accounts from Neon; make Team members add/edit/remove/publish for admin+editor.
+* **Explicitly deferred:** Domain-authenticated ESP for invite deliverability.
 
 ---
 
 ## Current Goal
 
-Await next owner-scoped unit.
+Ship Team CMS manageability and document the Neon account purge.
 
 ---
 
@@ -1573,22 +1573,19 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Staff invite expiry / email feedback
 
-* Root causes addressed:
-  * Forgot-password used deferred `after()` SMTP — UI said success while Worker
-    could drop the send; now awaits SMTP on staff reset/invite re-issue.
-  * Invite/reset tokens were rotated before SMTP success — failed sends left
-    people with “link expired” on the previous email; now restore prior token
-    when SMTP fails.
-  * Invited users requesting a new link got a 1-hour token while copy said 72h;
-    invited re-issues now use 72h consistently.
-  * Reset page now validates the token on load and shows a clear expired state
-    with “Request a new link”.
-  * Login shows success banners after activate/reset; Users admin copy clarifies
-    mail-server accept ≠ inbox delivery (check spam).
-* Explicitly deferred: domain-authenticated ESP (Gmail SMTP spam risk).
-* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
-* Ship: PR [#56](https://github.com/e-mond/Girls-Global-Initiative/pull/56) merged.
-* Deploy: Worker uploaded (forgot/reset/users chunks); wrangler zone 10083 known.
+* Shipped via PR #56.
+
+### Session Notes — Purge test accounts + Team CMS
+
+* Neon purge (users + newsletter + related actor refs): 
+  `eddiegot75@gmail.com`, `menalarbi142@gmail.com`, `jevisd48@gmail.com`,
+  `e_ander.son@yahoo.com` — remaining count verified 0.
+* Seeded 7 published `team_members` rows (owner roster) so Admin → Content →
+  Team can Edit / Remove / Publish instead of hard-coded public mocks only.
+* Public Team: if CMS has any rows, mock placeholders no longer reappear after
+  unpublish/delete.
+* ContentEntityManager: boolean fields, success feedback, Remove label,
+  team-specific create/empty copy; founders flag editable.
 
 ---
 
