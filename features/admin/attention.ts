@@ -3,6 +3,9 @@
  * No fabricated counts — empty when nothing needs attention.
  */
 
+import { and, desc, eq, gte, inArray } from "drizzle-orm";
+import { getDb } from "@/db/client";
+import { auditLogs } from "@/db/schema";
 import { listDonations } from "@/features/donations/service";
 import { listSubmissions } from "@/features/submissions/service";
 
@@ -11,7 +14,7 @@ export type AttentionItem = {
   title: string;
   href: string;
   createdAt: string;
-  kind: "submission" | "donation";
+  kind: "submission" | "donation" | "account";
 };
 
 function relativeLabel(iso: string): string {
@@ -27,15 +30,69 @@ function relativeLabel(iso: string): string {
   return `${days} days ago`;
 }
 
+async function listActorAccountNotices(
+  actorUserId: string,
+  limit = 8,
+): Promise<AttentionItem[]> {
+  const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const actions = ["user.role_changed", "user.disabled", "user.reenabled"] as const;
+  const db = getDb();
+
+  if (!db) {
+    return [];
+  }
+
+  const rows = await db
+    .select({
+      id: auditLogs.id,
+      action: auditLogs.action,
+      summary: auditLogs.summary,
+      createdAt: auditLogs.createdAt,
+    })
+    .from(auditLogs)
+    .where(
+      and(
+        eq(auditLogs.actorUserId, actorUserId),
+        inArray(auditLogs.action, [...actions]),
+        gte(auditLogs.createdAt, since),
+      ),
+    )
+    .orderBy(desc(auditLogs.createdAt))
+    .limit(limit);
+
+  return rows.map((row) => {
+    let title = row.summary;
+    if (row.action === "user.role_changed") {
+      title = `You changed a staff role — ${row.summary}`;
+    } else if (row.action === "user.disabled") {
+      title = `You disabled a staff account — ${row.summary}`;
+    } else if (row.action === "user.reenabled") {
+      title = `You re-enabled a staff account — ${row.summary}`;
+    }
+    return {
+      id: `acct-${row.id}`,
+      title,
+      href: "/admin/users",
+      createdAt: row.createdAt.toISOString(),
+      kind: "account" as const,
+    };
+  });
+}
+
 export async function listAttentionItems(
   limit = 12,
+  options?: { actorUserId?: string },
 ): Promise<(AttentionItem & { when: string })[]> {
-  const [volunteer, partnership, contact, donations] = await Promise.all([
-    listSubmissions("volunteer"),
-    listSubmissions("partnership"),
-    listSubmissions("contact"),
-    listDonations(),
-  ]);
+  const [volunteer, partnership, contact, donations, accountItems] =
+    await Promise.all([
+      listSubmissions("volunteer"),
+      listSubmissions("partnership"),
+      listSubmissions("contact"),
+      listDonations(),
+      options?.actorUserId
+        ? listActorAccountNotices(options.actorUserId)
+        : Promise.resolve([] as AttentionItem[]),
+    ]);
 
   const submissionItems: AttentionItem[] = [
     ...volunteer
@@ -83,7 +140,7 @@ export async function listAttentionItems(
       kind: "donation" as const,
     }));
 
-  return [...submissionItems, ...donationItems]
+  return [...accountItems, ...submissionItems, ...donationItems]
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),

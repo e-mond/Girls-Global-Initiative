@@ -13,7 +13,9 @@ export async function GET() {
   }
 
   try {
-    const items = await listAttentionItems();
+    const items = await listAttentionItems(12, {
+      actorUserId: access.user.id,
+    });
     return NextResponse.json({ data: { items } });
   } catch {
     return NextResponse.json(

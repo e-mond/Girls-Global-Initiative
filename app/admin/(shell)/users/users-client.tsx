@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { STAFF_ROLE_GUIDE } from "@/features/governance/rbac";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,20 @@ type Item = {
   lastLoginAt: string | null;
 };
 
+type PendingAction =
+  | {
+      type: "role";
+      id: string;
+      name: string;
+      next: "administrator" | "editor";
+    }
+  | {
+      type: "status";
+      id: string;
+      name: string;
+      status: "active" | "disabled";
+    };
+
 export default function AdminUsersPageClient({
   currentUserId,
 }: {
@@ -29,6 +44,8 @@ export default function AdminUsersPageClient({
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"administrator" | "editor">("editor");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [pending, setPending] = useState<PendingAction | null>(null);
+  const [confirmBusy, setConfirmBusy] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -87,62 +104,48 @@ export default function AdminUsersPageClient({
     await load();
   }
 
-  async function setUserRole(id: string, next: "administrator" | "editor") {
-    const guide = STAFF_ROLE_GUIDE[next];
-    if (
-      !window.confirm(
-        `Change this person to ${guide.label}?\n\nThey will be able to:\n- ${guide.can.slice(0, 3).join("\n- ")}${guide.can.length > 3 ? "\n- …" : ""}`,
-      )
-    ) {
-      return;
-    }
+  async function applyPending() {
+    if (!pending) return;
     setError(null);
     setSuccess(null);
-    setBusyId(id);
+    setConfirmBusy(true);
+    setBusyId(pending.id);
     try {
+      const body =
+        pending.type === "role"
+          ? { id: pending.id, role: pending.next }
+          : { id: pending.id, status: pending.status };
       const response = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, role: next }),
+        body: JSON.stringify(body),
       });
       const json = await response.json();
       if (!response.ok) {
-        setError(json?.error?.message ?? "Could not update role.");
+        setError(
+          json?.error?.message ??
+            (pending.type === "role"
+              ? "Could not update role."
+              : "Could not update access."),
+        );
         return;
       }
-      setSuccess(`Role updated to ${guide.label}.`);
-      await load();
-    } finally {
-      setBusyId(null);
-    }
-  }
-
-  async function setUserStatus(id: string, status: "active" | "disabled") {
-    const label = status === "disabled" ? "disable" : "re-enable";
-    if (!window.confirm(`Are you sure you want to ${label} this staff account?`)) {
-      return;
-    }
-    setError(null);
-    setSuccess(null);
-    setBusyId(id);
-    try {
-      const response = await fetch("/api/admin/users", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status }),
-      });
-      const json = await response.json();
-      if (!response.ok) {
-        setError(json?.error?.message ?? "Could not update access.");
-        return;
+      const notice =
+        typeof json?.data?.notice?.forActor === "string"
+          ? json.data.notice.forActor
+          : pending.type === "role"
+            ? `Role updated to ${STAFF_ROLE_GUIDE[pending.next].label}.`
+            : pending.status === "disabled"
+              ? "Staff access disabled."
+              : "Staff access re-enabled.";
+      setSuccess(notice);
+      if (typeof json?.data?.notice?.emailWarning === "string") {
+        setError(json.data.notice.emailWarning);
       }
-      setSuccess(
-        status === "disabled"
-          ? "Staff access disabled."
-          : "Staff access re-enabled.",
-      );
+      setPending(null);
       await load();
     } finally {
+      setConfirmBusy(false);
       setBusyId(null);
     }
   }
@@ -170,6 +173,9 @@ export default function AdminUsersPageClient({
       setBusyId(null);
     }
   }
+
+  const pendingGuide =
+    pending?.type === "role" ? STAFF_ROLE_GUIDE[pending.next] : null;
 
   return (
     <section className="space-y-6">
@@ -267,7 +273,10 @@ export default function AdminUsersPageClient({
         </p>
       ) : null}
       {success ? (
-        <p className="text-sm text-state-success" role="status">
+        <p
+          className="rounded-xl border border-brand-sky/40 bg-blob-sky/30 px-4 py-3 text-sm text-brand-navy"
+          role="status"
+        >
           {success}
         </p>
       ) : null}
@@ -337,7 +346,14 @@ export default function AdminUsersPageClient({
                       size="sm"
                       variant={item.role === "editor" ? "secondary" : "outline"}
                       disabled={!canChangeRole || item.role === "editor"}
-                      onClick={() => void setUserRole(item.id, "editor")}
+                      onClick={() =>
+                        setPending({
+                          type: "role",
+                          id: item.id,
+                          name: item.name,
+                          next: "editor",
+                        })
+                      }
                     >
                       Make Editor
                     </Button>
@@ -350,7 +366,14 @@ export default function AdminUsersPageClient({
                       disabled={
                         !canChangeRole || item.role === "administrator"
                       }
-                      onClick={() => void setUserRole(item.id, "administrator")}
+                      onClick={() =>
+                        setPending({
+                          type: "role",
+                          id: item.id,
+                          name: item.name,
+                          next: "administrator",
+                        })
+                      }
                     >
                       Make Administrator
                     </Button>
@@ -360,7 +383,14 @@ export default function AdminUsersPageClient({
                         size="sm"
                         variant="outline"
                         disabled={busy}
-                        onClick={() => void setUserStatus(item.id, "active")}
+                        onClick={() =>
+                          setPending({
+                            type: "status",
+                            id: item.id,
+                            name: item.name,
+                            status: "active",
+                          })
+                        }
                       >
                         Re-enable
                       </Button>
@@ -370,7 +400,14 @@ export default function AdminUsersPageClient({
                         size="sm"
                         variant="outline"
                         disabled={busy || item.id === currentUserId}
-                        onClick={() => void setUserStatus(item.id, "disabled")}
+                        onClick={() =>
+                          setPending({
+                            type: "status",
+                            id: item.id,
+                            name: item.name,
+                            status: "disabled",
+                          })
+                        }
                       >
                         Disable
                       </Button>
@@ -382,6 +419,50 @@ export default function AdminUsersPageClient({
           })}
         </ul>
       )}
+
+      <ConfirmDialog
+        open={Boolean(pending)}
+        title={
+          pending?.type === "role"
+            ? `Change ${pending.name} to ${pendingGuide?.label}?`
+            : pending?.status === "disabled"
+              ? `Disable ${pending.name}?`
+              : pending
+                ? `Re-enable ${pending.name}?`
+                : "Confirm"
+        }
+        description={
+          pending?.type === "role"
+            ? `${pending.name} will receive an email about this role change. Their new permissions take effect on the next sign-in.`
+            : pending?.status === "disabled"
+              ? `${pending.name} will be signed out of staff tools and emailed that access was disabled.`
+              : pending
+                ? `${pending.name} will be emailed that staff access was restored.`
+                : ""
+        }
+        details={
+          pending?.type === "role" && pendingGuide
+            ? pendingGuide.can.slice(0, 4)
+            : undefined
+        }
+        confirmLabel={
+          pending?.type === "role"
+            ? `Make ${pendingGuide?.label}`
+            : pending?.status === "disabled"
+              ? "Disable account"
+              : "Re-enable account"
+        }
+        tone={
+          pending?.type === "status" && pending.status === "disabled"
+            ? "danger"
+            : "default"
+        }
+        busy={confirmBusy}
+        onCancel={() => {
+          if (!confirmBusy) setPending(null);
+        }}
+        onConfirm={() => void applyPending()}
+      />
     </section>
   );
 }
