@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Fix staff invite expiry + email feedback**
-* **Status:** In progress on `feature/fix-staff-invite-expiry-feedback`
+* **Status:** Complete — PR #56 merged; Worker uploaded
 * **Previous phase:** Admin sidebar / roles / privacy (PR #55)
-* **Current branch:** `feature/fix-staff-invite-expiry-feedback`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Stop false “sent” / expired invite links; await SMTP on reset; clear request feedback; validate tokens before password form.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** Moving off consumer Gmail SMTP to domain-authenticated ESP (deliverability root cause for some inboxes).
 
 ---
 
 ## Current Goal
 
-Ship reliable staff invitation / password-reset email UX.
+Await next owner-scoped unit.
 
 ---
 
@@ -1586,6 +1586,9 @@ Phase 2 recurring billing remains deferred.
   * Login shows success banners after activate/reset; Users admin copy clarifies
     mail-server accept ≠ inbox delivery (check spam).
 * Explicitly deferred: domain-authenticated ESP (Gmail SMTP spam risk).
+* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
+* Ship: PR [#56](https://github.com/e-mond/Girls-Global-Initiative/pull/56) merged.
+* Deploy: Worker uploaded (forgot/reset/users chunks); wrangler zone 10083 known.
 
 ---
 
