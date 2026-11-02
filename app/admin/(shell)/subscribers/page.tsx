@@ -31,6 +31,7 @@ export default function AdminSubscribersPage() {
   const [status, setStatus] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -91,6 +92,44 @@ export default function AdminSubscribersPage() {
     await load();
   }
 
+  async function exportCsv() {
+    setExporting(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({ format: "csv" });
+      if (q.trim()) params.set("q", q.trim());
+      if (status) params.set("status", status);
+      const response = await fetch(`/api/admin/subscribers?${params}`);
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!response.ok) {
+        if (contentType.includes("application/json")) {
+          const json = (await response.json()) as {
+            error?: { message?: string };
+          };
+          throw new Error(
+            json?.error?.message ?? "Could not export subscribers.",
+          );
+        }
+        throw new Error("Could not export subscribers. Please try again.");
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "newsletter-subscribers.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Could not export subscribers.",
+      );
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <section className="space-y-6">
       <AdminPageHeader
@@ -105,12 +144,14 @@ export default function AdminSubscribersPage() {
             >
               Broadcast
             </a>
-            <a
-              href="/api/admin/subscribers?format=csv"
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-border-default bg-bg-surface px-4 text-sm font-medium text-brand-navy hover:border-brand-navy/40"
+            <Button
+              type="button"
+              variant="outline"
+              disabled={exporting}
+              onClick={() => void exportCsv()}
             >
-              Export CSV
-            </a>
+              {exporting ? "Exporting…" : "Export CSV"}
+            </Button>
           </div>
         }
       />

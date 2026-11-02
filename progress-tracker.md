@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Users confirm modal + account-change notifications**
-* **Status:** Complete — PR #59 merged; Worker uploaded
-* **Previous phase:** Auth session / password visibility (PR #58)
-* **Current branch:** `main`
+* **Fix subscribers CSV export 500**
+* **Status:** In progress on `feature/fix-subscribers-csv-export`
+* **Previous phase:** Users confirm modal + notifications (PR #59)
+* **Current branch:** `feature/fix-subscribers-csv-export`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Next owner-scoped unit (none queued).
-* **Explicitly deferred:** Full staff_notifications table (using audit-backed attention items for actor).
+* **Current objective:** Stop `/api/admin/subscribers?format=csv` 500; client-side download with filters and safe audit.
+* **Explicitly deferred:** None for this unit.
 
 ---
 
 ## Current Goal
 
-Await next owner-scoped unit.
+Ship subscribers CSV export fix.
 
 ---
 
@@ -1585,14 +1585,14 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Users confirm modal + notifications
 
-* Neon purge: `scriptjack4@gmail.com` user removed (related refs cleared).
-* Users admin: accessible `ConfirmDialog` for role change / disable / re-enable
-  (replaces `window.confirm`).
-* Affected staff receive branded email; actor gets page success banner plus
-  audit-backed items in the admin notifications bell.
-* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
-* Ship: PR [#59](https://github.com/e-mond/Girls-Global-Initiative/pull/59) merged.
-* Deploy: Worker uploaded (users chunk); wrangler zone 10083 known.
+* Shipped via PR #59.
+
+### Session Notes — Subscribers CSV export 500
+
+* `/api/admin/subscribers?format=csv` returned 500 (Chrome navigated to error
+  page). Hardened GET with try/catch; audit write no longer blocks export;
+  UTF-8 BOM + no-store headers; UI Export uses fetch/blob with current filters
+  so failures stay on-page.
 
 ---
 
