@@ -2,19 +2,83 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { AdminAuthShell } from "@/components/admin/admin-login-form";
 import { Button } from "@/components/ui/button";
+import { readJsonResponse } from "@/lib/safe-json";
 
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
-  const isInvite = searchParams.get("invite") === "1";
+  const isInviteParam = searchParams.get("invite") === "1";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [pending, setPending] = useState(false);
+  const [checking, setChecking] = useState(Boolean(token));
+  const [linkKind, setLinkKind] = useState<"invite" | "reset" | null>(
+    isInviteParam ? "invite" : null,
+  );
+  const [linkError, setLinkError] = useState<string | null>(
+    token ? null : "This link is missing a token. Request a new invitation or password reset.",
+  );
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!token) {
+      setChecking(false);
+      return;
+    }
+
+    let cancelled = false;
+    setChecking(true);
+    setLinkError(null);
+
+    void (async () => {
+      try {
+        const response = await fetch(
+          `/api/admin/password-reset/confirm?token=${encodeURIComponent(token)}`,
+        );
+        const json = await readJsonResponse<{
+          data?: {
+            valid?: boolean;
+            kind?: "invite" | "reset";
+            message?: string;
+          };
+          error?: { message?: string };
+        }>(response, "Could not check this link.");
+        if (cancelled) return;
+        if (!response.ok) {
+          setLinkError(
+            json?.error?.message ?? "Could not check this link. Try again.",
+          );
+          return;
+        }
+        if (!json.data?.valid) {
+          setLinkError(
+            json.data?.message ??
+              "This link is invalid or has expired. Request a new one.",
+          );
+          return;
+        }
+        setLinkKind(json.data.kind ?? (isInviteParam ? "invite" : "reset"));
+      } catch (err) {
+        if (!cancelled) {
+          setLinkError(
+            err instanceof Error ? err.message : "Could not check this link.",
+          );
+        }
+      } finally {
+        if (!cancelled) setChecking(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, isInviteParam]);
+
+  const isInvite = linkKind === "invite" || (linkKind === null && isInviteParam);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -32,11 +96,15 @@ function ResetPasswordForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),
       });
-      const json = await response.json();
+      const json = await readJsonResponse<{
+        error?: { message?: string };
+      }>(response, "Could not set password.");
       if (!response.ok) {
         throw new Error(json?.error?.message ?? "Could not set password.");
       }
-      router.replace("/admin/login");
+      router.replace(
+        isInvite ? "/admin/login?activated=1" : "/admin/login?reset=1",
+      );
       router.refresh();
     } catch (err) {
       setError(
@@ -47,14 +115,37 @@ function ResetPasswordForm() {
     }
   }
 
+  if (checking) {
+    return <p className="text-sm text-text-muted">Checking your link…</p>;
+  }
+
+  if (linkError) {
+    return (
+      <div className="space-y-4">
+        <p className="rounded-xl bg-brand-magenta/10 px-4 py-3 text-sm text-brand-magenta" role="alert">
+          {linkError}
+        </p>
+        <Link
+          href="/admin/forgot-password"
+          className="inline-flex h-10 w-full items-center justify-center rounded-xl bg-brand-magenta px-4 text-sm font-medium text-text-on-inverse hover:bg-brand-magenta/90"
+        >
+          Request a new link
+        </Link>
+        <p className="text-center text-xs text-text-muted">
+          Already activated?{" "}
+          <Link
+            href="/admin/login"
+            className="font-medium text-brand-sky hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {!token ? (
-        <p className="text-sm text-brand-magenta" role="alert">
-          This link is missing a token. Request a new invitation or password
-          reset.
-        </p>
-      ) : null}
       <div className="space-y-2">
         <label
           htmlFor="password"
@@ -110,11 +201,12 @@ function ResetPasswordForm() {
             : "Update password"}
       </Button>
       <p className="text-center text-xs text-text-muted">
+        Link not working?{" "}
         <Link
           href="/admin/forgot-password"
           className="font-medium text-brand-sky hover:underline"
         >
-          Request a new link
+          Request a new one
         </Link>
       </p>
     </form>
@@ -145,7 +237,7 @@ function ResetPasswordPageInner() {
       description={
         isInvite
           ? "Create a password to activate your GGI staff account. Invitation links expire after 72 hours."
-          : "Enter a new password for your staff account. The link expires after one hour."
+          : "Enter a new password for your staff account. Reset links expire after one hour."
       }
     >
       <ResetPasswordForm />

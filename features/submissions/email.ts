@@ -73,9 +73,12 @@ export async function sendAcknowledgementEmail(
       port: Number(process.env.SMTP_PORT ?? 587),
       secure: false,
       auth: user && pass ? { user, pass } : undefined,
+      connectionTimeout: 20_000,
+      greetingTimeout: 20_000,
+      socketTimeout: 30_000,
     });
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from,
       to: input.to,
       subject: input.subject,
@@ -84,6 +87,16 @@ export async function sendAcknowledgementEmail(
       replyTo,
       headers: Object.keys(headers).length > 0 ? headers : undefined,
     });
+
+    const rejected = Array.isArray(info.rejected) ? info.rejected : [];
+    if (rejected.length > 0) {
+      console.error("[email] SMTP rejected recipient(s)", rejected);
+      return {
+        sent: false,
+        reason:
+          "The mail server rejected this address. Check the email spelling and SMTP settings, then try again.",
+      };
+    }
 
     return { sent: true };
   } catch (error) {

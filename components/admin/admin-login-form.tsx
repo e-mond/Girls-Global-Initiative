@@ -14,6 +14,8 @@ export function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = safeAdminCallbackUrl(searchParams.get("callbackUrl"));
+  const activated = searchParams.get("activated") === "1";
+  const resetDone = searchParams.get("reset") === "1";
   const reduceMotion = useReducedMotion();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -90,6 +92,23 @@ export function AdminLoginForm() {
           className="h-11 w-full rounded-xl border border-border-default bg-bg-base px-3 text-sm text-text-primary outline-none focus-visible:border-brand-sky focus-visible:ring-2 focus-visible:ring-brand-sky"
         />
       </div>
+      {activated ? (
+        <p
+          className="rounded-xl border border-brand-sky/40 bg-blob-sky/30 px-4 py-3 text-sm text-brand-navy"
+          role="status"
+        >
+          Your account is active. Sign in with the email and password you just
+          chose.
+        </p>
+      ) : null}
+      {resetDone ? (
+        <p
+          className="rounded-xl border border-brand-sky/40 bg-blob-sky/30 px-4 py-3 text-sm text-brand-navy"
+          role="status"
+        >
+          Password updated. Sign in with your new password.
+        </p>
+      ) : null}
       {error ? (
         <p id="login-error" className="text-sm text-brand-magenta" role="alert">
           {error}

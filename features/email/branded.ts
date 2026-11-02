@@ -230,34 +230,44 @@ export function manualDonationNotifyEmail(input: {
 export function passwordResetEmail(input: {
   name: string;
   resetUrl: string;
+  expiresInHours?: number;
 }): BrandedEmailContent {
+  const hours = input.expiresInHours ?? 1;
+  const expiryLabel =
+    hours === 1 ? "one hour" : `${hours} hours`;
   return brandedMessage({
     subject: "Reset your GGI staff password",
     title: "Reset your password",
     greeting: `Hello ${input.name},`,
     paragraphs: [
       "We received a request to reset your Girls Global Initiative staff password.",
-      "This link expires in one hour. If you did not request a reset, you can ignore this email.",
+      `This link expires in ${expiryLabel}. If you did not request a reset, you can ignore this email.`,
+      "If the button does not work, copy the link from this email into your browser. Check spam or junk if you expected this earlier and did not see it.",
     ],
     cta: { href: input.resetUrl, label: "Choose a new password" },
     secondaryLinks: [
       { href: `${emailSiteOrigin()}/admin/login`, label: "Staff sign in" },
     ],
-    preheader: "Reset your GGI staff password within one hour.",
+    preheader: `Reset your GGI staff password within ${expiryLabel}.`,
   });
 }
 
 export function staffInviteEmail(input: {
   name: string;
   inviteUrl: string;
+  expiresInHours?: number;
 }): BrandedEmailContent {
+  const hours = input.expiresInHours ?? 72;
+  const expiryLabel =
+    hours === 1 ? "one hour" : `${hours} hours`;
   return brandedMessage({
     subject: "You're invited to the GGI staff back-office",
     title: "Set up your staff account",
     greeting: `Hello ${input.name},`,
     paragraphs: [
       "You have been invited to the Girls Global Initiative staff back-office.",
-      "Use the button below to choose your password and activate your account. This invitation link expires in 72 hours.",
+      `Use the button below to choose your password and activate your account. This invitation link expires in ${expiryLabel}.`,
+      "After you set a password, sign in from the staff login page. Check spam or junk folders if this email was hard to find.",
     ],
     cta: { href: input.inviteUrl, label: "Accept invitation" },
     secondaryLinks: [
