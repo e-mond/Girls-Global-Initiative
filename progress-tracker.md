@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Users confirm modal + account-change notifications**
-* **Status:** In progress on `feature/users-confirm-modal-notify`
+* **Status:** Complete — PR #59 merged; Worker uploaded
 * **Previous phase:** Auth session / password visibility (PR #58)
-* **Current branch:** `feature/users-confirm-modal-notify`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Proper confirm modal for role/disable; in-app notice for actor; email to affected staff; purge `scriptjack4@gmail.com`.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** Full staff_notifications table (using audit-backed attention items for actor).
 
 ---
 
 ## Current Goal
 
-Ship users confirm modal and account-change notifications.
+Await next owner-scoped unit.
 
 ---
 
@@ -1590,7 +1590,9 @@ Phase 2 recurring billing remains deferred.
   (replaces `window.confirm`).
 * Affected staff receive branded email; actor gets page success banner plus
   audit-backed items in the admin notifications bell.
-* Validation pending ship.
+* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
+* Ship: PR [#59](https://github.com/e-mond/Girls-Global-Initiative/pull/59) merged.
+* Deploy: Worker uploaded (users chunk); wrangler zone 10083 known.
 
 ---
 
