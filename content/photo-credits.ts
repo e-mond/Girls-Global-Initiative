@@ -37,6 +37,22 @@ export const photoCredits = [
     files: ["/our-story/challenges.jpg"],
   },
   {
+    title: "Hair braiding outdoors (black and white)",
+    creator: "Source via Pinterest",
+    sourceUrl: "https://pin.it/7AzRPI7ks",
+    license: "Third-party photograph — see source",
+    licenseUrl: "https://pin.it/7AzRPI7ks",
+    files: ["/our-story/began.jpg"],
+  },
+  {
+    title: "Children laughing (portrait)",
+    creator: "Source via Pinterest",
+    sourceUrl: "https://pin.it/flbCk11QJ",
+    license: "Third-party photograph — see source",
+    licenseUrl: "https://pin.it/flbCk11QJ",
+    files: ["/our-story/believe.jpg"],
+  },
+  {
     title: "Community mentoring in the schoolyard",
     creator: "Girls Global Initiative",
     sourceUrl: "https://girlsglobalinitiative.org/",

@@ -158,8 +158,8 @@ export function OurStoryView({
           <div className="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <Reveal className="relative min-h-[22rem] overflow-hidden rounded-[1.75rem] lg:min-h-full">
               <Image
-                src="/our-story/challenges.jpg?v=20261026"
-                alt="Two schoolgirls studying a book together outdoors in Ghana"
+                src="/our-story/began.jpg?v=20261102"
+                alt="Two young women outdoors, one braiding the other's hair while she holds a small mirror"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"
@@ -351,8 +351,8 @@ export function OurStoryView({
           <div className="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <Reveal className="relative min-h-[22rem] overflow-hidden rounded-[1.75rem] lg:min-h-full">
               <Image
-                src="/our-story/values.jpg?v=20261026"
-                alt="Two schoolgirls reading a book together outdoors in Ghana"
+                src="/our-story/believe.jpg?v=20261102"
+                alt="Two young children laughing together in a black-and-white portrait"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 45vw"
