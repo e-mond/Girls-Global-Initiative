@@ -7,19 +7,19 @@
 
 ## Current Phase
 
-* **Admin sidebar scroll, roles UX, privacy PDF, clear donations**
-* **Status:** Complete — PR #55 merged; Worker uploaded
-* **Previous phase:** Fix admin users invite 400 (PR #54)
-* **Current branch:** `main`
+* **Fix staff invite expiry + email feedback**
+* **Status:** In progress on `feature/fix-staff-invite-expiry-feedback`
+* **Previous phase:** Admin sidebar / roles / privacy (PR #55)
+* **Current branch:** `feature/fix-staff-invite-expiry-feedback`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Next owner-scoped unit (none queued).
-* **Explicitly deferred:** Fine-grained custom permission matrix beyond BR-19 Administrator/Editor roles.
+* **Current objective:** Stop false “sent” / expired invite links; await SMTP on reset; clear request feedback; validate tokens before password form.
+* **Explicitly deferred:** Moving off consumer Gmail SMTP to domain-authenticated ESP (deliverability root cause for some inboxes).
 
 ---
 
 ## Current Goal
 
-Await next owner-scoped unit.
+Ship reliable staff invitation / password-reset email UX.
 
 ---
 
@@ -1569,19 +1569,23 @@ Phase 2 recurring billing remains deferred.
 
 ### Session Notes — Admin sidebar / roles / privacy / donations wipe
 
-* Sidebar nav: `overflow-y-auto` on admin nav links so long menus scroll inside
-  fixed `h-dvh` shell.
-* Roles: `STAFF_ROLE_GUIDE` (BR-19 Editor vs Administrator) + Users UI with
-  capability cards and Make Editor / Make Administrator actions (no invented
-  fine-grained ACL matrix).
-* Privacy look-up: plain-language copy, result cards, branded jsPDF summary
-  (replaces JSON download).
-* Donations: all Paystack/donation rows deleted in Neon (test data wipe per
-  owner request); count verified at 0 after delete.
-* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
-* Ship: PR [#55](https://github.com/e-mond/Girls-Global-Initiative/pull/55) merged.
-* Deploy: Worker `girls-global-initiative` uploaded (users/privacy chunks live);
-  wrangler exit 1 on custom-domain API (zone 10083 — known).
+* Shipped via PR #55.
+
+### Session Notes — Staff invite expiry / email feedback
+
+* Root causes addressed:
+  * Forgot-password used deferred `after()` SMTP — UI said success while Worker
+    could drop the send; now awaits SMTP on staff reset/invite re-issue.
+  * Invite/reset tokens were rotated before SMTP success — failed sends left
+    people with “link expired” on the previous email; now restore prior token
+    when SMTP fails.
+  * Invited users requesting a new link got a 1-hour token while copy said 72h;
+    invited re-issues now use 72h consistently.
+  * Reset page now validates the token on load and shows a clear expired state
+    with “Request a new link”.
+  * Login shows success banners after activate/reset; Users admin copy clarifies
+    mail-server accept ≠ inbox delivery (check spam).
+* Explicitly deferred: domain-authenticated ESP (Gmail SMTP spam risk).
 
 ---
 

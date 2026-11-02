@@ -1,8 +1,12 @@
 import { and, count, desc, eq, ne } from "drizzle-orm";
-import { randomBytes, createHash } from "crypto";
+import { randomBytes } from "crypto";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema";
 import { hashPassword } from "@/features/governance/credentials";
+import {
+  STAFF_INVITE_TTL_MS,
+  hashPasswordResetToken,
+} from "@/features/governance/password-reset";
 import type { StaffRole } from "@/features/governance/rbac";
 import { staffInviteEmail } from "@/features/email/branded";
 import { emailSiteOrigin } from "@/features/email/site-origin";
@@ -20,12 +24,6 @@ export type StaffUserRecord = {
   updatedAt: string;
   lastLoginAt: string | null;
 };
-
-const INVITE_TTL_MS = 72 * 60 * 60 * 1000;
-
-function hashToken(token: string) {
-  return createHash("sha256").update(token).digest("hex");
-}
 
 function mapRow(row: typeof users.$inferSelect): StaffUserRecord {
   return {
@@ -50,9 +48,19 @@ async function issueInviteToken(
     return { error: "Database is required to invite staff users." };
   }
 
+  const [previous] = await db
+    .select({
+      passwordResetToken: users.passwordResetToken,
+      passwordResetExpires: users.passwordResetExpires,
+      status: users.status,
+    })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
   const rawToken = randomBytes(32).toString("hex");
-  const tokenHash = hashToken(rawToken);
-  const expires = new Date(Date.now() + INVITE_TTL_MS);
+  const tokenHash = hashPasswordResetToken(rawToken);
+  const expires = new Date(Date.now() + STAFF_INVITE_TTL_MS);
 
   await db
     .update(users)
@@ -65,7 +73,11 @@ async function issueInviteToken(
     .where(eq(users.id, userId));
 
   const inviteUrl = `${emailSiteOrigin()}/admin/reset-password?token=${rawToken}&invite=1`;
-  const mail = staffInviteEmail({ name, inviteUrl });
+  const mail = staffInviteEmail({
+    name,
+    inviteUrl,
+    expiresInHours: 72,
+  });
   const sent = await sendAcknowledgementEmail({
     to: email,
     subject: mail.subject,
@@ -74,6 +86,18 @@ async function issueInviteToken(
   });
 
   if (!sent.sent) {
+    // Restore the previous token so an earlier invite email is not invalidated
+    // when SMTP fails (otherwise the person only sees "link expired").
+    await db
+      .update(users)
+      .set({
+        passwordResetToken: previous?.passwordResetToken ?? null,
+        passwordResetExpires: previous?.passwordResetExpires ?? null,
+        status: previous?.status ?? "invited",
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+
     return {
       error:
         sent.reason ??

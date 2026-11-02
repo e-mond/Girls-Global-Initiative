@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     data: {
       message:
-        "If that email matches a staff account, we sent password reset instructions.",
+        "If that email matches a staff account, we sent a new link. Check inbox and spam/junk — invitation links last 72 hours; password resets last 1 hour. If nothing arrives in a few minutes, ask an administrator to resend from Users.",
     },
   });
 }

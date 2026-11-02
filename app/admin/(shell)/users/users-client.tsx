@@ -82,7 +82,7 @@ export default function AdminUsersPageClient({
     setEmail("");
     setRole("editor");
     setSuccess(
-      `Invitation sent to ${invitedEmail} as ${STAFF_ROLE_GUIDE[role].label}.`,
+      `Invitation accepted by the mail server for ${invitedEmail} (${STAFF_ROLE_GUIDE[role].label}). Ask them to check inbox and spam/junk — the link is valid for 72 hours.`,
     );
     await load();
   }
@@ -162,7 +162,9 @@ export default function AdminUsersPageClient({
         setError(json?.error?.message ?? "Could not resend invitation.");
         return;
       }
-      setSuccess("Invitation email resent.");
+      setSuccess(
+        "Invitation re-sent via the mail server. Ask them to check inbox and spam/junk — older invite links stop working after a successful resend.",
+      );
       await load();
     } finally {
       setBusyId(null);
