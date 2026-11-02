@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Purge test staff emails + Team CMS manageability**
-* **Status:** In progress on `feature/purge-test-accounts-team-crud`
+* **Status:** Complete — PR #57 merged; Worker uploaded
 * **Previous phase:** Staff invite expiry / email feedback (PR #56)
-* **Current branch:** `feature/purge-test-accounts-team-crud`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Remove listed test accounts from Neon; make Team members add/edit/remove/publish for admin+editor.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** Domain-authenticated ESP for invite deliverability.
 
 ---
 
 ## Current Goal
 
-Ship Team CMS manageability and document the Neon account purge.
+Await next owner-scoped unit.
 
 ---
 
