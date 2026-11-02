@@ -73,16 +73,22 @@ export async function GET(request: Request) {
           item.createdAt,
         ]),
       );
-      await writeAuditLog({
-        actorUserId: access.user.id,
-        action: "donation.export",
-        entityType: "donation",
-        summary: `Exported ${limited.length} donations`,
-      });
-      return new NextResponse(csv, {
+      try {
+        await writeAuditLog({
+          actorUserId: access.user.id,
+          action: "donation.export",
+          entityType: "donation",
+          summary: `Exported ${limited.length} donations`,
+        });
+      } catch (error) {
+        console.error("[admin/donations] export audit failed", error);
+      }
+      return new NextResponse(`\uFEFF${csv}\r\n`, {
+        status: 200,
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
           "Content-Disposition": 'attachment; filename="donations.csv"',
+          "Cache-Control": "no-store",
         },
       });
     }
