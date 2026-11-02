@@ -8,18 +8,18 @@
 ## Current Phase
 
 * **Fix subscribers CSV export 500**
-* **Status:** In progress on `feature/fix-subscribers-csv-export`
+* **Status:** Complete — PR #60 merged; Worker uploaded
 * **Previous phase:** Users confirm modal + notifications (PR #59)
-* **Current branch:** `feature/fix-subscribers-csv-export`
+* **Current branch:** `main`
 * **Repository:** `e-mond/Girls-Global-Initiative`
-* **Current objective:** Stop `/api/admin/subscribers?format=csv` 500; client-side download with filters and safe audit.
+* **Current objective:** Next owner-scoped unit (none queued).
 * **Explicitly deferred:** None for this unit.
 
 ---
 
 ## Current Goal
 
-Ship subscribers CSV export fix.
+Await next owner-scoped unit.
 
 ---
 
@@ -1593,6 +1593,9 @@ Phase 2 recurring billing remains deferred.
   page). Hardened GET with try/catch; audit write no longer blocks export;
   UTF-8 BOM + no-store headers; UI Export uses fetch/blob with current filters
   so failures stay on-page.
+* Validation: `npm run type-check` PASS; `npm run lint` PASS; `next build` PASS.
+* Ship: PR [#60](https://github.com/e-mond/Girls-Global-Initiative/pull/60) merged.
+* Deploy: Worker uploaded; wrangler zone 10083 known.
 
 ---
 
